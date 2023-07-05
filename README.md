@@ -110,8 +110,7 @@ Tem o objetivo de consolidar meus conhecimentos em Node.js com Nest.js e Mongoos
 
 <a href="" title="">![version](https://img.shields.io/badge/version-1.0.0-white)</a> 
 <br>
-API Rest para conversão de moedas consumindo a API Exchangerates utilizando Node.js com Typescript e Nest.js. testes,
-exceções, logs, cache, doc. OpenAPI, autenticação com criptografia e graceful shutdown. TDD, DDD, SOLID, design pattern.
+API Rest para conversão de moedas consumindo a API Exchangerates desenvolvida com Node.js Typescript e Nest.js utilizando DDD, TDD. Possui testes unitários, integração e e2e, exceções, logs, cache, doc. OpenAPI, autenticação.
 <br>
 
 
