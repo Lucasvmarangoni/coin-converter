@@ -49,6 +49,10 @@ Tem o objetivo de consolidar meus conhecimentos em Node.js com Nest.js e Mongoos
 
 ## Tecnologias
 
+<div align="left">
+- Sujeito à alterações.
+</div>
+
 </div>
 
 <table width="300px" align="center">
