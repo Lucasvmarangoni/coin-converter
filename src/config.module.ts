@@ -3,13 +3,21 @@ import { ConfigModule } from '@nestjs/config';
 import configuration from 'config/configuration';
 import * as Joi from 'joi';
 
+const node_env = process.env.NODE_ENV || 'development'
+
+const env = {
+  environment: `config/.env.${node_env}`,
+  secrets: node_env === 'development' && 'config/secrets.env',
+  default: 'config/default.env',
+}
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: [
-        'config/default.env',
-        'config/test.env',
-        'config/secrets.env',
+        env.environment,
+        env.default,
+        env.secrets,
       ],
       load: [configuration],
       isGlobal: true,
@@ -20,13 +28,10 @@ import * as Joi from 'joi';
           .default('development'),
         PORT: Joi.number().default(3333),
         DATABASE_URL: Joi.string().required(),
-        TEST_DATABASE_URL: Joi.string().required(),
         API_URL: Joi.string().required(),
         API_KEY: Joi.string().required(),
-        TEST_KEY: Joi.string().required(),
-        LOGGER_LEVEL: Joi.string().required().default('info'),
-        LOGGER_ENABLED: Joi.boolean().required().default(true),
-        TEST_LOGGER_ENABLED: Joi.boolean().required().default(false),
+        LOGGER_LEVEL: Joi.string().default('info'),
+        LOGGER_ENABLED: Joi.boolean().default(true),
       }).unknown(),
       validationOptions: {
         allowUnknown: false,
@@ -35,4 +40,4 @@ import * as Joi from 'joi';
     }),
   ],
 })
-export class AppConfigModule {}
+export class AppConfigModule { }
