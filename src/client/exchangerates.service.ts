@@ -65,18 +65,15 @@ export class ExchangeratesService {
 
     const api = await this.configService.get<ApiConfig>('api', {
       infer: true,
-    });
-    console.log(api);
+    });    
     
     const url = `${api.url}${sourceCurrency}&symbols=${symbols}&access_key=${api.key}`;      
     let response: ExchangeRatesResponse;    
     
     try {
       const response$ = this.request.get<ExchangeRatesResponse>(url);      
-      console.log('response1: ' +response$);
       const axiosResponse: AxiosResponse<ExchangeRatesResponse> = await firstValueFrom(response$);
-      response = axiosResponse.data;      
-      console.log('response2: ' + response);
+      response = axiosResponse.data;           
       
       if (!this.isValidResponse(response)) {
         throw new ExchangeratesResponseError('Invalid response');
