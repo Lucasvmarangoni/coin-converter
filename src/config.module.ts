@@ -10,7 +10,6 @@ const env = {
   secrets: node_env === 'development' && 'config/secrets.env',
   default: 'config/default.env',
 }
-console.log('teste', env.environment);
 
 @Module({
   imports: [
