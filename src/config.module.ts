@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import configuration from 'config/configuration';
+import configuration from '../config/configuration';
 import * as Joi from 'joi';
 
 const node_env = process.env.NODE_ENV || 'development'
@@ -10,6 +10,7 @@ const env = {
   secrets: node_env === 'development' && 'config/secrets.env',
   default: 'config/default.env',
 }
+console.log('teste', env.environment);
 
 @Module({
   imports: [
