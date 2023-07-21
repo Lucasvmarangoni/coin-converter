@@ -49,9 +49,10 @@ Tem o objetivo de consolidar meus conhecimentos em Node.js com Nest.js e Mongoos
 
 ## Tecnologias
 
-<div align="left">
-- Sujeito à alterações.
-</div>
+
+Sujeito à alterações. <br>
+(Durante o desenvolvimento, posso modificar as tecnologias, removendo algumas e adicionando outras conforme necessário.)
+
 
 </div>
 
