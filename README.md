@@ -51,7 +51,7 @@ Tem o objetivo de consolidar meus conhecimentos em Node.js com Nest.js e Mongoos
 
 
 Sujeito à alterações. <br>
-(Durante o desenvolvimento, posso modificar as tecnologias, removendo algumas e adicionando outras conforme necessário.)
+(Durante o desenvolvimento, posso modificar tecnologias, removendo algumas e adicionando outras.)
 
 
 </div>
