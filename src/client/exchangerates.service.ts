@@ -49,103 +49,56 @@ interface ApiConfig {
 @Injectable()
 export class ExchangeratesService {
   constructor(
-    private request: HttpService,    
+    private request: HttpService,
     private configService: ConfigService<ApiConfig, true>,
   ) { }
 
   public async fetchConvert(
-    sourceCurrency: string,
-    destinationCurrency: string | string[],
+    sourceCurrency: string,   
   ): Promise<ExchangeRatesResponse> {
-    this.ParamsValidator(sourceCurrency, destinationCurrency);
-
-    const symbols = Array.isArray(destinationCurrency)
-      ? destinationCurrency.join(',')
-      : destinationCurrency;  
+    this.ParamsValidator(sourceCurrency);
 
     const api = await this.configService.get<ApiConfig>('api', {
       infer: true,
-    });    
-    
-    const url = `${api.url}${sourceCurrency}&symbols=${symbols}&access_key=${api.key}`;      
-    let response: ExchangeRatesResponse;    
-    
+    });
+
+    const url = `${api.url}${sourceCurrency}&access_key=${api.key}`;
+    let response: ExchangeRatesResponse;
+
     try {
-      const response$ = this.request.get<ExchangeRatesResponse>(url);      
+      const response$ = this.request.get<ExchangeRatesResponse>(url);
       const axiosResponse: AxiosResponse<ExchangeRatesResponse> = await firstValueFrom(response$);
-      response = axiosResponse.data;           
-      
+      response = axiosResponse.data;
+
       if (!this.isValidResponse(response)) {
         throw new ExchangeratesResponseError('Invalid response');
-      }    
+      }
       return response;
     } catch (err) {
-      const { response } = err 
+      const { response } = err
       if (err instanceof Error && response && response.status) {
         throw new ExchangeratesResponseError(
           `Error: ${JSON.stringify(response.data)} Code: ${response.status}`,
         );
-      }      
+      }
       throw new ClientRequestError(JSON.stringify(err));
-    }    
+    }
   }
 
   private ParamsValidator(
     sourceCurrency: string,
-    destinationCurrency: string | string[],
   ) {
-    if (Array.isArray(destinationCurrency)) {
-      const invalidCurrencies = destinationCurrency.filter(
-        (currency) => currency !== '' && !currencies.includes(currency),
-      );
-
-      if (invalidCurrencies.length > 0) {
-        throw new ExchangeratesInvalidInputError(
-          `These currencies do not exist: ${invalidCurrencies.join(', ')}`,
-        );
-      }
-    } else if (
-      destinationCurrency !== '' &&
-      !currencies.includes(destinationCurrency)
-    ) {
-      throw new ExchangeratesInvalidInputError(
-        `This currency does not exist: ${destinationCurrency}`,
-      );
-    }
 
     if (!sourceCurrenciesAccepted.includes(sourceCurrency)) {
       if (typeof sourceCurrency !== 'string' || !sourceCurrency.trim()) {
-        if (
-          (typeof destinationCurrency !== 'string' ||
-            !destinationCurrency.trim()) &&
-          (!Array.isArray(destinationCurrency) ||
-            !destinationCurrency.every(
-              (currency) =>
-                typeof currency === 'string' && currency.trim() !== '',
-            ))
-        ) {
-          throw new ExchangeratesInvalidInputError(
-            `${acceptedCurrencies} Both source currency and destination currency are invalid. They must be a non-empty string or a non-empty array of strings.`,
-          );
-        }
+
         throw new ExchangeratesInvalidInputError(
           `${acceptedCurrencies} Invalid source currency. It must be a non-empty string.`,
         );
       }
       throw new ExchangeratesInvalidInputError(acceptedCurrencies);
     }
-    if (
-      (typeof destinationCurrency !== 'string' ||
-        !destinationCurrency.trim()) &&
-      (!Array.isArray(destinationCurrency) ||
-        !destinationCurrency.every(
-          (currency) => typeof currency === 'string' && currency.trim() !== '',
-        ))
-    ) {
-      throw new ExchangeratesInvalidInputError(
-        'Invalid destination currency. It must be a non-empty string or a non-empty array of strings.',
-      );
-    }
+
   }
 
   private isValidResponse(response: Partial<ExchangeRatesResponse>): boolean {

@@ -16,8 +16,6 @@ describe('Exchangerates client', () => {
     let httpService: HttpService;
 
     const sourceCurrency = 'EUR';
-    const destinationCurrency = 'USD';
-    const destinationCurrencyArray = ['USD', 'BRL', 'CAD'];
 
     jest.mock('@nestjs/axios', () => ({
         HttpModule: {
@@ -69,8 +67,7 @@ describe('Exchangerates client', () => {
         await createTestingModuleWithData(exchangeRatesResponse);
 
         const response = await exchangeratesService.fetchConvert(
-            sourceCurrency,
-            destinationCurrency,
+            sourceCurrency
         );
         expect(response).toEqual(exchangeRatesResponse);
     });
@@ -92,8 +89,7 @@ describe('Exchangerates client', () => {
         await createTestingModuleWithData(exchangeRatesResponse);
 
         const response = exchangeratesService.fetchConvert(
-            sourceCurrency,
-            destinationCurrency,
+            sourceCurrency,         
         );
         expect(response).rejects.toThrow(ClientRequestError);
     });
@@ -105,8 +101,7 @@ describe('Exchangerates client', () => {
         await createTestingModuleWithData();
 
         const response = exchangeratesService.fetchConvert(
-            invalidSourceCurrency,
-            destinationCurrencyArray,
+            invalidSourceCurrency           
         );
 
         await expect(response).rejects.toThrow(
@@ -121,58 +116,13 @@ describe('Exchangerates client', () => {
         await createTestingModuleWithData();
 
         const response = exchangeratesService.fetchConvert(
-            invalidSourceCurrency,
-            destinationCurrencyArray,
+            invalidSourceCurrency,        
         );
 
         await expect(response).rejects.toThrow(
             `${acceptedCurrencies} Invalid source currency. It must be a non-empty string.`,
         );
     });
-
-    it('should return the ExchangeratesInvalidInputError when an invalid destination currency type is provided', async () => {
-        const invalidDestinationCurrency = '';
-        await createTestingModuleWithData();
-
-        const response = exchangeratesService.fetchConvert(
-            sourceCurrency,
-            invalidDestinationCurrency,
-        );
-
-        await expect(response).rejects.toThrow(
-            `Invalid destination currency. It must be a non-empty string or a non-empty array of strings.`,
-        );
-    });
-
-    it('should return the ExchangeratesInvalidInputError when an invalid source currency a destination currency type is provided', async () => {
-        const invalidSourceCurrency = '';
-        const invalidDestinationCurrency = [''];
-
-        await createTestingModuleWithData();
-
-        const response = exchangeratesService.fetchConvert(
-            invalidSourceCurrency,
-            invalidDestinationCurrency,
-        );
-
-        await expect(response).rejects.toThrow(
-            `${acceptedCurrencies} Both source currency and destination currency are invalid. They must be a non-empty string or a non-empty array of strings.`,
-        );
-    });
-
-    it('should return the ExchangeratesInvalidInputError when an invalid source currency a destination currency type is provided', async () => {
-
-        const invalidDestinationCurrency = ['sdffsdf'];
-        await createTestingModuleWithData();
-
-        const response = exchangeratesService.fetchConvert(
-            sourceCurrency,
-            invalidDestinationCurrency,
-        );
-
-        await expect(response).rejects.toThrow(
-            `These currencies do not exist: ${invalidDestinationCurrency.join(', ')}`,
-        );
-    });
+   
 });
 
