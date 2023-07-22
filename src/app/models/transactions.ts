@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, SchemaTypes } from 'mongoose';
 
 export interface ConversionRates {
   [key: string]: number;
@@ -16,21 +16,18 @@ export type TransactionDocument = Transaction & Document;
     },
   },
 })
-export class Transaction extends Document{
+export class Transaction extends Document {
   // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
   // user: string;
-
-  @Prop({ type: mongoose.Schema.Types.ObjectId, required: true })
-  transaction_id: string;
 
   @Prop({ required: true })
   from: string;
 
   @Prop({ required: true })
-  value: number;
+  amount: number;
 
-  @Prop({ required: true })
-  to: string;
+  @Prop({ required: true, type: SchemaTypes.Mixed  })
+  to: string | string[];
 
   @Prop({ type: Object, required: true })
   rates: ConversionRates;
