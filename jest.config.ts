@@ -12,7 +12,8 @@ const config: Config = {
     prefix: '<rootDir>/',
   }),
   collectCoverageFrom: ['**/*.(t|j)s'], 
-  testEnvironment: 'node', 
+  testEnvironment: 'node',
+  clearMocks: true, 
 };
 
 export default config;
