@@ -6,14 +6,14 @@ import {
     acceptedCurrencies,
     sourceCurrenciesAccepted,
 } from '../exchangerates.service';
-import { Test } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import { HttpModule, HttpService } from '@nestjs/axios';
 import { AppConfigModule } from '@src/config.module';
 import { of } from 'rxjs';
 
 describe('Exchangerates client', () => {
-    let exchangeratesService: ExchangeratesService;
-    let httpService: HttpService;
+    let exchangeratesService: ExchangeratesService,
+        httpService: HttpService;
 
     const sourceCurrency = 'EUR';
 
@@ -27,7 +27,7 @@ describe('Exchangerates client', () => {
     }));
 
     const createTestingModuleWithData = async (exchangeRatesResponse?: Partial<ExchangeRatesResponse>) => {
-        const moduleRef = await Test.createTestingModule({
+        const moduleRef: TestingModule = await Test.createTestingModule({
             imports: [
                 HttpModule,
                 AppConfigModule
@@ -89,7 +89,7 @@ describe('Exchangerates client', () => {
         await createTestingModuleWithData(exchangeRatesResponse);
 
         const response = exchangeratesService.fetchConvert(
-            sourceCurrency,         
+            sourceCurrency,
         );
         expect(response).rejects.toThrow(ClientRequestError);
     });
@@ -101,7 +101,7 @@ describe('Exchangerates client', () => {
         await createTestingModuleWithData();
 
         const response = exchangeratesService.fetchConvert(
-            invalidSourceCurrency           
+            invalidSourceCurrency
         );
 
         await expect(response).rejects.toThrow(
@@ -116,13 +116,13 @@ describe('Exchangerates client', () => {
         await createTestingModuleWithData();
 
         const response = exchangeratesService.fetchConvert(
-            invalidSourceCurrency,        
+            invalidSourceCurrency,
         );
 
         await expect(response).rejects.toThrow(
             `${acceptedCurrencies} Invalid source currency. It must be a non-empty string.`,
         );
     });
-   
+
 });
 
