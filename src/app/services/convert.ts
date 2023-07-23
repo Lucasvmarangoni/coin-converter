@@ -9,7 +9,6 @@ type Rate = { [key: string]: number }
 export interface ConvertProps {
     rates: Rate,
 }
-
 export interface ResponseData {
     user?: string,   
     from: string,
@@ -18,7 +17,6 @@ export interface ResponseData {
     rates: Rate,
     date: Date,   
 }
-
 export interface RequestData {
     to: string,
     amount: number,
