@@ -33,10 +33,9 @@ export class ConvertService {
         private exchangeratesService: ExchangeratesService) { }
 
     async execute(req: RequestData): Promise<ResponseData> {
-
-        if (!req.from) {
-            req.from = this.sourceCurrenciesAccepted;
-        }
+        
+        req.from ?? (req.from = this.sourceCurrenciesAccepted);
+       
         const { to, amount, from } = req;
         const convertedAmount = await this.convertCurrency(req);    
         
