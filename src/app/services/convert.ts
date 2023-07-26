@@ -10,12 +10,12 @@ export interface ConvertProps {
     rates: Rate,
 }
 export interface ResponseData {
-    user?: string,   
+    user?: string,
     from: string,
     amount: number,
     to: string | string[],
     rates: Rate,
-    date: Date,   
+    date: Date,
 }
 export interface RequestData {
     to: string,
@@ -33,13 +33,20 @@ export class ConvertService {
         private exchangeratesService: ExchangeratesService) { }
 
     async execute(req: RequestData): Promise<ResponseData> {
-        
+
+        if (!req.to || !Number.isNaN(Number(req.to))) {
+            throw new Error('Currency "to" convert is required')
+        } else if (!req.amount || typeof req.amount !== 'number') {
+            throw new Error('"Amount" to convert is required')
+        }
         req.from ?? (req.from = this.sourceCurrenciesAccepted);
-       
+        req.to = req.to.toUpperCase();
+        req.from = req.from.toUpperCase();
+
         const { to, amount, from } = req;
-        const convertedAmount = await this.convertCurrency(req);    
-        
-        const transactionData: ResponseData = {            
+        const convertedAmount = await this.convertCurrency(req);
+
+        const transactionData: ResponseData = {
             from: from,
             amount: amount,
             to: to.split(',').map((item) => item.trim()),
@@ -61,7 +68,7 @@ export class ConvertService {
             this.sourceCurrenciesAccepted,
         );
         const { rates } = apiResponse;
-        
+
         Object.keys(rates).forEach((key) => {
             if (req.to.includes(key)) {
                 selectRates[key] = rates[key];
