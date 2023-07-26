@@ -28,7 +28,7 @@ describe('Convert Service', () => {
             };
         }
     }
-    const createTestingModuleWithData = async (create: ResponseData) => {
+    const createTestingModuleWithData = async (create?: ResponseData) => {
         const moduleRef: TestingModule = await Test.createTestingModule({
             providers: [
                 ConvertService,
@@ -172,5 +172,37 @@ describe('Convert Service', () => {
             "date": expect.any(Date),
             "id": expect.any(String),
         });
+    })
+
+    it('Should return erro "Currency to convert is required" when not provide or invalid value in "to" param', async () => {
+
+        const params = {
+            to: '',
+            amount: 10,
+            from: 'BRL',
+        }
+        await createTestingModuleWithData();
+       
+        await expect(
+            new Promise((resolve, reject) => {
+                convertService.execute(params).then(resolve).catch(reject);
+            })
+          ).rejects.toThrow(new Error('Currency "to" convert is required'));
+    })
+
+    it('Should return erro "Currency to convert is required" when not provide or invalid value in "amount" param', async () => {
+
+        const params = {
+            to: 'USD',
+            amount: Number('xx'),
+            from: 'BRL',
+        }
+        await createTestingModuleWithData();
+       
+        await expect(
+            new Promise((resolve, reject) => {
+                convertService.execute(params).then(resolve).catch(reject);
+            })
+          ).rejects.toThrow(new Error('"Amount" to convert is required'));
     })
 });
