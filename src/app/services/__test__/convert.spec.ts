@@ -182,12 +182,12 @@ describe('Convert Service', () => {
             from: 'BRL',
         }
         await createTestingModuleWithData();
-       
+
         await expect(
             new Promise((resolve, reject) => {
                 convertService.execute(params).then(resolve).catch(reject);
             })
-          ).rejects.toThrow(new Error('Currency "to" convert is required'));
+        ).rejects.toThrow(new Error(`Currency 'to' convert is required`));
     })
 
     it('Should return erro "Currency to convert is required" when not provide or invalid value in "amount" param', async () => {
@@ -198,11 +198,11 @@ describe('Convert Service', () => {
             from: 'BRL',
         }
         await createTestingModuleWithData();
-       
+
         await expect(
             new Promise((resolve, reject) => {
                 convertService.execute(params).then(resolve).catch(reject);
             })
-          ).rejects.toThrow(new Error('"Amount" to convert is required'));
+        ).rejects.toThrow(new Error(`'Amount' to convert is required`));
     })
 });
