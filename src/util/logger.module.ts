@@ -8,6 +8,9 @@ import { ConfigService } from '@nestjs/config';
       useFactory: (configService: ConfigService) => {
         return {
           pinoHttp: {
+            customProps: (req, res) => ({
+              context: 'HTTP',
+            }),
             transport: {
               target: 'pino-pretty',
               options: {
