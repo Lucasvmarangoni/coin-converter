@@ -7,7 +7,7 @@ const node_env = process.env.NODE_ENV || 'development'
 
 const env = {
   environment: `config/.env.${node_env}`,
-  secrets: node_env === 'development' && 'config/secrets.env',
+  secrets: 'config/secrets.env',
   default: 'config/default.env',
 }
 

@@ -19,8 +19,8 @@ export default class ApiError {
       ...{},
       ...{
         code: error.code,
-        cause: error.cause,
         error: error.codeAsString ? error.codeAsString : HttpStatus[error.code],
+        cause: error.cause,
       },
       ...(error.message && { message: error.message }),
       ...(error.documentation && { documentation: error.documentation }),
