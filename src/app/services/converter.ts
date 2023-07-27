@@ -24,7 +24,7 @@ export interface RequestData {
 }
 
 @Injectable()
-export class ConvertService {
+export class ConverterService {
     private readonly sourceCurrenciesAccepted = 'EUR';
 
     constructor(
@@ -35,22 +35,22 @@ export class ConvertService {
     async execute(req: RequestData): Promise<ResponseData> {
 
         if (!req.to || !Number.isNaN(Number(req.to))) {
-            throw new Error('Currency "to" convert is required')
+            throw new Error(`Currency 'to' converter is required`)
         } else if (!req.amount || typeof req.amount !== 'number') {
-            throw new Error('"Amount" to convert is required')
+            throw new Error(`'Amount' to converter is required`)
         }
         req.from ?? (req.from = this.sourceCurrenciesAccepted);
         req.to = req.to.toUpperCase();
         req.from = req.from.toUpperCase();
 
         const { to, amount, from } = req;
-        const convertedAmount = await this.convertCurrency(req);
+        const converterAmount = await this.converterCurrency(req);
 
         const transactionData: ResponseData = {
             from: from,
             amount: amount,
             to: to.split(',').map((item) => item.trim()),
-            rates: convertedAmount.rates,
+            rates: converterAmount.rates,
             date: new Date()
         }
         const save = await this.transactionsModel.create(transactionData);
@@ -59,7 +59,7 @@ export class ConvertService {
         return response;
     }
 
-    private async convertCurrency(req: RequestData): Promise<ConvertProps> {
+    private async converterCurrency(req: RequestData): Promise<ConvertProps> {
 
         let conversionRate: Rate;
         let selectRates = {};
