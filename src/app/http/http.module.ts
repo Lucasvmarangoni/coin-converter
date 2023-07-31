@@ -4,7 +4,7 @@ import { ConverterService } from '../services/converter';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TransactionSchema, Transactions } from '../models/transactions';
 import { AppClientModule } from '@src/client/client.module';
-import { FindAllService } from '../services/find';
+import { FindAllService } from '../services/find-all';
 
 @Module({
   imports: [
