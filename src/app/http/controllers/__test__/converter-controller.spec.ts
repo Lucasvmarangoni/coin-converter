@@ -5,7 +5,7 @@ import { allRates } from '@src/app/services/__test__/util/all-rates';
 import { AppClientModule } from '@src/client/client.module';
 import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import { Transactions } from '@src/app/models/transactions';
-import { FindAllService } from '@src/app/services/find';
+import { FindAllService } from '@src/app/services/find-all';
 import { ExchangeratesService } from '@src/client/exchangerates.service';
 import { Response } from 'express';
 
