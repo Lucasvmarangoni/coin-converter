@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConverterService, ResponseData } from '@src/app/services/converter';
+import { ConverterService, ResponseData } from '@src/app/services/converter/converter';
 import { ConverterController } from '../converter-controller';
 import { allRates } from '@src/app/services/__test__/util/all-rates';
 import { AppClientModule } from '@src/client/client.module';
 import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import { Transactions } from '@src/app/models/transactions';
-import { FindAllService } from '@src/app/services/find-all';
+import { FindAllService } from '@src/app/services/converter/find-all';
 import { ExchangeratesService } from '@src/client/exchangerates.service';
 import { Response } from 'express';
 

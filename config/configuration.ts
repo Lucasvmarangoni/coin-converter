@@ -11,4 +11,8 @@ export default () => ({
     level: process.env.LOGGER_LEVEL,
     enabled: process.env.LOGGER_ENABLED !== 'true' ? false : true,
   },
+  auth: {
+    key: process.env.AUTH_KEY,
+    expiresIn: Number(process.env.AUTH_TOKEN_EXPIRES_IN),
+  }
 });

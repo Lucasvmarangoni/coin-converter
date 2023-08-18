@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { ConversionRates, Transaction, Transactions } from "../models/transactions";
+import { Transaction } from "@src/app/models/transactions";
 import { ExchangeratesService } from "@src/client/exchangerates.service";
 import { InjectModel } from "@nestjs/mongoose";
-import mongoose, { Model, mongo } from "mongoose";
+import { Model } from "mongoose";
 
 type Rate = { [key: string]: number }
 
@@ -28,7 +28,7 @@ export class ConverterService {
     private readonly sourceCurrenciesAccepted = 'EUR';
 
     constructor(
-        @InjectModel(Transactions.name)
+        @InjectModel('TransactionModel')
         private transactionsModel: Model<Transaction>,
         private exchangeratesService: ExchangeratesService) { }
 

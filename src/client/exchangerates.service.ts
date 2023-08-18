@@ -1,4 +1,3 @@
-import { currencies } from './util/all-currencies';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from "@nestjs/axios";
 import { InternalError } from '@src/util/err/internal-error';
@@ -98,7 +97,6 @@ export class ExchangeratesService {
       }
       throw new ExchangeratesInvalidInputError(acceptedCurrencies);
     }
-
   }
 
   private isValidResponse(response: Partial<ExchangeRatesResponse>): boolean {
