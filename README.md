@@ -39,12 +39,6 @@ O projeto é uma API REST para conversão de moedas utilizando taxas de convers�
 
 <br>
 
-### Objetivo 
-
-Tem o objetivo de consolidar meus conhecimentos em Node.js com Nest.js e Mongoose. Além de continuar utilizando esse projeto para praticar, aprimorando-o com as novas habilidades, tecnologias e ferramentas que adquiro.
-
-<br>
-
 <div align="center">
 
 ## Tecnologias
