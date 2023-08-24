@@ -16,6 +16,10 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
+  afterEach(async () => {
+    await app.close();
+  });
+
   it('(POST) Transaction of converter currency from default base', async () => {
     const { body, status } = await request(app.getHttpServer()).post(
       '/converter/USD/10/EUR',
