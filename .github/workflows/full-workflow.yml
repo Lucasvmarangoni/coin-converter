@@ -16,16 +16,27 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
+    
+    services:
+      mongodb:
+        image: mongo:5.0
+        ports:
+          - 27017
+        options: >-
+          --health-cmd mongo
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@v2
 
       - name: Set up environment variables
-        working-directory: src
+        working-directory: ./
         run: |
-          echo "API_KEY=${{ secrets.API_KEY }}" >> secrets.env
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> secrets.env
-          cat secrets.env      
+          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          cat .env      
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -41,5 +52,8 @@ jobs:
         run: npm run test     
 
       - name: Run e2e tests
-        working-directory: test        
+        working-directory: test       
+        env:
+          DATABASE_URL: mongodb://localhost:${{ job.services.mongodb.ports[27017] }}/currency-converter-test    
+          LOGGER_ENABLED: false    
         run: npm run test:e2e
