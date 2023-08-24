@@ -3,7 +3,8 @@ import { AppClientModule } from '@src/client/client.module';
 import { AppConfigModule } from '../config/config.module';
 import { AppLoggerModule } from './util/logger.module';
 import { AppMongooseModule } from './mongoose.module';
-import { AppFeaturesModule } from './app/features.module';
+import { AppAuthModule } from './app/auth/auth.module';
+import { AppFeaturesModule } from './app/features/features.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { AppFeaturesModule } from './app/features.module';
     AppClientModule,
     AppFeaturesModule,
     AppMongooseModule,
+    AppAuthModule,
   ],
 })
 export class AppModule {}
