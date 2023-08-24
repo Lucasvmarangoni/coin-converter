@@ -12,7 +12,7 @@ export default () => ({
     enabled: process.env.LOGGER_ENABLED !== 'true' ? false : true,
   },
   auth: {
-    key: process.env.AUTH_KEY,
+    key: process.env.JWT_SECRET,
     expiresIn: Number(process.env.AUTH_TOKEN_EXPIRES_IN),
   }
 });

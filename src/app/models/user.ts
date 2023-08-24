@@ -11,9 +11,7 @@ export type UserDocument = User & Document;
     },
   },
 })
-
 export class User extends Document {
-
   @Prop({ type: String, required: true })
   name: string;
 
@@ -32,8 +30,4 @@ export class User extends Document {
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
-export const Users = mongoose.model<UserDocument>(
-  'Users',
-  UserSchema,
-);
-
+export const Users = mongoose.model<UserDocument>('Users', UserSchema);

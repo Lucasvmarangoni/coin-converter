@@ -1,5 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import { HttpService } from "@nestjs/axios";
+import { HttpService } from '@nestjs/axios';
 import { InternalError } from '@src/util/err/internal-error';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
@@ -50,10 +50,10 @@ export class ExchangeratesService {
   constructor(
     private request: HttpService,
     private configService: ConfigService<ApiConfig, true>,
-  ) { }
+  ) {}
 
   public async fetchConvert(
-    sourceCurrency: string,   
+    sourceCurrency: string,
   ): Promise<ExchangeRatesResponse> {
     this.ParamsValidator(sourceCurrency);
 
@@ -66,7 +66,8 @@ export class ExchangeratesService {
 
     try {
       const response$ = this.request.get<ExchangeRatesResponse>(url);
-      const axiosResponse: AxiosResponse<ExchangeRatesResponse> = await firstValueFrom(response$);
+      const axiosResponse: AxiosResponse<ExchangeRatesResponse> =
+        await firstValueFrom(response$);
       response = axiosResponse.data;
 
       if (!this.isValidResponse(response)) {
@@ -74,7 +75,7 @@ export class ExchangeratesService {
       }
       return response;
     } catch (err) {
-      const { response } = err
+      const { response } = err;
       if (err instanceof Error && response && response.status) {
         throw new ExchangeratesResponseError(
           `Error: ${JSON.stringify(response.data)} Code: ${response.status}`,
@@ -84,13 +85,9 @@ export class ExchangeratesService {
     }
   }
 
-  private ParamsValidator(
-    sourceCurrency: string,
-  ) {
-
+  private ParamsValidator(sourceCurrency: string) {
     if (!sourceCurrenciesAccepted.includes(sourceCurrency)) {
       if (typeof sourceCurrency !== 'string' || !sourceCurrency.trim()) {
-
         throw new ExchangeratesInvalidInputError(
           `${acceptedCurrencies} Invalid source currency. It must be a non-empty string.`,
         );

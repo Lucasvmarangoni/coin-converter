@@ -26,7 +26,7 @@ export class Transaction extends Document {
   @Prop({ type: String, required: true })
   amount: number;
 
-  @Prop({ type: Array, required: true, })
+  @Prop({ type: Array, required: true })
   to: string[];
 
   @Prop({ type: Object, required: true })

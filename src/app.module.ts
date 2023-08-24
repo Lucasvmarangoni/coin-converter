@@ -1,19 +1,17 @@
 import { Module } from '@nestjs/common';
-import { AppHttpModule } from './app/http/http.module';
 import { AppClientModule } from '@src/client/client.module';
-import { AppConfigModule } from './config.module';
+import { AppConfigModule } from '../config/config.module';
 import { AppLoggerModule } from './util/logger.module';
-import { MongooseModule } from '@nestjs/mongoose';
-
+import { AppMongooseModule } from './mongoose.module';
+import { AppFeaturesModule } from './app/features.module';
 
 @Module({
   imports: [
     AppConfigModule,
     AppLoggerModule,
     AppClientModule,
-    AppHttpModule,
-    MongooseModule.forRoot(process.env.DATABASE_URL),    
+    AppFeaturesModule,
+    AppMongooseModule,
   ],
-
 })
-export class AppModule { }
+export class AppModule {}

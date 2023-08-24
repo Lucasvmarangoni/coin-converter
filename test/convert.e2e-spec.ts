@@ -12,77 +12,73 @@ describe('AppController (e2e)', () => {
       imports: [AppModule],
     }).compile();
 
-    app = moduleFixture.createNestApplication()
+    app = moduleFixture.createNestApplication();
     await app.init();
   });
 
   it('(POST) Transaction of converter currency from default base', async () => {
-
-    const { body, status } = await request(app.getHttpServer()).post('/converter/USD/10/EUR')
+    const { body, status } = await request(app.getHttpServer()).post(
+      '/converter/USD/10/EUR',
+    );
 
     expect(status).toBe(201);
     expect(ObjectId.isValid(body.id)).toBe(true);
     expect(body).toEqual({
-      "from": "EUR",
-      "amount": 10,
-      "to": [
-        "USD"
-      ],
-      "rates": {
-        "USD": expect.any(Number)
+      from: 'EUR',
+      amount: 10,
+      to: ['USD'],
+      rates: {
+        USD: expect.any(Number),
       },
-      "date": body.date,
-      "id": expect.any(String)
+      date: body.date,
+      id: expect.any(String),
     });
   });
 
   it('(POST) Transaction of multiple currencies converter from default base', async () => {
-
-    const { body, status } = await request(app.getHttpServer()).post('/converter/USD,BRL/10/')
+    const { body, status } = await request(app.getHttpServer()).post(
+      '/converter/USD,BRL/10/',
+    );
 
     expect(status).toBe(201);
     expect(ObjectId.isValid(body.id)).toBe(true);
     expect(body).toEqual({
-      "from": "EUR",
-      "amount": 10,
-      "to": [
-        "USD",
-        "BRL"
-      ],
-      "rates": {
-        "USD": expect.any(Number),
-        "BRL": expect.any(Number)
+      from: 'EUR',
+      amount: 10,
+      to: ['USD', 'BRL'],
+      rates: {
+        USD: expect.any(Number),
+        BRL: expect.any(Number),
       },
-      "date": body.date,
-      "id": expect.any(String)
+      date: body.date,
+      id: expect.any(String),
     });
   });
 
   it('(POST) Transaction of multiple currencies converter from non-default base', async () => {
-
-    const { body, status } = await request(app.getHttpServer()).post('/converter/USD,BRL/10/AMD')
+    const { body, status } = await request(app.getHttpServer()).post(
+      '/converter/USD,BRL/10/AMD',
+    );
 
     expect(status).toBe(201);
     expect(ObjectId.isValid(body.id)).toBe(true);
     expect(body).toEqual({
-      "from": "AMD",
-      "amount": 10,
-      "to": [
-        "USD",
-        "BRL"
-      ],
-      "rates": {
-        "USD": expect.any(Number),
-        "BRL": expect.any(Number)
+      from: 'AMD',
+      amount: 10,
+      to: ['USD', 'BRL'],
+      rates: {
+        USD: expect.any(Number),
+        BRL: expect.any(Number),
       },
-      "date": body.date,
-      "id": expect.any(String)
+      date: body.date,
+      id: expect.any(String),
     });
   });
 
   it('(POST) Transaction of invalid none currency', async () => {
-
-    const { body, status } = await request(app.getHttpServer()).post('/converter/10/AMD')
+    const { body, status } = await request(app.getHttpServer()).post(
+      '/converter/10/AMD',
+    );
 
     expect(status).toBe(400);
     expect(body).toThrow('Invalid currency');
