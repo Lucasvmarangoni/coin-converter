@@ -9,11 +9,6 @@ import { UserController } from './controllers/user.controller';
   imports: [AppDatabaseModule],
   providers: [CreateUserService, FindUsersService, DeleteAllUsersService],
   controllers: [UserController],
-  exports: [
-    AppDatabaseModule,
-    CreateUserService,
-    FindUsersService,
-    DeleteAllUsersService,
-  ],
+  exports: [AppDatabaseModule, FindUsersService],
 })
 export class AppUserModule {}
