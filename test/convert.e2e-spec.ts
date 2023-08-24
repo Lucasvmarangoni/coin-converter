@@ -81,6 +81,17 @@ describe('AppController (e2e)', () => {
     );
 
     expect(status).toBe(400);
-    expect(body).toThrow('Invalid currency');
+    expect(body.cause).toBe(`Valid currency 'to' converter is required`);
+    expect(body.code).toBe(400);
+    expect(body.error).toBe('BAD_REQUEST');
+    expect(body.message).toBe(
+      `You need to provide a valid Valid 'currency ISO code' in to param.`,
+    );
+    expect(body).toEqual({
+      cause: `Valid currency 'to' converter is required`,
+      code: 400,
+      error: 'BAD_REQUEST',
+      message: `You need to provide a valid Valid 'currency ISO code' in to param.`,
+    });
   });
 });
