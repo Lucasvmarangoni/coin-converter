@@ -3,22 +3,18 @@ import { ConfigModule } from '@nestjs/config';
 import configuration from './configuration';
 import * as Joi from 'joi';
 
-const node_env = process.env.NODE_ENV || 'development'
+const node_env = process.env.NODE_ENV || 'development';
 
 const env = {
   environment: `config/.env.${node_env}`,
   secrets: 'config/secrets.env',
   default: 'config/default.env',
-}
+};
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: [
-        env.environment,
-        env.default,
-        env.secrets,
-      ],
+      envFilePath: [env.environment, env.default, env.secrets],
       load: [configuration],
       isGlobal: true,
       cache: true,
@@ -40,4 +36,4 @@ const env = {
     }),
   ],
 })
-export class AppConfigModule { }
+export class AppConfigModule {}

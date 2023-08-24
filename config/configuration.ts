@@ -14,5 +14,5 @@ export default () => ({
   auth: {
     key: process.env.JWT_SECRET,
     expiresIn: Number(process.env.AUTH_TOKEN_EXPIRES_IN),
-  }
+  },
 });
