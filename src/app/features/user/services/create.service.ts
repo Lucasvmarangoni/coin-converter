@@ -11,12 +11,12 @@ interface CreateUserRequest {
   password: string;
 }
 
-interface UserProps extends CreateUserRequest {
+export interface UserProps extends CreateUserRequest {
   createdAt: Date;
 }
 
-interface UserResponse {
-  user: UserProps;
+export interface UserResponse {
+  user: Omit<UserProps, 'password'>;
 }
 
 @Injectable()
