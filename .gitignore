@@ -3,3 +3,4 @@ NOTES.md
 .vscode
 config/secrets.env
 dist
+.env
