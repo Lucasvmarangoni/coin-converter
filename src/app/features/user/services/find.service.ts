@@ -3,6 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from '@src/app/models/user';
 import { Model } from 'mongoose';
 
+export interface UserInfo {
+  id: string;
+  username: string;
+  email: string;
+  password: string;
+  createdAt: Date;
+}
+
 @Injectable()
 export class FindUsersService {
   constructor(
@@ -10,13 +18,15 @@ export class FindUsersService {
     private userModel: Model<User>,
   ) {}
 
-  async findOne(usernameOrEmail: string): Promise<User | undefined> {
-    let user: User;
+  async findOne(usernameOrEmail: string): Promise<UserInfo | undefined> {
+    let user: UserInfo;
 
     if (this.isEmail(usernameOrEmail)) {
-      user = await this.userModel.findOne<User>({ email: usernameOrEmail });
+      user = await this.userModel.findOne<UserInfo>({ email: usernameOrEmail });
     }
-    user = await this.userModel.findOne<User>({ username: usernameOrEmail });
+    user = await this.userModel.findOne<UserInfo>({
+      username: usernameOrEmail,
+    });
 
     return user;
   }

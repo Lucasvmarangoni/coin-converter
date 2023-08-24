@@ -4,7 +4,10 @@ import { User } from '@src/app/models/user';
 import * as bcrypt from 'bcrypt';
 import { UserPayload } from './models/user-payload';
 import { UserToken } from './models/user-token';
-import { FindUsersService } from '../features/user/services/find.service';
+import {
+  FindUsersService,
+  UserInfo,
+} from '../features/user/services/find.service';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +26,7 @@ export class AuthService {
     if (!pass) {
       throw new Error('Password is required');
     }
-    const user: User = await this.findUsersService.findOne(usernameOrEmail);
+    const user: UserInfo = await this.findUsersService.findOne(usernameOrEmail);
 
     const isPasswordValid = await bcrypt.compare(pass, user.password);
 
