@@ -1,8 +1,8 @@
 import { Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
 import { BaseController } from '@src/index';
 import { Request, Response } from 'express';
-import { ConverterService } from '../services/converter';
-import { FindAllService } from '../services/find-all';
+import { ConverterService } from '../services/converter.service';
+import { FindAllService } from '../services/find-all.service';
 
 @Controller('converter')
 export class ConverterController extends BaseController {

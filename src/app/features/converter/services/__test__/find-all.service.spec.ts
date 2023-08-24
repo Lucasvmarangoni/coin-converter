@@ -1,6 +1,6 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { FindAllService } from '../find-all';
+import { FindAllService } from '../find-all.service';
 
 describe('Find all transactions testining', () => {
   let findAllService: FindAllService;

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConverterService, ResponseData } from '../converter';
+import { ConverterService, ResponseData } from '../converter.service';
 import { ExchangeratesService } from '@src/client/exchangerates.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { allRates } from './util/all-rates';
