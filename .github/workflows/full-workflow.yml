@@ -38,7 +38,7 @@ jobs:
 
       - name: Run unit tests
         working-directory: src
-        run: npm run test:unit     
+        run: npm run test     
 
       - name: Run e2e tests
         working-directory: test        
