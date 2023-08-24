@@ -23,9 +23,9 @@ jobs:
       - name: Set up environment variables
         working-directory: src
         run: |
-          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-          cat .env      
+          echo "API_KEY=${{ secrets.API_KEY }}" >> secrets.env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> secrets.env
+          cat secrets.env      
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
