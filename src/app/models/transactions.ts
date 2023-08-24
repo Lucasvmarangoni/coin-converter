@@ -23,7 +23,7 @@ export class Transaction extends Document {
   @Prop({ type: String, required: true })
   from: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: Number, required: true })
   amount: number;
 
   @Prop({ type: Array, required: true })
