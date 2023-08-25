@@ -21,6 +21,7 @@ export interface RequestData {
   to: string;
   amount: number;
   from: string;
+  user: string;
 }
 
 @Injectable()
@@ -52,6 +53,7 @@ export class ConverterService {
       to: to.split(',').map((item) => item.trim()),
       rates: converterAmount.rates,
       date: new Date(),
+      user: req.user,
     };
     const save = await this.transactionsModel.create(transactionData);
 

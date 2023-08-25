@@ -17,8 +17,8 @@ export type TransactionDocument = Transaction & Document;
   },
 })
 export class Transaction extends Document {
-  // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
-  // user: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
+  user: string;
 
   @Prop({ type: String, required: true })
   from: string;
