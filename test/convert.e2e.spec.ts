@@ -8,7 +8,7 @@ import { Connection } from 'mongoose';
 import { clearDatabase } from './util/clear-database';
 
 describe('AppController (e2e)', () => {
-  let app: INestApplication, token;
+  let app: INestApplication, token, connection: Connection;
 
   beforeAll(async () => {
     const userData = {
@@ -29,7 +29,7 @@ describe('AppController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
 
-    const connection = app.get<Connection>(getConnectionToken());
+    connection = app.get<Connection>(getConnectionToken());
     await clearDatabase(connection);
 
     await request(app.getHttpServer()).post('/user').send(userData).expect(201);
@@ -38,6 +38,7 @@ describe('AppController (e2e)', () => {
   });
 
   afterAll(async () => {
+    await clearDatabase(connection);
     await app.close();
   });
 
