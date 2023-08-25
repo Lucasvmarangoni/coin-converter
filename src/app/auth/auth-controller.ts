@@ -22,16 +22,13 @@ export class AuthController {
   @IsPublic()
   @Post('login')
   @UseGuards(LocalAuthGuard)
-  async login(@Request() req: AuthRequest) {
-    return this.authService.login(req.user);
-
-    // try {
-    //     res.set('authorization', jwt.access_token);
-    //     res.status(200);
-    //     return res.json(req.user);
-    // } catch (err) {
-    //     return res.status(401).json({ error: err.message })
-    // }
+  async login(@Req() req: AuthRequest, @Res() res) {
+    try {
+      // res.set('authorization', jwt.access_token);
+      res.status(200).json(this.authService.login(req.user));
+    } catch (err) {
+      return res.status(401).json({ error: err.message });
+    }
   }
 
   @UseGuards(JwtAuthGuard)
