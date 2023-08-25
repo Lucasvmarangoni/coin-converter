@@ -23,11 +23,11 @@ export class FindUsersService {
 
     if (this.isEmail(usernameOrEmail)) {
       user = await this.userModel.findOne<UserInfo>({ email: usernameOrEmail });
+    } else {
+      user = await this.userModel.findOne<UserInfo>({
+        username: usernameOrEmail,
+      });
     }
-    user = await this.userModel.findOne<UserInfo>({
-      username: usernameOrEmail,
-    });
-
     return user;
   }
 
