@@ -1,12 +1,14 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { AuthConfig, JwtStrategy } from './strategies/jwt.strategy';
 import { AuthController } from './auth-controller';
 import { AppUserModule } from '../features/user/user.module';
+import { LoginValidationMiddleware } from './middlewares/login-validation.middleware';
+import { IdentifyFieldMiddleware } from './middlewares/identify-field.middleware';
 
 @Module({
   imports: [
@@ -25,4 +27,9 @@ import { AppUserModule } from '../features/user/user.module';
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],
 })
-export class AppAuthModule {}
+export class AppAuthModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoginValidationMiddleware).forRoutes('login'),
+      consumer.apply(IdentifyFieldMiddleware).forRoutes('login');
+  }
+}
