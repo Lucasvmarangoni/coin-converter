@@ -13,14 +13,14 @@ import { AuthService } from '@src/app/auth/auth.service';
 import { JwtAuthGuard } from '@src/app/auth/guards/jwt-auth.guard';
 import { LocalAuthGuard } from '@src/app/auth/guards/local-auth.guard';
 import { AuthRequest } from '@src/app/auth/models/auth-request';
-import { Response } from 'express';
+import { IsPublic } from './decorators/is-public.decorator';
 
 @Controller()
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @IsPublic()
   @Post('login')
-  @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   async login(@Request() req: AuthRequest) {
     return this.authService.login(req.user);
@@ -36,7 +36,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Req() req, res: Response) {
+  getProfile(@Req() req) {
     return req.user;
   }
 }

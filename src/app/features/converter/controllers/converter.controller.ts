@@ -1,8 +1,17 @@
-import { Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { BaseController } from '@src/index';
 import { Request, Response } from 'express';
 import { ConverterService } from '../services/converter.service';
 import { FindAllService } from '../services/find-all.service';
+import { JwtAuthGuard } from '@src/app/auth/guards/jwt-auth.guard';
 
 @Controller('converter')
 export class ConverterController extends BaseController {
@@ -13,6 +22,7 @@ export class ConverterController extends BaseController {
     super();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post(':to/:amount/:from?')
   public async converter(
     @Param() params: { to: string; amount: number; from?: string },
@@ -32,6 +42,7 @@ export class ConverterController extends BaseController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('all')
   public async listAll(@Res() res: Response): Promise<void> {
     try {

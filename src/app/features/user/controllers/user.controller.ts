@@ -5,13 +5,14 @@ import {
   Body,
   UsePipes,
   ValidationPipe,
-  Request,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/user-dto';
 import { CreateUserService } from '../services/create.service';
 import { DeleteAllUsersService } from '../services/delete.service';
 import { Response } from 'express';
+import { JwtAuthGuard } from '@src/app/auth/guards/jwt-auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -35,8 +36,9 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete('delete')
-  deleteAll(@Request() req, res: Response) {
+  deleteAll() {
     this.deleteAllUsersService.execute();
     return;
   }

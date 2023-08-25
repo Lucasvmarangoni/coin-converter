@@ -7,7 +7,7 @@ import { User } from '@src/app/models/user';
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
-    super({ usernameField: 'email' } && { usernameField: 'username' });
+    super({ usernameField: 'email' });
   }
 
   async validate(
