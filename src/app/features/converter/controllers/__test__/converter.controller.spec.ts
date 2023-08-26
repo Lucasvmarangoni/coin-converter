@@ -80,12 +80,15 @@ describe('converter controller', () => {
     it('should call service execute with params and return converter value', async () => {
       const params = { to: 'USD', amount: 10, from: 'EUR' };
       await createTestingModuleWithData(responseData);
+      const req = {
+        user: jest.fn().mockReturnThis(),
+      };
       const res: Partial<Response> = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn().mockReturnThis(),
       };
 
-      await controller.converter(params, res as Response);
+      await controller.converter(params, req, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith(responseData);
@@ -94,13 +97,16 @@ describe('converter controller', () => {
     it('should call service execute with params and return converter value', async () => {
       const params = { to: '', amount: 10, from: 'EUR' };
       await createTestingModuleWithData();
+      const req = {
+        user: jest.fn().mockReturnThis(),
+      };
       const res: Partial<Response> = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn().mockReturnThis(),
         send: jest.fn().mockReturnThis(),
       };
 
-      await controller.converter(params, res as Response);
+      await controller.converter(params, req, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.send).toHaveBeenCalledWith({

@@ -55,6 +55,7 @@ describe('Convert Service', () => {
       to: 'USD',
       amount: 10,
       from: 'EUR',
+      user: '60f9b0b5b54b4b0015f1b0a0',
     };
     await createTestingModuleWithData(responseData);
     const response = await converterService.execute(params);
@@ -78,6 +79,7 @@ describe('Convert Service', () => {
       to: 'USD',
       amount: 10,
       from: '',
+      user: '60f9b0b5b54b4b0015f1b0a0',
     };
     await createTestingModuleWithData(responseData);
     const response = await converterService.execute(params);
@@ -101,6 +103,7 @@ describe('Convert Service', () => {
       to: 'USD,BRL,AMD',
       amount: 10,
       from: '',
+      user: '60f9b0b5b54b4b0015f1b0a0',
     };
     responseData = {
       ...responseData,
@@ -131,6 +134,7 @@ describe('Convert Service', () => {
       to: 'USD,AMD',
       amount: 10,
       from: 'BRL',
+      user: '60f9b0b5b54b4b0015f1b0a0',
     };
 
     responseData = {
@@ -162,6 +166,7 @@ describe('Convert Service', () => {
       to: '',
       amount: 10,
       from: 'BRL',
+      user: '60f9b0b5b54b4b0015f1b0a0',
     };
     await createTestingModuleWithData();
 
@@ -177,6 +182,7 @@ describe('Convert Service', () => {
       to: 'USD',
       amount: Number('xx'),
       from: 'BRL',
+      user: '60f9b0b5b54b4b0015f1b0a0',
     };
     await createTestingModuleWithData();
 
