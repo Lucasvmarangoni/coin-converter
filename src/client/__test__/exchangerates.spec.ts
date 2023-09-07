@@ -1,113 +1,106 @@
-import { ConfigService } from '@nestjs/config';
-import {
-  ClientRequestError,
-  ExchangeRatesResponse,
-  ExchangeratesService,
-  acceptedCurrencies,
-  sourceCurrenciesAccepted,
-} from '../exchangerates.service';
 import { Test, TestingModule } from '@nestjs/testing';
-import { HttpModule, HttpService } from '@nestjs/axios';
+import { HttpService } from '@nestjs/axios';
+import { ConfigService } from '@nestjs/config';
 import { of } from 'rxjs';
-import { AppConfigModule } from '@config/config.module';
+import { AxiosResponse } from 'axios';
+import {
+  ExchangeratesService,
+  ExchangeratesResponseError,
+  ExchangeRatesResponse,
+  ClientRequestError,
+} from '../exchangerates.service';
 
-describe('Exchangerates client', () => {
-  let exchangeratesService: ExchangeratesService, httpService: HttpService;
+describe('ExchangeratesService', () => {
+  let service: ExchangeratesService;
+  let httpService: HttpService;
+  let configService: ConfigService;
 
-  const sourceCurrency = 'EUR';
-
-  jest.mock('@nestjs/axios', () => ({
-    HttpModule: {
-      register: jest.fn(),
-    },
-    HttpService: jest.fn(() => ({
-      get: jest.fn(),
-    })),
-  }));
-
-  const createTestingModuleWithData = async (
-    exchangeRatesResponse?: Partial<ExchangeRatesResponse>,
-  ) => {
-    const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [HttpModule, AppConfigModule],
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         ExchangeratesService,
-        ConfigService,
         {
           provide: HttpService,
           useValue: {
-            get: jest.fn().mockReturnValue(of({ data: exchangeRatesResponse })),
+            get: jest.fn(),
+          },
+        },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn(),
           },
         },
       ],
     }).compile();
 
-    httpService = moduleRef.get<HttpService>(HttpService);
-    exchangeratesService =
-      moduleRef.get<ExchangeratesService>(ExchangeratesService);
-
-    return moduleRef;
-  };
-
-  it('should return the normalized response from the ExchangeRates service.', async () => {
-    const exchangeRatesResponse = {
-      success: true,
-      timestamp: 1686621843,
-      base: 'EUR',
-      date: '2023-06-13',
-      rates: {
-        USD: 3.955097,
-        BRL: 92.349891,
-        JPY: 106.328178,
-        AMD: 628.982,
-      },
-    };
-    await createTestingModuleWithData(exchangeRatesResponse);
-
-    const response = await exchangeratesService.fetchConvert(sourceCurrency);
-    expect(response).toEqual(exchangeRatesResponse);
+    service = module.get<ExchangeratesService>(ExchangeratesService);
+    httpService = module.get<HttpService>(HttpService);
+    configService = module.get<ConfigService>(ConfigService);
   });
 
-  it('should return the ClientRequestError for an invalid response.', async () => {
-    const exchangeRatesResponse = {
-      base: 'EUR',
-      date: '2023-06-13',
-      rates: {
-        USD: 3.955097,
-        BRL: 92.349891,
-        JPY: 106.328178,
-        AMD: 628.982,
-      },
-    };
-    await createTestingModuleWithData(exchangeRatesResponse);
-
-    const response = exchangeratesService.fetchConvert(sourceCurrency);
-    expect(response).rejects.toThrow(ClientRequestError);
+  it('should be defined', () => {
+    expect(service).toBeDefined();
   });
 
-  // !! Do not break lines in the exception strings. (toThrow)
+  describe('fetchConvert', () => {
+    it('should throw an error if the response from the API is not valid', async () => {
+      jest.spyOn(configService, 'get').mockReturnValueOnce({
+        url: 'http://api.exchangeratesapi.io/v1/latest?base=',
+        key: 'testKey',
+      });
+      const mockAxiosResponse: AxiosResponse = {
+        data: { success: false },
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config: undefined,
+      };
+      jest.spyOn(httpService, 'get').mockReturnValueOnce(of(mockAxiosResponse));
 
-  it('should return the ExchangeratesInvalidInputError when an invalid currency is provided', async () => {
-    const invalidSourceCurrency = 'BRL';
-    await createTestingModuleWithData();
+      await expect(service.fetchConvert('EUR')).rejects.toThrow(
+        ExchangeratesResponseError,
+      );
+    });
 
-    const response = exchangeratesService.fetchConvert(invalidSourceCurrency);
+    it('should return the response from the API if it is valid', async () => {
+      const mockResponse: ExchangeRatesResponse = {
+        success: true,
+        timestamp: 1633027206,
+        base: 'EUR',
+        date: '2021-09-30',
+        rates: { USD: 1.16 },
+      };
+      jest.spyOn(configService, 'get').mockReturnValueOnce({
+        url: 'http://api.exchangeratesapi.io/v1/latest?base=',
+        key: 'testKey',
+      });
+      const mockAxiosResponse: AxiosResponse = {
+        data: mockResponse,
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config: undefined,
+      };
+      jest.spyOn(httpService, 'get').mockReturnValueOnce(of(mockAxiosResponse));
 
-    await expect(response).rejects.toThrow(
-      `At the moment, it is only possible to perform conversions based on the ${sourceCurrenciesAccepted.join(
-        ',',
-      )} currency.`,
-    );
-  });
+      const result = await service.fetchConvert('EUR');
 
-  it('should return the ExchangeratesInvalidInputError when an invalid source currency type is provided', async () => {
-    const invalidSourceCurrency = '';
-    await createTestingModuleWithData();
+      expect(result).toEqual(mockResponse);
+    });
 
-    const response = exchangeratesService.fetchConvert(invalidSourceCurrency);
+    it('should throw an error if the request to the API fails', async () => {
+      jest.spyOn(configService, 'get').mockReturnValueOnce({
+        url: 'http://api.exchangeratesapi.io/v1/latest?base=',
+        key: 'testKey',
+      });
+      jest.spyOn(httpService, 'get').mockImplementationOnce(() => {
+        throw new Error('Request failed');
+      });
 
-    await expect(response).rejects.toThrow(
-      `${acceptedCurrencies} Invalid source currency. It must be a non-empty string.`,
-    );
+      await expect(service.fetchConvert('EUR')).rejects.toThrow(
+        ClientRequestError,
+      );
+    });
   });
 });

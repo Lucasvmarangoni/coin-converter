@@ -107,24 +107,68 @@ describe('AppController (e2e)', () => {
     });
   });
 
-  it('(POST) Transaction of invalid none currency', async () => {
+  it('(POST) Transaction of invalid to currency', async () => {
     const { body, status } = await request(app.getHttpServer())
       .post('/converter/10/AMD')
       .set('Authorization', `Bearer ${token}`)
       .expect(400);
 
     expect(status).toBe(400);
-    expect(body.cause).toBe(`Valid currency 'to' converter is required`);
-    expect(body.code).toBe(400);
-    expect(body.error).toBe('BAD_REQUEST');
     expect(body.message).toBe(
-      `You need to provide a valid Valid 'currency ISO code' in to param.`,
+      `You provide an invalid value for the 'to' parameter`,
+    );
+    expect(body.statusCode).toBe(400);
+    expect(body.error).toBe(
+      `You need to provide a valid 'currency ISO code' in to param.`,
     );
     expect(body).toEqual({
-      cause: `Valid currency 'to' converter is required`,
-      code: 400,
-      error: 'BAD_REQUEST',
-      message: `You need to provide a valid Valid 'currency ISO code' in to param.`,
+      message: "You provide an invalid value for the 'to' parameter",
+      error: "You need to provide a valid 'currency ISO code' in to param.",
+      statusCode: 400,
+    });
+  });
+
+  it('(POST) Transaction of invalid amount', async () => {
+    const { body, status } = await request(app.getHttpServer())
+      .post('/converter/AMD/x/BRL')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(400);
+
+    expect(status).toBe(400);
+    expect(body.message).toBe(
+      `You provide an invalide 'amount' value to converter parameter`,
+    );
+    expect(body.statusCode).toBe(400);
+    expect(body.error).toBe(
+      `You must provide a valid 'amount' in numeric format and Number type for the conversion.`,
+    );
+    expect(body).toEqual({
+      message: "You provide an invalide 'amount' value to converter parameter",
+      error:
+        "You must provide a valid 'amount' in numeric format and Number type for the conversion.",
+      statusCode: 400,
+    });
+  });
+
+  it('(POST) Transaction of invalid from', async () => {
+    const { body, status } = await request(app.getHttpServer())
+      .post('/converter/AMD/10/ASDASD')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(400);
+
+    expect(status).toBe(400);
+    expect(body.message).toBe(
+      `You provide an invalid value for the 'from' parameter`,
+    );
+    expect(body.statusCode).toBe(400);
+    expect(body.error).toBe(
+      `You need to provide a valid 'currency ISO code' in to param or leave it undefined to use the default value.`,
+    );
+    expect(body).toEqual({
+      message: "You provide an invalid value for the 'from' parameter",
+      error:
+        "You need to provide a valid 'currency ISO code' in to param or leave it undefined to use the default value.",
+      statusCode: 400,
     });
   });
 

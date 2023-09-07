@@ -4,8 +4,9 @@ import { FindAllService } from '../find-all.service';
 
 describe('Find all transactions testining', () => {
   let findAllService: FindAllService;
-  const responseData = [
+  const database = [
     {
+      user: '64e92312c74a2b4749bd2cf3',
       from: 'EUR',
       amount: 10,
       to: ['USD'],
@@ -16,6 +17,18 @@ describe('Find all transactions testining', () => {
       id: expect.any(String),
     },
     {
+      user: '64e92312c74a2b4749bd2cf3',
+      from: 'EUR',
+      amount: 10,
+      to: ['USD'],
+      rates: {
+        USD: 1.3,
+      },
+      date: expect.any(Date),
+      id: expect.any(String),
+    },
+    {
+      user: 'other-id',
       from: 'EUR',
       amount: 10,
       to: ['USD'],
@@ -34,8 +47,13 @@ describe('Find all transactions testining', () => {
         {
           provide: getModelToken('TransactionModel'),
           useValue: {
-            find: jest.fn().mockResolvedValue(responseData),
-            exec: jest.fn().mockResolvedValue(responseData),
+            find: jest.fn().mockImplementation((query) => {
+              const user = query.user;
+              const filteredTransactions = database.filter(
+                (transaction) => transaction.user === user,
+              );
+              return Promise.resolve(filteredTransactions);
+            }),
           },
         },
       ],
@@ -49,7 +67,10 @@ describe('Find all transactions testining', () => {
   });
 
   it('Should call service execute and return all transactions', async () => {
-    const response = await findAllService.execute();
-    expect(response).toEqual(responseData);
+    const user = '64e92312c74a2b4749bd2cf3';
+    const response = await findAllService.execute(user);
+
+    expect(response[0]).toEqual(database[0]);
+    expect(response).toHaveLength(2);
   });
 });

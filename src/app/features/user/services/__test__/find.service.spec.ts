@@ -1,6 +1,6 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { TestingModule, Test } from '@nestjs/testing';
-import { FindUsersService, UserInfo } from '../find.service';
+import { FindUsersService, UserInfo } from '../../../../auth/find.service';
 
 describe('User create service', () => {
   let findUsersService: FindUsersService;

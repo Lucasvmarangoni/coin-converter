@@ -1,195 +1,92 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConverterService, ResponseData } from '../converter.service';
 import { ExchangeratesService } from '@src/client/exchangerates.service';
 import { getModelToken } from '@nestjs/mongoose';
-import { allRates } from './util/all-rates';
+import { BadRequestException } from '@nestjs/common';
+import { ConverterService } from '../converter.service';
 
-describe('Convert Service', () => {
-  let converterService: ConverterService;
-  const { USD, EUR, BRL, AMD } = allRates;
+describe('ConverterService', () => {
+  let service: ConverterService;
+  const mockExchangeratesService = { fetchConvert: jest.fn() };
+  const mockTransactionModel = { create: jest.fn() };
 
-  interface ResponseDataWithoutID extends Omit<ResponseData, 'id'> {
-    id?: string;
-  }
-  let responseData: ResponseDataWithoutID = {
-    from: 'EUR',
-    amount: 10,
-    to: ['USD'],
-    rates: { USD },
-    date: new Date('2023-07-21T21:45:25.272Z'),
-    id: '60f9b0b5b54b4b0015f1b0a0',
-  };
-  class ExchangeratesServiceMock {
-    async fetchConvert(base: string): Promise<any> {
-      return {
-        rates: allRates,
-      };
-    }
-  }
-  const createTestingModuleWithData = async (responseData?: ResponseData) => {
-    const moduleRef: TestingModule = await Test.createTestingModule({
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         ConverterService,
+        { provide: ExchangeratesService, useValue: mockExchangeratesService },
         {
           provide: getModelToken('TransactionModel'),
-          useValue: {
-            create: jest.fn().mockResolvedValue(responseData),
-          },
-        },
-        {
-          provide: ExchangeratesService,
-          useClass: ExchangeratesServiceMock,
-          useValue: {
-            fetchConvert: jest.fn().mockResolvedValue('EUR'),
-          },
+          useValue: mockTransactionModel,
         },
       ],
     }).compile();
 
-    converterService = moduleRef.get<ConverterService>(ConverterService);
-    return moduleRef;
-  };
+    service = module.get<ConverterService>(ConverterService);
+  });
 
-  it('Should return the converter value when a valid currency is provided', async () => {
-    const params = {
-      to: 'USD',
-      amount: 10,
-      from: 'EUR',
-      user: '60f9b0b5b54b4b0015f1b0a0',
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
+  it('should throw BadRequestException with correct message if "to" parameter is invalid', async () => {
+    const req = { to: '123', amount: 100, from: 'USD', user: 'testUser' };
+    await expect(service.execute(req)).rejects.toThrow(
+      new BadRequestException(
+        `You provide an invalid value for the 'to' parameter`,
+        {
+          cause: new Error(),
+          description: `You need to provide a valid 'currency ISO code' in to param.`,
+        },
+      ),
+    );
+  });
+
+  it('should throw BadRequestException with correct message if "from" parameter is invalid', async () => {
+    const req = { to: 'EUR', amount: 100, from: '123', user: 'testUser' };
+    await expect(service.execute(req)).rejects.toThrow(
+      new BadRequestException(
+        `You provide an invalid value for the 'from' parameter`,
+        {
+          cause: new Error(),
+          description: `You need to provide a valid 'currency ISO code' in to param or leave it undefined to use the default value.`,
+        },
+      ),
+    );
+  });
+
+  it('should throw BadRequestException with correct message if "amount" parameter is invalid', async () => {
+    const req = {
+      to: 'EUR',
+      amount: Number('abc'),
+      from: 'USD',
+      user: 'testUser',
     };
-    await createTestingModuleWithData(responseData);
-    const response = await converterService.execute(params);
+    await expect(service.execute(req)).rejects.toThrow(
+      new BadRequestException(
+        `You provide an invalide 'amount' value to converter parameter`,
+        {
+          cause: new Error(),
+          description: `You must provide a valid 'amount' in numeric format and Number type for the conversion.`,
+        },
+      ),
+    );
+  });
 
-    expect(converterService).toBeDefined();
-    expect(converterService).toBeInstanceOf(ConverterService);
-    expect(response).toEqual({
-      from: 'EUR',
-      amount: 10,
-      to: ['USD'],
-      rates: {
-        USD,
-      },
+  it('should return a transaction data if all parameters are valid', async () => {
+    const req = { to: 'EUR', amount: 100, from: 'USD', user: 'testUser' };
+    const mockApiResponse = { rates: { EUR: 0.85 } };
+    const expectedResponse = {
+      from: 'USD',
+      amount: 100,
+      to: ['EUR'],
+      rates: { EUR: 85 },
       date: expect.any(Date),
-      id: expect.any(String),
-    });
-  });
-
-  it('Should return the converter value when a valid currency is provided with an empty from parameter', async () => {
-    const params = {
-      to: 'USD',
-      amount: 10,
-      from: '',
-      user: '60f9b0b5b54b4b0015f1b0a0',
+      user: 'testUser',
     };
-    await createTestingModuleWithData(responseData);
-    const response = await converterService.execute(params);
+    mockExchangeratesService.fetchConvert.mockResolvedValue(mockApiResponse);
+    mockTransactionModel.create.mockResolvedValue(expectedResponse);
 
-    expect(converterService).toBeDefined();
-    expect(converterService).toBeInstanceOf(ConverterService);
-    expect(response).toEqual({
-      from: 'EUR',
-      amount: 10,
-      to: ['USD'],
-      rates: {
-        USD,
-      },
-      date: expect.any(Date),
-      id: expect.any(String),
-    });
-  });
-
-  it('Should return the converter value when a valid currencies is provided', async () => {
-    const params = {
-      to: 'USD,BRL,AMD',
-      amount: 10,
-      from: '',
-      user: '60f9b0b5b54b4b0015f1b0a0',
-    };
-    responseData = {
-      ...responseData,
-      to: ['USD', 'BRL', 'AMD'],
-      rates: { USD, BRL, AMD },
-    };
-    await createTestingModuleWithData(responseData);
-    const response = await converterService.execute(params);
-
-    expect(converterService).toBeDefined();
-    expect(converterService).toBeInstanceOf(ConverterService);
-    expect(response).toEqual({
-      from: 'EUR',
-      amount: 10,
-      to: ['USD', 'BRL', 'AMD'],
-      rates: {
-        USD,
-        BRL,
-        AMD,
-      },
-      date: expect.any(Date),
-      id: expect.any(String),
-    });
-  });
-
-  it('Should return the converter value when a valid currencies is provided with not default base currency', async () => {
-    const params = {
-      to: 'USD,AMD',
-      amount: 10,
-      from: 'BRL',
-      user: '60f9b0b5b54b4b0015f1b0a0',
-    };
-
-    responseData = {
-      ...responseData,
-      from: 'BRL',
-      to: ['USD', 'AMD'],
-      rates: { USD, AMD },
-    };
-    await createTestingModuleWithData(responseData);
-    const response = await converterService.execute(params);
-
-    expect(converterService).toBeDefined();
-    expect(converterService).toBeInstanceOf(ConverterService);
-    expect(response).toEqual({
-      from: 'BRL',
-      amount: 10,
-      to: ['USD', 'AMD'],
-      rates: {
-        USD,
-        AMD,
-      },
-      date: expect.any(Date),
-      id: expect.any(String),
-    });
-  });
-
-  it('Should return erro "Currency to converter is required" when not provide or invalid value in "to" param', async () => {
-    const params = {
-      to: '',
-      amount: 10,
-      from: 'BRL',
-      user: '60f9b0b5b54b4b0015f1b0a0',
-    };
-    await createTestingModuleWithData();
-
-    await expect(
-      new Promise((resolve, reject) => {
-        converterService.execute(params).then(resolve).catch(reject);
-      }),
-    ).rejects.toThrow(new Error(`Currency 'to' converter is required`));
-  });
-
-  it('Should return erro "Currency to converter is required" when not provide or invalid value in "amount" param', async () => {
-    const params = {
-      to: 'USD',
-      amount: Number('xx'),
-      from: 'BRL',
-      user: '60f9b0b5b54b4b0015f1b0a0',
-    };
-    await createTestingModuleWithData();
-
-    await expect(
-      new Promise((resolve, reject) => {
-        converterService.execute(params).then(resolve).catch(reject);
-      }),
-    ).rejects.toThrow(new Error(`'Amount' to converter is required`));
+    const result = await service.execute(req);
+    expect(result).toEqual(expectedResponse);
   });
 });
