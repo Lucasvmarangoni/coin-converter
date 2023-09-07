@@ -11,7 +11,7 @@ export class FindAllService {
     private transactionsModel: Model<Transaction>,
   ) {}
 
-  execute(): Promise<ResponseData[]> {
-    return this.transactionsModel.find();
+  execute(user: string): Promise<ResponseData[]> {
+    return this.transactionsModel.find({ user: user });
   }
 }

@@ -4,7 +4,7 @@ import { User } from '@src/app/models/user';
 import { Injectable } from '@nestjs/common';
 import { AuthService } from '@src/app/auth/auth.service';
 
-interface CreateUserRequest {
+export interface CreateUserRequest {
   name: string;
   username: string;
   email: string;

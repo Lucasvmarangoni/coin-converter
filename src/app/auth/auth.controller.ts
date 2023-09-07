@@ -30,10 +30,4 @@ export class AuthController {
       return res.status(401).json({ error: err.message });
     }
   }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Req() req) {
-    return req.user;
-  }
 }

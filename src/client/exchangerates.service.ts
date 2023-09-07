@@ -1,7 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { InternalError } from '@src/util/err/internal-error';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { AxiosResponse } from 'axios';
 
@@ -13,26 +12,39 @@ export interface ExchangeRatesResponse {
   readonly rates: { [currency: string]: number };
 }
 
-export class ExchangeratesResponseError extends InternalError {
+export class ExchangeratesResponseError extends HttpException {
   constructor(message: string) {
     const internalMessage =
       'Unexpected error returned by the Exchangerates service';
-    super(`${internalMessage}: ${message}`);
+    super(
+      {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: internalMessage,
+        error: message,
+      },
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
   }
 }
 
-export class ClientRequestError extends InternalError {
+export class ClientRequestError extends HttpException {
   constructor(message: string) {
     const internalMessage =
-      'Unexpected error when trying to communicate to Exchangerates';
-    super(`${internalMessage}: ${message}`);
+      'Unexpected error when trying to communicate with Exchangerates';
+    super(
+      {
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: `${internalMessage}: ${message}`,
+      },
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
   }
 }
 
-export class ExchangeratesInvalidInputError extends InternalError {
+export class ExchangeratesInvalidInputError extends HttpException {
   constructor(message: string) {
     const internalMessage = message;
-    super(`${internalMessage}`);
+    super(internalMessage, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
 export const sourceCurrenciesAccepted = ['EUR'];
@@ -80,6 +92,9 @@ export class ExchangeratesService {
         throw new ExchangeratesResponseError(
           `Error: ${JSON.stringify(response.data)} Code: ${response.status}`,
         );
+      }
+      if (err instanceof ExchangeratesResponseError) {
+        throw err;
       }
       throw new ClientRequestError(JSON.stringify(err));
     }
