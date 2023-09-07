@@ -1,9 +1,9 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { TestingModule, Test } from '@nestjs/testing';
-import { CreateUserService, UserProps } from '../create.service';
+import { CreateService, UserProps } from '../create.service';
 
 describe('User create service', () => {
-  let createUserService: CreateUserService;
+  let createService: CreateService;
 
   const responseData = {
     name: 'John Doe',
@@ -16,7 +16,7 @@ describe('User create service', () => {
   const createTestingModuleWithData = async (responseData?: UserProps) => {
     const moduleRef: TestingModule = await Test.createTestingModule({
       providers: [
-        CreateUserService,
+        CreateService,
         {
           provide: getModelToken('UserModel'),
           useValue: {
@@ -26,12 +26,12 @@ describe('User create service', () => {
       ],
     }).compile();
 
-    createUserService = moduleRef.get<CreateUserService>(CreateUserService);
+    createService = moduleRef.get<CreateService>(CreateService);
   };
 
   it('should be defined', async () => {
     await createTestingModuleWithData();
-    expect(createUserService).toBeDefined();
+    expect(createService).toBeDefined();
   });
 
   it('should call create with params and return user', async () => {
@@ -43,9 +43,9 @@ describe('User create service', () => {
       email: 'john@gmail.com',
       password: 'asHaf#as231',
     };
-    const response = await createUserService.execute(params);
+    const response = await createService.execute(params);
 
-    expect(createUserService).toBeInstanceOf(CreateUserService);
+    expect(createService).toBeInstanceOf(CreateService);
     expect(response).toEqual({
       user: {
         ...responseData,

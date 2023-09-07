@@ -1,16 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateUserService } from '../../services/create.service';
-import { DeleteAllUsersService } from '../../services/delete.service';
+import { CreateService } from '../../services/create.service';
+import { DeleteService } from '../../services/delete.service';
 import { FindUsersService } from '../../../../auth/find.service';
 import { UserController } from '../user.controller';
 import { getModelToken } from '@nestjs/mongoose';
 import { CreateUserRequest } from '../../services/create.service';
 import { Response } from 'express';
-import { LoginValidationMiddleware } from '@src/app/auth/middlewares/login-validation.middleware';
 import { CreateUserDto } from '../dto/user-dto';
 
 describe('User controller', () => {
-  let createUserService: CreateUserService,
+  let createService: CreateService,
     findUsersService: FindUsersService,
     controller: UserController;
 
@@ -18,9 +17,9 @@ describe('User controller', () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
       imports: [],
       providers: [
-        CreateUserService,
+        CreateService,
         FindUsersService,
-        DeleteAllUsersService,
+        DeleteService,
         {
           provide: getModelToken('UserModel'),
           useValue: {
@@ -32,7 +31,7 @@ describe('User controller', () => {
     }).compile();
 
     controller = moduleRef.get<UserController>(UserController);
-    createUserService = moduleRef.get<CreateUserService>(CreateUserService);
+    createService = moduleRef.get<CreateService>(CreateService);
     findUsersService = moduleRef.get<FindUsersService>(FindUsersService);
   };
 
@@ -40,7 +39,7 @@ describe('User controller', () => {
     await createTestingModuleWithData();
 
     expect(controller).toBeDefined();
-    expect(createUserService).toBeDefined();
+    expect(createService).toBeDefined();
     expect(findUsersService).toBeDefined();
   });
 
@@ -63,7 +62,7 @@ describe('User controller', () => {
         json: jest.fn(),
       };
 
-      jest.spyOn(createUserService, 'execute').mockResolvedValue({ user });
+      jest.spyOn(createService, 'execute').mockResolvedValue({ user });
       await controller.create(dto, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(201);
