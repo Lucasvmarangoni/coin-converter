@@ -7,18 +7,20 @@ import {
   ValidationPipe,
   Delete,
   UseGuards,
+  Get,
+  Req,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/user-dto';
-import { CreateUserService } from '../services/create.service';
-import { DeleteAllUsersService } from '../services/delete.service';
+import { CreateService } from '../services/create.service';
+import { DeleteService } from '../services/delete.service';
 import { Response } from 'express';
 import { JwtAuthGuard } from '@src/app/auth/guards/jwt-auth.guard';
 
 @Controller('user')
 export class UserController {
   constructor(
-    private createUserService: CreateUserService,
-    private deleteAllUsersService: DeleteAllUsersService,
+    private createService: CreateService,
+    private deleteService: DeleteService,
   ) {}
 
   @Post('')
@@ -27,19 +29,22 @@ export class UserController {
     @Body() body: CreateUserDto,
     @Res() res: Response,
   ): Promise<void> {
-    try {
-      const { user } = await this.createUserService.execute(body);
-
-      res.status(201).json(user);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
+    const { user } = await this.createService.execute(body);
+    res.status(201).json(user);
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@Req() req) {
+    return req.user;
+  }
+
   @Delete('delete')
-  deleteAll() {
-    this.deleteAllUsersService.execute();
-    return;
+  @UseGuards(JwtAuthGuard)
+  delete(@Req() req, @Res() res) {
+    this.deleteService.execute(req.user);
+    return res.status(200).json({
+      message: 'You account is deleted successful',
+    });
   }
 }

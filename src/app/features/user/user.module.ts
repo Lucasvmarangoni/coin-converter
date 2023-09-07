@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { CreateUserService } from './services/create.service';
-import { DeleteAllUsersService } from './services/delete.service';
+import { CreateService } from './services/create.service';
+import { DeleteService } from './services/delete.service';
 import { FindUsersService } from '../../auth/find.service';
 import { AppDatabaseModule } from '@src/app/models/database.module';
 import { UserController } from './controllers/user.controller';
 
 @Module({
   imports: [AppDatabaseModule],
-  providers: [CreateUserService, FindUsersService, DeleteAllUsersService],
+  providers: [CreateService, FindUsersService, DeleteService],
   controllers: [UserController],
   exports: [AppDatabaseModule, FindUsersService],
 })

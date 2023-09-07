@@ -69,7 +69,7 @@ describe('Authentication (e2e)', () => {
     //   });
     // });
 
-    describe('POST (/login) - login', () => {
+    describe('POST (/login) - login (authn)', () => {
       it('with email', async () => {
         const credentials = {
           email: 'john@gmail.com',

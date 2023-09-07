@@ -44,6 +44,6 @@ describe('User create service', () => {
     const response = await findUsersService.findOne(param);
 
     expect(findUsersService).toBeInstanceOf(FindUsersService);
-    // expect(response).toEqual(responseData);
+    expect(response).toEqual(responseData);
   });
 });

@@ -10,7 +10,6 @@ import { HttpExceptionFilter } from './httt-exception-filter';
   const port = configService.get<number>('port', 3333);
   app.useLogger(app.get(Logger));
   app.useGlobalInterceptors(new LoggerErrorInterceptor());
-
   app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(port);
 })();
