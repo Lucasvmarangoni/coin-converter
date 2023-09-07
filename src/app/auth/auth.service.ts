@@ -4,10 +4,7 @@ import { User } from '@src/app/models/user';
 import * as bcrypt from 'bcrypt';
 import { UserPayload } from './models/user-payload';
 import { UserToken } from './models/user-token';
-import {
-  FindUsersService,
-  UserInfo,
-} from '../features/user/services/find.service';
+import { FindUsersService, UserInfo } from './find.service';
 
 @Injectable()
 export class AuthService {
