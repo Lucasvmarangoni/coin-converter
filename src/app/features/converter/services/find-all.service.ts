@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ResponseData } from './converter.service';
 import { Transaction } from '@src/app/models/transactions';
+import { ResponseData } from '../models/converter-models';
 
 @Injectable()
 export class FindAllService {

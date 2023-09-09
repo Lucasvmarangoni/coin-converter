@@ -1,6 +1,7 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { TestingModule, Test } from '@nestjs/testing';
-import { CreateService, UserProps } from '../create.service';
+import { CreateService } from '../create.service';
+import { UserProps } from '../models/user-models';
 
 describe('User create service', () => {
   let createService: CreateService;

@@ -3,21 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from '@src/app/models/user';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { AuthService } from '@src/app/auth/auth.service';
-
-export interface CreateUserRequest {
-  name: string;
-  username: string;
-  email: string;
-  password: string;
-}
-
-export interface UserProps extends CreateUserRequest {
-  createdAt: Date;
-}
-
-export interface UserResponse {
-  user: Omit<UserProps, 'password'>;
-}
+import {
+  CreateUserRequest,
+  UserResponse,
+  UserProps,
+} from './models/user-models';
 
 @Injectable()
 export class CreateService {
