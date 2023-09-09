@@ -25,7 +25,7 @@ const env = {
         PORT: Joi.number().default(3333),
         DATABASE_URL: Joi.string().required(),
         API_URL: Joi.string().required(),
-        // API_KEY: Joi.string().required(),
+        API_KEY: Joi.string().required(),
         LOGGER_LEVEL: Joi.string().default('info'),
         LOGGER_ENABLED: Joi.boolean().default(true),
       }).unknown(),
