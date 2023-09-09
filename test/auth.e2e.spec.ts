@@ -1,4 +1,3 @@
-// auth.e2e-spec.ts
 import * as request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from './../src/app.module';
@@ -24,6 +23,7 @@ describe('Authentication (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.setGlobalPrefix('api');
     connection = app.get<Connection>(getConnectionToken());
     await clearDatabase(connection);
     await app.init();
@@ -38,7 +38,7 @@ describe('Authentication (e2e)', () => {
         password: '1aS@3$4%sF',
       };
       const response = await request(app.getHttpServer())
-        .post('/user')
+        .post('/api/user')
         .send(userData)
         .expect(201);
 
@@ -76,7 +76,7 @@ describe('Authentication (e2e)', () => {
           password: '1aS@3$4%sF',
         };
         const response = await request(app.getHttpServer())
-          .post('/login')
+          .post('/api/login')
           .send(credentials)
           .expect(200);
 
@@ -92,7 +92,7 @@ describe('Authentication (e2e)', () => {
           password: '1aS@3$4%sF',
         };
         const response = await request(app.getHttpServer())
-          .post('/login')
+          .post('/api/login')
           .send(credentials)
           .expect(200);
 

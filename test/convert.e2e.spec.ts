@@ -27,13 +27,19 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.setGlobalPrefix('api');
     await app.init();
 
     connection = app.get<Connection>(getConnectionToken());
     await clearDatabase(connection);
 
-    await request(app.getHttpServer()).post('/user').send(userData).expect(201);
-    token = await request(app.getHttpServer()).post('/login/').send(authnUser);
+    await request(app.getHttpServer())
+      .post('/api/user')
+      .send(userData)
+      .expect(201);
+    token = await request(app.getHttpServer())
+      .post('/api/login/')
+      .send(authnUser);
     token = token.body.access_token;
   });
 
@@ -44,7 +50,7 @@ describe('AppController (e2e)', () => {
 
   it('(POST) Transaction of converter currency from default base', async () => {
     const { body, status } = await request(app.getHttpServer())
-      .post('/converter/USD/10/EUR')
+      .post('/api/converter/USD/10/EUR')
       .set('Authorization', `Bearer ${token}`)
       .expect(201);
 
@@ -65,7 +71,7 @@ describe('AppController (e2e)', () => {
 
   it('(POST) Transaction of multiple currencies converter from default base', async () => {
     const { body, status } = await request(app.getHttpServer())
-      .post('/converter/USD,BRL/10/')
+      .post('/api/converter/USD,BRL/10/')
       .set('Authorization', `Bearer ${token}`)
       .expect(201);
 
@@ -87,7 +93,7 @@ describe('AppController (e2e)', () => {
 
   it('(POST) Transaction of multiple currencies converter from non-default base', async () => {
     const { body, status } = await request(app.getHttpServer())
-      .post('/converter/USD,BRL/10/AMD')
+      .post('/api/converter/USD,BRL/10/AMD')
       .set('Authorization', `Bearer ${token}`)
       .expect(201);
 
@@ -109,7 +115,7 @@ describe('AppController (e2e)', () => {
 
   it('(POST) Transaction of invalid to currency', async () => {
     const { body, status } = await request(app.getHttpServer())
-      .post('/converter/10/AMD')
+      .post('/api/converter/10/AMD')
       .set('Authorization', `Bearer ${token}`)
       .expect(400);
 
@@ -130,7 +136,7 @@ describe('AppController (e2e)', () => {
 
   it('(POST) Transaction of invalid amount', async () => {
     const { body, status } = await request(app.getHttpServer())
-      .post('/converter/AMD/x/BRL')
+      .post('/api/converter/AMD/x/BRL')
       .set('Authorization', `Bearer ${token}`)
       .expect(400);
 
@@ -152,7 +158,7 @@ describe('AppController (e2e)', () => {
 
   it('(POST) Transaction of invalid from', async () => {
     const { body, status } = await request(app.getHttpServer())
-      .post('/converter/AMD/10/ASDASD')
+      .post('/api/converter/AMD/10/ASDASD')
       .set('Authorization', `Bearer ${token}`)
       .expect(400);
 
@@ -174,7 +180,7 @@ describe('AppController (e2e)', () => {
 
   it('(POST) Transaction of invalid token', async () => {
     const { body, status } = await request(app.getHttpServer())
-      .post('/converter/10/AMD')
+      .post('/api/converter/10/AMD')
       .set('Authorization', `Bearer invalid_token`);
 
     // TODO: corrigir esse caso de teste quando eu implementar o tratamento das exceções.
