@@ -4,7 +4,10 @@ import { User } from '@src/app/models/user';
 import * as bcrypt from 'bcrypt';
 import { UserPayload } from './models/user-payload';
 import { UserToken } from './models/user-token';
-import { FindUsersService, UserInfo } from './find.service';
+import { FindUsersService } from './find.service';
+import { UserGoogleData } from './models/user-google-data';
+import { UserLocalData } from './models/user-local-data';
+import { UserInfo } from './models/user-info';
 
 @Injectable()
 export class AuthService {
@@ -13,19 +16,22 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(
-    usernameOrEmail: string,
-    pass: string,
-  ): Promise<Partial<User>> {
+  async googleValidateUser(userData: UserGoogleData) {
+    const { email, displayName } = userData;
+  }
+
+  async localValidateUser(userData: UserLocalData): Promise<Partial<User>> {
+    const { usernameOrEmail, password } = userData;
+
     if (!usernameOrEmail) {
       throw new Error('Username or email is required');
     }
-    if (!pass) {
+    if (!password) {
       throw new Error('Password is required');
     }
     const user: UserInfo = await this.findUsersService.findOne(usernameOrEmail);
 
-    const isPasswordValid = await bcrypt.compare(pass, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (isPasswordValid) {
       const { id, email, username, createdAt } = user;

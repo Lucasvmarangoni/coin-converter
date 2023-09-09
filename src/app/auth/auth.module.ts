@@ -9,6 +9,7 @@ import { AuthController } from './auth.controller';
 import { AppUserModule } from '../features/user/user.module';
 import { LoginValidationMiddleware } from './middlewares/login-validation.middleware';
 import { IdentifyFieldMiddleware } from './middlewares/identify-field.middleware';
+import { GoogleStrategy } from './strategies/google.strategy';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { IdentifyFieldMiddleware } from './middlewares/identify-field.middleware
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy],
 })
 export class AppAuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
