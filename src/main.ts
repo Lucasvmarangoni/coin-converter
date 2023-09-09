@@ -8,6 +8,7 @@ import { HttpExceptionFilter } from './httt-exception-filter';
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
   const configService = app.get(ConfigService);
   const port = configService.get<number>('port', 3333);
+  app.setGlobalPrefix('api');
   app.useLogger(app.get(Logger));
   app.useGlobalInterceptors(new LoggerErrorInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
