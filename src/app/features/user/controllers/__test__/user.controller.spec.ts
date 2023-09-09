@@ -4,9 +4,9 @@ import { DeleteService } from '../../services/delete.service';
 import { FindUsersService } from '../../../../auth/find.service';
 import { UserController } from '../user.controller';
 import { getModelToken } from '@nestjs/mongoose';
-import { CreateUserRequest } from '../../services/create.service';
 import { Response } from 'express';
 import { CreateUserDto } from '../dto/user-dto';
+import { CreateUserRequest } from '../../services/models/user-models';
 
 describe('User controller', () => {
   let createService: CreateService,
