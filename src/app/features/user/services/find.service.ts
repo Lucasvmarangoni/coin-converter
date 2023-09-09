@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '@src/app/models/user';
 import { Model } from 'mongoose';
-import { UserInfo } from './models/user-info';
+import { UserInfo } from '../../../auth/models/user-info';
 
 @Injectable()
 export class FindUsersService {

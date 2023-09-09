@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateService } from '../../services/create.service';
 import { DeleteService } from '../../services/delete.service';
-import { FindUsersService } from '../../../../auth/find.service';
+import { FindUsersService } from '../../services/find.service';
 import { UserController } from '../user.controller';
 import { getModelToken } from '@nestjs/mongoose';
 import { Response } from 'express';

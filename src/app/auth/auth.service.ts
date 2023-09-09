@@ -4,23 +4,38 @@ import { User } from '@src/app/models/user';
 import * as bcrypt from 'bcrypt';
 import { UserPayload } from './models/user-payload';
 import { UserToken } from './models/user-token';
-import { FindUsersService } from './find.service';
+import { FindUsersService } from '../features/user/services/find.service';
 import { UserGoogleData } from './models/user-google-data';
 import { UserLocalData } from './models/user-local-data';
 import { UserInfo } from './models/user-info';
+import { CreateForOAuth } from '../features/user/services/create.google.service';
+import { UserResponse } from './models/user-response';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly findUsersService: FindUsersService,
     private readonly jwtService: JwtService,
+    private readonly createForOAuth: CreateForOAuth,
   ) {}
 
-  async googleValidateUser(userData: UserGoogleData) {
-    const { email, displayName } = userData;
+  async googleValidateUser(
+    userData: UserGoogleData,
+  ): Promise<Omit<UserResponse, 'password'>> {
+    const user = await this.findUsersService.findOne(userData.email);
+    const { password, ...result } = user;
+    if (!user) {
+      await this.createForOAuth.execute(userData);
+      const user = await this.findUsersService.findOne(userData.email);
+      const { password, ...result } = user;
+      return { ...result };
+    }
+    return { ...result };
   }
 
-  async localValidateUser(userData: UserLocalData): Promise<Partial<User>> {
+  async localValidateUser(
+    userData: UserLocalData,
+  ): Promise<Omit<UserResponse, 'password'>> {
     const { usernameOrEmail, password } = userData;
 
     if (!usernameOrEmail) {

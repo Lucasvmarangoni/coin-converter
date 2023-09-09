@@ -1,4 +1,4 @@
 export interface UserGoogleData {
   email: string;
-  displayName: string;
+  name: string;
 }
