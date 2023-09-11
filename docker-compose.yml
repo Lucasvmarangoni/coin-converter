@@ -10,16 +10,6 @@ services:
     volumes:
       - mongodb:/data
 
-  redis:
-    container_name: cache
-    image: redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis:/data
-
-# volumes:
-#   mongodb:
-#     driver: local
-#   redis:
-#     driver: local
+volumes:
+  mongodb:
+    driver: local

@@ -6,14 +6,16 @@ import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    CacheModule.registerAsync({
+    CacheModule.register({
       isGlobal: true,
       useFactory: (configService: ConfigService) => ({
         store: redisStore,
-        host: 'localhost',
+        host: configService.get('cache').host,
         port: configService.get('cache').port,
         ttl: configService.get('cache').ttl,
         max: configService.get('cache').max,
+        password: configService.get('cache').password,
+        no_ready_check: true,
       }),
       inject: [ConfigService],
     }),

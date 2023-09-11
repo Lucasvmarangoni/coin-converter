@@ -16,8 +16,10 @@ export default () => ({
     expiresIn: Number(process.env.AUTH_TOKEN_EXPIRES_IN),
   },
   cache: {
+    host: process.env.CACHE_HOST,
     port: process.env.CACHE_PORT,
     ttl: process.env.CACHE_TTL,
     max: process.env.CACHE_MAX,
+    password: process.env.CACHE_PASSWORD,
   },
 });
