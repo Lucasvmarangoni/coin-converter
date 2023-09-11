@@ -1,4 +1,4 @@
-name: Currency Converter workflow
+name: Currency Converter 1.0.0 workflow
 
 on:
   push:
