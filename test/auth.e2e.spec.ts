@@ -29,6 +29,11 @@ describe('Authentication (e2e)', () => {
     await app.init();
   });
 
+  afterAll(async () => {
+    await clearDatabase(connection);
+    await app.close();
+  });
+
   describe('POST (/user) - create user', () => {
     it('should returned 201 created', async () => {
       const userData = {
@@ -50,24 +55,26 @@ describe('Authentication (e2e)', () => {
       });
     });
 
-    // it('/user (POST) - username already exists', async () => {
-    //   const userData = {
-    //     name: 'John Doe',
-    //     username: 'johnuser',
-    //     email: 'john@gmail.com',
-    //     password: '1aS@3$4%sF',
-    //   };
-    //   const response = await request(app.getHttpServer())
-    //     .post('/user')
-    //     .send(userData)
-    //     .expect(400);
+    it('/user (POST) - username already exists', async () => {
+      const userData = {
+        name: 'John Doe',
+        username: 'johnuser',
+        email: 'john@gmail.com',
+        password: '1aS@3$4%sF',
+      };
+      const response = await request(app.getHttpServer())
+        .post('/api/user')
+        .send(userData)
+        .expect(400);
 
-    //   expect(response.body).toEqual({
-    //     statusCode: 400,
-    //     message: 'Username already exists',
-    //     error: 'Bad Request',
-    //   });
-    // });
+      expect(response.body).toEqual({
+        message: 'mongoose validation error',
+        error:
+          // eslint-disable-next-line prettier/prettier
+          'E11000 duplicate key error collection: currency-converter-teste.usermodels index: username_1 dup key: { username: \"johnuser\" }',
+        statusCode: 400,
+      });
+    });
 
     describe('POST (/login) - login (authn)', () => {
       it('with email', async () => {
@@ -101,11 +108,6 @@ describe('Authentication (e2e)', () => {
           access_token: expect.any(String),
         });
       });
-    });
-
-    afterAll(async () => {
-      await clearDatabase(connection);
-      await app.close();
     });
   });
 });
