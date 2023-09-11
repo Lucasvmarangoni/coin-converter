@@ -72,7 +72,15 @@ Sujeito à alterações. <br>
             <tr>             
                  <td colspan="1">Mongoose</th>   
               </tr>
+            <tr>    
             <tr>             
+                 <td colspan="1">Redis</th>   
+              </tr>
+            <tr>            
+            <tr>             
+                 <td colspan="1">Redis Cloud</th>   
+              </tr>
+            <tr>   
                  <td colspan="1">Axios</th>   
             </tr>  
             <tr>             
