@@ -109,7 +109,8 @@ Sujeito à alterações. <br>
 
 <a href="" title="">![version](https://img.shields.io/badge/version-1.0.0-white)</a> 
 <br>
-API Rest para conversão de moedas consumindo a API Exchangerates desenvolvida com Node.js Typescript e Nest.js utilizando DDD, TDD. Possui testes unitários, integração e e2e, exceções, logs, cache, doc. OpenAPI, autenticação.
+     Conversor de moedas consumindo a API Exchangerates. Desenvolvido com Nest, e arquitetura de monólito modular. Possui
+     testes unitários, integração e e2e, tratamento de exceções, logs, rate limit, cache, doc. openAPI e authn (local e OAuth).
 <br>
 
 
