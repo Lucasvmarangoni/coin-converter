@@ -32,10 +32,15 @@ export class CreateService {
     try {
       await this.userModel.create(user);
     } catch (err) {
-      throw new BadRequestException('mongoose validation error', {
-        cause: new Error(),
-        description: err.message,
-      });
+      throw new BadRequestException(
+        err.message.includes('duplicate key')
+          ? 'This user already exist. Try with other username or email.'
+          : err.message,
+        {
+          cause: new Error(),
+          description: 'mongoose validation error',
+        },
+      );
     }
     const response: UserProps = {
       ...user,
