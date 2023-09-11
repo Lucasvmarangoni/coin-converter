@@ -68,10 +68,8 @@ describe('Authentication (e2e)', () => {
         .expect(400);
 
       expect(response.body).toEqual({
-        message: 'mongoose validation error',
-        error:
-          // eslint-disable-next-line prettier/prettier
-          'E11000 duplicate key error collection: currency-converter-teste.usermodels index: username_1 dup key: { username: \"johnuser\" }',
+        message: 'This user already exist. Try with other username or email.',
+        error: 'mongoose validation error',
         statusCode: 400,
       });
     });
