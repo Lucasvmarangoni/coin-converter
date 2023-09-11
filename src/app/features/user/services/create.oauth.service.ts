@@ -2,12 +2,13 @@ import { User } from '@src/app/models/user';
 import { CreateService } from './create.service';
 import * as crypto from 'crypto';
 import { FindUsersService } from './find.service';
-import { UnprocessableEntityException } from '@nestjs/common';
+import { Inject, UnprocessableEntityException } from '@nestjs/common';
 import { UserResponse } from './models/user-models';
 
 export class CreateForOAuth {
   constructor(
     private readonly createUserService: CreateService,
+    @Inject(FindUsersService)
     private readonly findUsersService: FindUsersService,
   ) {}
 
@@ -49,7 +50,6 @@ export class CreateForOAuth {
     const numbers = '0123456789';
     const characters = uppercaseChars + lowercaseChars + numbers;
     const { name, email } = userData;
-    let username: string;
     const maxAttempts = 1000;
     let attempts = 0;
 
@@ -61,14 +61,13 @@ export class CreateForOAuth {
         usernameArray.push(characters.charAt(randomIndex));
       }
 
-      username = name + usernameArray.join('');
+      const username = name.split(' ').join('') + '-' + usernameArray.join('');
 
-      const user = await this.findUsersService.findOne(email);
+      const user = await this.findUsersService.findOne(username);
 
-      if (!user || user.username !== username) {
-        return username; // Nome de usuário é único
+      if (!user) {
+        return username;
       }
-
       attempts++;
     }
 

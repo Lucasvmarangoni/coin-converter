@@ -15,4 +15,9 @@ export default () => ({
     key: process.env.JWT_SECRET,
     expiresIn: Number(process.env.AUTH_TOKEN_EXPIRES_IN),
   },
+  cache: {
+    port: process.env.CACHE_PORT,
+    ttl: process.env.CACHE_TTL,
+    max: process.env.CACHE_MAX,
+  },
 });

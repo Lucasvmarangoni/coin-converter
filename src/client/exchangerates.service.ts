@@ -1,8 +1,13 @@
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { AxiosResponse } from 'axios';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { ExchangeratesInvalidInputError } from './err/invalid-input-error';
+import { ClientRequestError } from './err/client-request-error';
+import { ExchangeratesResponseError } from './err/response-error';
 
 export interface ExchangeRatesResponse {
   readonly success: boolean;
@@ -12,41 +17,6 @@ export interface ExchangeRatesResponse {
   readonly rates: { [currency: string]: number };
 }
 
-export class ExchangeratesResponseError extends HttpException {
-  constructor(message: string) {
-    const internalMessage =
-      'Unexpected error returned by the Exchangerates service';
-    super(
-      {
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: internalMessage,
-        error: message,
-      },
-      HttpStatus.INTERNAL_SERVER_ERROR,
-    );
-  }
-}
-
-export class ClientRequestError extends HttpException {
-  constructor(message: string) {
-    const internalMessage =
-      'Unexpected error when trying to communicate with Exchangerates';
-    super(
-      {
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: `${internalMessage}: ${message}`,
-      },
-      HttpStatus.INTERNAL_SERVER_ERROR,
-    );
-  }
-}
-
-export class ExchangeratesInvalidInputError extends HttpException {
-  constructor(message: string) {
-    const internalMessage = message;
-    super(internalMessage, HttpStatus.INTERNAL_SERVER_ERROR);
-  }
-}
 export const sourceCurrenciesAccepted = ['EUR'];
 export const acceptedCurrencies = `At the moment, it is only possible to perform conversions based on the ${sourceCurrenciesAccepted.join(
   ',',
@@ -62,6 +32,7 @@ export class ExchangeratesService {
   constructor(
     private request: HttpService,
     private configService: ConfigService<ApiConfig, true>,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   public async fetchConvert(
@@ -85,6 +56,14 @@ export class ExchangeratesService {
       if (!this.isValidResponse(response)) {
         throw new ExchangeratesResponseError('Invalid response');
       }
+
+      const cachedExchangeRates =
+        await this.cacheManager.get<ExchangeRatesResponse>('ExchangeRates');
+
+      if (cachedExchangeRates) {
+        return cachedExchangeRates;
+      }
+      await this.cacheManager.set('ExchangeRates', response, 6000);
       return response;
     } catch (err) {
       const { response } = err;

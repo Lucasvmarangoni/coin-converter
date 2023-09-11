@@ -28,6 +28,9 @@ const env = {
         API_KEY: Joi.string().required(),
         LOGGER_LEVEL: Joi.string().default('info'),
         LOGGER_ENABLED: Joi.boolean().default(true),
+        CACHE_PORT: Joi.number().default(6379),
+        CACHE_TTL: Joi.number().default(60000),
+        CACHE_MAX: Joi.number().default(50),
       }).unknown(),
       validationOptions: {
         allowUnknown: false,

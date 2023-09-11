@@ -1,7 +1,7 @@
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '@src/app/models/user';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { AuthService } from '@src/app/auth/auth.service';
 import {
   CreateUserRequest,
@@ -34,7 +34,7 @@ export class CreateService {
     } catch (err) {
       throw new BadRequestException('mongoose validation error', {
         cause: new Error(),
-        description: 'Some provided value to be invalid',
+        description: err.message,
       });
     }
     const response: UserProps = {

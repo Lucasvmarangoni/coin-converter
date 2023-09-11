@@ -4,7 +4,7 @@ import { DeleteService } from './services/delete.service';
 import { FindUsersService } from './services/find.service';
 import { AppDatabaseModule } from '@src/app/models/database.module';
 import { UserController } from './controllers/user.controller';
-import { CreateForOAuth } from './services/create.google.service';
+import { CreateForOAuth } from './services/create.oauth.service';
 
 @Module({
   imports: [AppDatabaseModule],

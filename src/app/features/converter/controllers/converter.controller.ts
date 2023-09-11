@@ -6,13 +6,16 @@ import {
   Req,
   Res,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ConverterService } from '../services/converter.service';
 import { FindAllService } from '../services/find-all.service';
 import { JwtAuthGuard } from '@src/app/auth/guards/jwt-auth.guard';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @Controller('converter')
+@UseInterceptors(CacheInterceptor)
 export class ConverterController {
   constructor(
     private converterService: ConverterService,
@@ -20,6 +23,7 @@ export class ConverterController {
   ) {}
 
   @UseGuards(JwtAuthGuard)
+  @CacheTTL(360 * 100)
   @Post(':to/:amount/:from?')
   public async converter(
     @Param() params: { to: string; amount: number; from?: string },
@@ -38,6 +42,7 @@ export class ConverterController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @CacheTTL(360 * 100)
   @Get('all')
   public async listAll(@Req() req, @Res() res): Promise<void> {
     const listAll = await this.findAllService.execute(req.user.id);

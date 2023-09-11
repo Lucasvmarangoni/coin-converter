@@ -8,7 +8,7 @@ import { FindUsersService } from '../features/user/services/find.service';
 import { UserGoogleData } from './models/user-google-data';
 import { UserLocalData } from './models/user-local-data';
 import { UserInfo } from './models/user-info';
-import { CreateForOAuth } from '../features/user/services/create.google.service';
+import { CreateForOAuth } from '../features/user/services/create.oauth.service';
 import { UserResponse } from './models/user-response';
 
 @Injectable()
