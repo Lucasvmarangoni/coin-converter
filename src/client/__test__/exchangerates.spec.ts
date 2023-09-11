@@ -3,17 +3,25 @@ import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { of } from 'rxjs';
 import { AxiosResponse } from 'axios';
+import { ClientRequestError } from '../err/client-request-error';
+import { ExchangeratesResponseError } from '../err/response-error';
 import {
   ExchangeratesService,
-  ExchangeratesResponseError,
   ExchangeRatesResponse,
-  ClientRequestError,
 } from '../exchangerates.service';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 describe('ExchangeratesService', () => {
   let service: ExchangeratesService;
   let httpService: HttpService;
   let configService: ConfigService;
+
+  const mockCacheManager = {
+    set: jest.fn(),
+    get: jest.fn(),
+    del: jest.fn(),
+    reset: jest.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -30,6 +38,10 @@ describe('ExchangeratesService', () => {
           useValue: {
             get: jest.fn(),
           },
+        },
+        {
+          provide: CACHE_MANAGER,
+          useValue: mockCacheManager,
         },
       ],
     }).compile();

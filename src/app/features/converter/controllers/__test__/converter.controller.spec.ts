@@ -7,6 +7,7 @@ import { FindAllService } from '../../services/find-all.service';
 import { ExchangeratesService } from '@src/client/exchangerates.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { ResponseData } from '../../models/converter-models';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 describe('converter controller', () => {
   let controller: ConverterController,
@@ -29,6 +30,13 @@ describe('converter controller', () => {
     user: '1',
   };
 
+  const mockCacheManager = {
+    set: jest.fn(),
+    get: jest.fn(),
+    del: jest.fn(),
+    reset: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
@@ -40,6 +48,10 @@ describe('converter controller', () => {
         {
           provide: getModelToken('TransactionModel'),
           useValue: mockTransactionModel,
+        },
+        {
+          provide: CACHE_MANAGER,
+          useValue: mockCacheManager,
         },
       ],
     }).compile();
