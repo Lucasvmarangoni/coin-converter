@@ -9,6 +9,8 @@ import { CreateUserDto } from '../dto/user-dto';
 import { CreateUserRequest } from '../../services/models/user-models';
 import { ProfileService } from '../../services/profile.service';
 import { UserInfo } from '@src/app/auth/models/user-info';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { mockCacheManager } from '@src/util/mock-cache';
 
 describe('User controller', () => {
   let createService: CreateService,
@@ -29,6 +31,10 @@ describe('User controller', () => {
           useValue: {
             create: jest.fn().mockResolvedValue(userData),
           },
+        },
+        {
+          provide: CACHE_MANAGER,
+          useValue: mockCacheManager,
         },
       ],
       controllers: [UserController],
