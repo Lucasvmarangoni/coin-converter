@@ -14,7 +14,7 @@ export class DeleteService {
   ) {}
 
   async execute(user: User): Promise<void> {
-    this.cacheManager.del(`user:${user.id}`);
+    this.cacheManager.del(`user:${user.email}`);
     await this.userModel.deleteOne({ id: user.id });
   }
 }
