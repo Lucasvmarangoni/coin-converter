@@ -52,8 +52,8 @@ export class ConverterService {
         description: 'Some provided value to be invalid',
       });
     }
-    const cached = this.cacheManager.get(`transactions:${req.user}`);
-    this.cacheManager.set(`transactions:${req.user}`, { ...cached, response });
+    // const cached = this.cacheManager.get(`transactions:${req.user}`);
+    // this.cacheManager.set(`transactions:${req.user}`, { ...cached, response });
     return response;
   }
 

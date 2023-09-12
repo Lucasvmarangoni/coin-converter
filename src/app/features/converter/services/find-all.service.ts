@@ -15,12 +15,12 @@ export class FindAllService {
   ) {}
 
   async execute(userId: string): Promise<ResponseData[]> {
-    const cached = await this.cacheManager.get<ResponseData[]>(
-      `transactions:${userId}`,
-    );
-    if (cached) {
-      return cached;
-    }
+    // const cached = await this.cacheManager.get<ResponseData[]>(
+    //   `transactions:${userId}`,
+    // );
+    // if (cached) {
+    //   return cached;
+    // }
     const find = await this.transactionsModel.find({ user: userId });
     await this.cacheManager.set(`transactions:${userId}`, find);
     return find;
