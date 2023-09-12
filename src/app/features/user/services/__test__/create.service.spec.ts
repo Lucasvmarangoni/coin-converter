@@ -1,58 +1,82 @@
+import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
-import { TestingModule, Test } from '@nestjs/testing';
+import { User } from '@src/app/models/user';
+import { BadRequestException } from '@nestjs/common';
+import { Model } from 'mongoose';
 import { CreateService } from '../create.service';
-import { UserProps } from '../models/user-models';
+import { HashPassword } from '../util/hash-password';
 
-describe('User create service', () => {
-  let createService: CreateService;
+describe('CreateService', () => {
+  let service: CreateService;
+  let userModel: Model<User>;
+  let hashPassword: HashPassword;
 
-  const responseData = {
-    name: 'John Doe',
-    username: 'JohnDoe',
-    email: 'john@gmail.com',
-    password: 'asHaf#as231',
-    createdAt: new Date(),
-  };
-
-  const createTestingModuleWithData = async (responseData?: UserProps) => {
-    const moduleRef: TestingModule = await Test.createTestingModule({
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         CreateService,
         {
           provide: getModelToken('UserModel'),
           useValue: {
-            create: jest.fn().mockResolvedValue(responseData),
+            create: jest.fn(),
           },
         },
+        HashPassword,
       ],
     }).compile();
 
-    createService = moduleRef.get<CreateService>(CreateService);
-  };
-
-  it('should be defined', async () => {
-    await createTestingModuleWithData();
-    expect(createService).toBeDefined();
+    service = module.get<CreateService>(CreateService);
+    userModel = module.get<Model<User>>(getModelToken('UserModel'));
+    hashPassword = module.get<HashPassword>(HashPassword);
   });
 
-  it('should call create with params and return user', async () => {
-    await createTestingModuleWithData(responseData);
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
 
-    const params = {
-      name: 'John Doe',
-      username: 'JohnDoe',
-      email: 'john@gmail.com',
-      password: 'asHaf#as231',
+  it('should create a user', async () => {
+    const req = {
+      email: 'test@test.com',
+      name: 'Test User',
+      username: 'testuser',
+      password: 'password',
     };
-    const response = await createService.execute(params);
 
-    expect(createService).toBeInstanceOf(CreateService);
-    expect(response).toEqual({
-      user: {
-        ...responseData,
-        password: undefined,
-        createdAt: expect.any(Date),
-      },
+    jest.spyOn(hashPassword, 'hash').mockResolvedValue('hashedpassword');
+    jest.spyOn(userModel, 'create').mockResolvedValue(req as any);
+
+    const result = await service.execute(req);
+
+    expect(result).toEqual({
+      user: { ...req, password: undefined, createdAt: expect.any(Date) },
+    });
+    expect(hashPassword.hash).toHaveBeenCalledWith(req.password);
+    expect(userModel.create).toHaveBeenCalledWith({
+      ...req,
+      password: 'hashedpassword',
+      createdAt: expect.any(Date),
+    });
+  });
+
+  it('should throw BadRequestException when user already exists', async () => {
+    const req = {
+      email: 'test@test.com',
+      name: 'Test User',
+      username: 'testuser',
+      password: 'password',
+    };
+
+    jest.spyOn(hashPassword, 'hash').mockResolvedValue('hashedpassword');
+    jest
+      .spyOn(userModel, 'create')
+      .mockRejectedValue({ message: 'duplicate key' });
+
+    await expect(service.execute(req)).rejects.toThrow(BadRequestException);
+    expect(hashPassword.hash).toHaveBeenCalledWith(req.password);
+    expect(userModel.create).toHaveBeenCalledWith({
+      ...req,
+      password: 'hashedpassword',
+      createdAt: expect.any(Date),
     });
   });
 });
