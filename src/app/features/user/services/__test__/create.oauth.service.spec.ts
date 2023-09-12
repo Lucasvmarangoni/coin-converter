@@ -74,6 +74,7 @@ describe('CreateForOAuth', () => {
 
   it('should throw an error when unable to generate a unique username', async () => {
     const findData: UserInfo = {
+      name: 'teste',
       username: expect.any(String),
       email: 'test@example.com',
       password: 'jbGHUI7869675%',
