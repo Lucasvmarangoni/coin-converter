@@ -2,31 +2,31 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '@src/app/models/user';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { AuthService } from '@src/app/auth/auth.service';
 import {
   CreateUserRequest,
   UserResponse,
   UserProps,
 } from './models/user-models';
+import { HashPassword } from './util/hash-password';
 
 @Injectable()
 export class CreateService {
   constructor(
     @InjectModel('UserModel')
     private userModel: Model<User>,
+    private readonly hashPassword: HashPassword,
   ) {}
 
   async execute(req: CreateUserRequest): Promise<UserResponse> {
-    const { email, name, username } = req;
-    let { password } = req;
+    const { email, name, username, password } = req;
 
-    password = await this.hashPassword(password);
+    const hashPassword = await this.hashPassword.hash(password);
 
     const user: UserProps = {
       name,
       username,
       email,
-      password,
+      password: hashPassword,
       createdAt: new Date(),
     };
     try {
@@ -47,13 +47,5 @@ export class CreateService {
       password: undefined,
     };
     return { user: response };
-  }
-
-  private async hashPassword(password: string): Promise<string> {
-    if (password) {
-      const hashedPassword = await AuthService.hashPassword(password);
-      password = hashedPassword;
-    }
-    return password;
   }
 }
