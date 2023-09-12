@@ -14,15 +14,16 @@ export class ProfileService {
     const user = await this.findUsersService.findOne(email);
     const { name, createdAt } = user;
 
+    const response = {
+      user: {
+        name,
+        username,
+        email,
+        createdAt,
+      },
+    };
     if (id === user.id && username === user.username) {
-      return {
-        user: {
-          name,
-          username,
-          email,
-          createdAt,
-        },
-      };
+      return response;
     }
     throw new UnauthorizedException('Unauthorized', {
       cause: new Error(),
