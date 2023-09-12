@@ -9,6 +9,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { ResponseData } from '../../models/converter-models';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { mockCacheManager } from '@src/util/mock-cache';
+import { DeleteService } from '../../services/delete.service';
 
 describe('converter controller', () => {
   let controller: ConverterController,
@@ -38,6 +39,7 @@ describe('converter controller', () => {
       providers: [
         ConverterService,
         FindAllService,
+        DeleteService,
         { provide: ExchangeratesService, useValue: mockExchangeratesService },
         {
           provide: getModelToken('TransactionModel'),

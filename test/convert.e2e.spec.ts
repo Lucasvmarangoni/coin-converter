@@ -183,8 +183,6 @@ describe('AppController (e2e)', () => {
       .post('/api/converter/10/AMD')
       .set('Authorization', `Bearer invalid_token`);
 
-    // TODO: corrigir esse caso de teste quando eu implementar o tratamento das exceções.
-
     expect(body.statusCode).toBe(401);
     expect(body.error).toBe('Unauthorized');
     expect(body.message).toBe(`Unauthorized`);
@@ -192,6 +190,17 @@ describe('AppController (e2e)', () => {
       message: 'Unauthorized',
       error: 'Unauthorized',
       statusCode: 401,
+    });
+  });
+
+  it('(DELETE) Deleted all transactions', async () => {
+    const { body, status } = await request(app.getHttpServer())
+      .delete('/api/converter/delete')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
+
+    expect(body).toEqual({
+      message: 'You transactions are deleted successful',
     });
   });
 });
