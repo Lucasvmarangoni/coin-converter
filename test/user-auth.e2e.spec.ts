@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../src/app.module';
 import { INestApplication } from '@nestjs/common';
 import { getConnectionToken } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
@@ -8,6 +8,15 @@ import { clearDatabase } from './util/clear-database';
 
 describe('Authentication (e2e)', () => {
   let app: INestApplication, connection: Connection;
+
+  const validUserData = {
+    name: 'John Doe',
+    username: 'johnuser',
+    email: 'john@gmail.com',
+    password: '1aS@3$4%sF',
+  };
+
+  let token: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -36,15 +45,9 @@ describe('Authentication (e2e)', () => {
 
   describe('POST (/user) - create user', () => {
     it('should returned 201 created', async () => {
-      const userData = {
-        name: 'John Doe',
-        username: 'johnuser',
-        email: 'john@gmail.com',
-        password: '1aS@3$4%sF',
-      };
       const response = await request(app.getHttpServer())
         .post('/api/user')
-        .send(userData)
+        .send(validUserData)
         .expect(201);
 
       expect(response.body).toEqual({
@@ -101,10 +104,30 @@ describe('Authentication (e2e)', () => {
           .send(credentials)
           .expect(200);
 
+        token = response.body.access_token;
+
         expect(response.body).toHaveProperty('access_token');
         expect(response.body).toEqual({
           access_token: expect.any(String),
         });
+      });
+    });
+  });
+
+  describe('/user/profile (GET) - user profile', () => {
+    it('When a get user profile ', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/api/user/profile')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+
+      expect(response.body).toEqual({
+        user: {
+          name: 'John Doe',
+          username: 'johnuser',
+          email: 'john@gmail.com',
+          createdAt: expect.any(String),
+        },
       });
     });
   });
