@@ -3,6 +3,8 @@ import { getModelToken } from '@nestjs/mongoose';
 import { User } from '@src/app/models/user';
 import { Model } from 'mongoose';
 import { DeleteService } from '../delete.service';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { mockCacheManager } from '@src/util/mock-cache';
 
 describe('DeleteService', () => {
   let service: DeleteService;
@@ -17,6 +19,10 @@ describe('DeleteService', () => {
           useValue: {
             deleteOne: jest.fn().mockResolvedValue(true),
           },
+        },
+        {
+          provide: CACHE_MANAGER,
+          useValue: mockCacheManager,
         },
       ],
     }).compile();

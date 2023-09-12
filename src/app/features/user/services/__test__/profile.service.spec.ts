@@ -26,10 +26,6 @@ describe('ProfileService', () => {
             findOne: jest.fn(),
           },
         },
-        {
-          provide: CACHE_MANAGER,
-          useValue: mockCacheManager,
-        },
       ],
     }).compile();
 

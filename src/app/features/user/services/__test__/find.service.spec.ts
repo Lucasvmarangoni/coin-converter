@@ -2,6 +2,8 @@ import { getModelToken } from '@nestjs/mongoose';
 import { TestingModule, Test } from '@nestjs/testing';
 import { FindUsersService } from '../find.service';
 import { UserInfo } from '@src/app/auth/models/user-info';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { mockCacheManager } from '@src/util/mock-cache';
 
 describe('User create service', () => {
   let findUsersService: FindUsersService;
@@ -26,6 +28,10 @@ describe('User create service', () => {
           useValue: {
             findOne: jest.fn().mockResolvedValue(responseData),
           },
+        },
+        {
+          provide: CACHE_MANAGER,
+          useValue: mockCacheManager,
         },
       ],
     }).compile();
