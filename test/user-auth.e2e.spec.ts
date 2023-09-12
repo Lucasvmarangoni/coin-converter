@@ -131,4 +131,17 @@ describe('Authentication (e2e)', () => {
       });
     });
   });
+
+  describe('/user/delete (DELETE) - delete user', () => {
+    it('When a get user profile ', async () => {
+      const response = await request(app.getHttpServer())
+        .delete('/api/user/delete')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+
+      expect(response.body).toEqual({
+        message: 'You account is deleted successful',
+      });
+    });
+  });
 });
