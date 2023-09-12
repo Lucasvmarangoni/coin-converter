@@ -10,18 +10,12 @@ import {
   ExchangeRatesResponse,
 } from '../exchangerates.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { mockCacheManager } from '@src/util/mock-cache';
 
 describe('ExchangeratesService', () => {
   let service: ExchangeratesService;
   let httpService: HttpService;
   let configService: ConfigService;
-
-  const mockCacheManager = {
-    set: jest.fn(),
-    get: jest.fn(),
-    del: jest.fn(),
-    reset: jest.fn(),
-  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

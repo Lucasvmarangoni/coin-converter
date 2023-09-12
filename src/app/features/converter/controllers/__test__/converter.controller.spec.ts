@@ -8,6 +8,7 @@ import { ExchangeratesService } from '@src/client/exchangerates.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { ResponseData } from '../../models/converter-models';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { mockCacheManager } from '@src/util/mock-cache';
 
 describe('converter controller', () => {
   let controller: ConverterController,
@@ -28,13 +29,6 @@ describe('converter controller', () => {
     date: new Date('2023-07-21T21:45:25.272Z'),
     id: '60f9b0b5b54b4b0015f1b0a0',
     user: '1',
-  };
-
-  const mockCacheManager = {
-    set: jest.fn(),
-    get: jest.fn(),
-    del: jest.fn(),
-    reset: jest.fn(),
   };
 
   beforeEach(async () => {
