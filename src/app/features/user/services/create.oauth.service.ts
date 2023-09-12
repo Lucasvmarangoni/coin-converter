@@ -1,7 +1,7 @@
 import { User } from '@src/app/models/user';
 import { CreateService } from './create.service';
 import * as crypto from 'crypto';
-import { FindUsersService } from './find.service';
+import { FindUsersService } from '../util/find-user';
 import { Inject, UnprocessableEntityException } from '@nestjs/common';
 import { UserResponse } from './models/user-models';
 

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UnauthorizedException } from '@nestjs/common';
-import { FindUsersService } from '../find.service';
+import { FindUsersService } from '../../util/find-user';
 import { ProfileService } from '../profile.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';

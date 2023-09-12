@@ -3,7 +3,7 @@ import { User } from '@src/app/models/user';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { CreateForOAuth } from '../create.oauth.service';
 import { CreateService } from '../create.service';
-import { FindUsersService } from '../find.service';
+import { FindUsersService } from '../../util/find-user';
 import { UserResponse } from '../models/user-models';
 import { UserInfo } from '@src/app/auth/models/user-info';
 import { getModelToken } from '@nestjs/mongoose';

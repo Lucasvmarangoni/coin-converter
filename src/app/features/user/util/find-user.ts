@@ -18,18 +18,21 @@ export class FindUsersService {
     let user: UserInfo;
 
     if (this.isEmail(usernameOrEmail)) {
+      const cached = await this.cacheManager.get<UserInfo>(
+        `user:${usernameOrEmail}`,
+      );
+      if (cached) {
+        return cached;
+      }
+      const ttl5days = 432 * 1000000;
       user = await this.userModel.findOne<UserInfo>({ email: usernameOrEmail });
+      this.cacheManager.set(`user:${usernameOrEmail}`, user, ttl5days);
     } else {
       user = await this.userModel.findOne<UserInfo>({
         username: usernameOrEmail,
       });
     }
-    const cached = await this.cacheManager.get<UserInfo>(`user:${user.id}`);
-    if (cached) {
-      return cached;
-    }
-    const ttl5days = 432 * 1000000;
-    this.cacheManager.set(`user:${user.id}`, user, ttl5days);
+
     return user;
   }
 
