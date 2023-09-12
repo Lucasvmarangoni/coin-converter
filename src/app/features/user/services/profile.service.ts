@@ -1,13 +1,11 @@
-import { Inject, UnauthorizedException } from '@nestjs/common';
-import { FindUsersService } from './find.service';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { FindUsersService } from '../util/find-user';
 import { UserResponse } from './models/user-models';
 import { ReqProps } from './models/req-props';
 
+@Injectable()
 export class ProfileService {
-  constructor(
-    @Inject(FindUsersService)
-    private readonly findUsersService: FindUsersService,
-  ) {}
+  constructor(private readonly findUsersService: FindUsersService) {}
 
   async execute(req: ReqProps): Promise<UserResponse> {
     const { id, username, email } = req;

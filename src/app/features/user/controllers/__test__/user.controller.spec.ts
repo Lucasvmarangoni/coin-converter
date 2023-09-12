@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateService } from '../../services/create.service';
 import { DeleteService } from '../../services/delete.service';
-import { FindUsersService } from '../../services/find.service';
+import { FindUsersService } from '../../util/find-user';
 import { UserController } from '../user.controller';
 import { getModelToken } from '@nestjs/mongoose';
 import { Response } from 'express';
@@ -11,6 +11,8 @@ import { ProfileService } from '../../services/profile.service';
 import { UserInfo } from '@src/app/auth/models/user-info';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { mockCacheManager } from '@src/util/mock-cache';
+import { UpdateService } from '../../services/update.service';
+import { HashPassword } from '../../services/util/hash-password';
 
 describe('User controller', () => {
   let createService: CreateService,
@@ -26,6 +28,8 @@ describe('User controller', () => {
         FindUsersService,
         DeleteService,
         ProfileService,
+        UpdateService,
+        HashPassword,
         {
           provide: getModelToken('UserModel'),
           useValue: {
