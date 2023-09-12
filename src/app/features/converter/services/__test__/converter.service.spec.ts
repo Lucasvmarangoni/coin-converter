@@ -3,6 +3,8 @@ import { ExchangeratesService } from '@src/client/exchangerates.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { BadRequestException } from '@nestjs/common';
 import { ConverterService } from '../converter.service';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { mockCacheManager } from '@src/util/mock-cache';
 
 describe('ConverterService', () => {
   let service: ConverterService;
@@ -17,6 +19,10 @@ describe('ConverterService', () => {
         {
           provide: getModelToken('TransactionModel'),
           useValue: mockTransactionModel,
+        },
+        {
+          provide: CACHE_MANAGER,
+          useValue: mockCacheManager,
         },
       ],
     }).compile();

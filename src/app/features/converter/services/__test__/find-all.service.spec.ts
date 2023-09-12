@@ -1,6 +1,8 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { FindAllService } from '../find-all.service';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { mockCacheManager } from '@src/util/mock-cache';
 
 describe('Find all transactions testining', () => {
   let findAllService: FindAllService;
@@ -55,6 +57,10 @@ describe('Find all transactions testining', () => {
               return Promise.resolve(filteredTransactions);
             }),
           },
+        },
+        {
+          provide: CACHE_MANAGER,
+          useValue: mockCacheManager,
         },
       ],
     }).compile();
