@@ -132,6 +132,30 @@ describe('Authentication (e2e)', () => {
     });
   });
 
+  describe('POST (/user/update) - create user', () => {
+    it('should returned 200', async () => {
+      const updateUser = {
+        ...validUserData,
+        username: 'updateJohn',
+      };
+
+      const response = await request(app.getHttpServer())
+        .put('/api/user/update')
+        .set('Authorization', `Bearer ${token}`)
+        .send(updateUser)
+        .expect(200);
+
+      expect(response.body).toEqual({
+        user: {
+          name: 'John Doe',
+          username: 'updateJohn',
+          email: 'john@gmail.com',
+          createdAt: expect.any(String),
+        },
+      });
+    });
+  });
+
   describe('/user/delete (DELETE) - delete user', () => {
     it('When a get user profile ', async () => {
       const response = await request(app.getHttpServer())
