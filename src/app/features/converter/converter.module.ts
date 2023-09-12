@@ -4,10 +4,11 @@ import { ConverterService } from './services/converter.service';
 import { FindAllService } from './services/find-all.service';
 import { AppDatabaseModule } from '@src/app/models/database.module';
 import { ConverterController } from './controllers/converter.controller';
+import { DeleteService } from './services/delete.service';
 
 @Module({
   imports: [AppClientModule, AppDatabaseModule],
-  providers: [FindAllService, ConverterService],
+  providers: [FindAllService, ConverterService, DeleteService],
   controllers: [ConverterController],
   exports: [FindAllService, ConverterService],
 })

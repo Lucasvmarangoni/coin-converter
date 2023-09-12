@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -13,6 +14,7 @@ import { ConverterService } from '../services/converter.service';
 import { FindAllService } from '../services/find-all.service';
 import { JwtAuthGuard } from '@src/app/auth/guards/jwt-auth.guard';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import { DeleteService } from '../services/delete.service';
 
 @Controller('converter')
 @UseInterceptors(CacheInterceptor)
@@ -20,6 +22,7 @@ export class ConverterController {
   constructor(
     private converterService: ConverterService,
     private findAllService: FindAllService,
+    private deleteAllService: DeleteService,
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -47,5 +50,14 @@ export class ConverterController {
   public async listAll(@Req() req, @Res() res): Promise<void> {
     const listAll = await this.findAllService.execute(req.user.id);
     res.status(200).json(listAll);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('delete')
+  async delete(@Req() req, @Res() res) {
+    await this.deleteAllService.execute(req.user);
+    return res.status(200).json({
+      message: 'You transactions are deleted successful',
+    });
   }
 }
