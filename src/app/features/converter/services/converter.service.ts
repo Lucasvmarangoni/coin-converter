@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { Transaction } from '@src/app/models/transactions';
 import { ExchangeratesService } from '@src/client/exchangerates.service';
 import { InjectModel } from '@nestjs/mongoose';
@@ -10,6 +10,8 @@ import {
   ConvertProps,
   Rate,
 } from '../models/converter-models';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class ConverterService {
@@ -19,6 +21,7 @@ export class ConverterService {
     @InjectModel('TransactionModel')
     private transactionsModel: Model<Transaction>,
     private exchangeratesService: ExchangeratesService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async execute(req: RequestData): Promise<ResponseData> {
@@ -49,6 +52,8 @@ export class ConverterService {
         description: 'Some provided value to be invalid',
       });
     }
+    const cached = this.cacheManager.get(`transactions:${req.user}`);
+    this.cacheManager.set(`transactions:${req.user}`, { ...cached, response });
     return response;
   }
 
