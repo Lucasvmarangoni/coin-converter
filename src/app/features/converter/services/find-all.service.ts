@@ -14,14 +14,14 @@ export class FindAllService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async execute(email: string): Promise<ResponseData[]> {
+  async execute(id: string, email: string): Promise<ResponseData[]> {
     const cached = await this.cacheManager.get<ResponseData[]>(
       `transactions:${email}`,
     );
     if (cached) {
       return cached;
     }
-    const find = await this.transactionsModel.find({ user: email });
+    const find = await this.transactionsModel.find({ user: id });
     await this.cacheManager.set(`transactions:${email}`, find);
     return find;
   }
