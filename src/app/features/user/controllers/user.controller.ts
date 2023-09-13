@@ -18,6 +18,8 @@ import { Response } from 'express';
 import { JwtAuthGuard } from '@src/app/auth/guards/jwt-auth.guard';
 import { ProfileService } from '../services/profile.service';
 import { UpdateService } from '../services/update.service';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
+import { ttlOneHour } from '@src/modules/util/ttl-rate-limiter';
 
 @Controller('user')
 export class UserController {
@@ -28,8 +30,9 @@ export class UserController {
     private updateService: UpdateService,
   ) {}
 
-  @Post('')
+  @SkipThrottle({ default: true })
   @UsePipes(ValidationPipe)
+  @Post('')
   public async create(
     @Body() body: CreateUserDto,
     @Res() res: Response,
@@ -39,6 +42,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Throttle({ medium: { limit: 20, ttl: ttlOneHour } })
   @Get('profile')
   async getProfile(@Req() req, @Res() res) {
     const profile = await this.profileService.execute(req.user);
@@ -46,6 +50,8 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Throttle({ short: { limit: 3, ttl: ttlOneHour } })
+  @UsePipes(ValidationPipe)
   @Put('update')
   async update(@Body() body: CreateUserDto, @Req() req, @Res() res) {
     const updateUser = await this.updateService.execute(req.user.email, body);
@@ -53,6 +59,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @SkipThrottle({ default: true })
   @Delete('delete')
   async delete(@Req() req, @Res() res) {
     await this.deleteService.execute(req.user);

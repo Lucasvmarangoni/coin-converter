@@ -15,8 +15,11 @@ import { FindAllService } from '../services/find-all.service';
 import { JwtAuthGuard } from '@src/app/auth/guards/jwt-auth.guard';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import { DeleteService } from '../services/delete.service';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
+import { ttlOneHour } from '@src/modules/util/ttl-rate-limiter';
 
 // @UseInterceptors(CacheInterceptor)
+@SkipThrottle()
 @Controller('converter')
 export class ConverterController {
   constructor(
@@ -26,6 +29,7 @@ export class ConverterController {
   ) {}
 
   @UseGuards(JwtAuthGuard)
+  @Throttle({ long: { limit: 30, ttl: ttlOneHour * 2 } })
   @CacheTTL(360 * 100)
   @Post(':to/:amount/:from?')
   public async converter(
@@ -45,14 +49,17 @@ export class ConverterController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Throttle({ short: { limit: 5, ttl: ttlOneHour } })
   @CacheTTL(360 * 100)
   @Get('all')
   public async listAll(@Req() req, @Res() res): Promise<void> {
-    const listAll = await this.findAllService.execute(req.user.email);
+    const { id, email } = req.user;
+    const listAll = await this.findAllService.execute(id, email);
     res.status(200).json(listAll);
   }
 
   @UseGuards(JwtAuthGuard)
+  @SkipThrottle({ default: true })
   @Delete('delete')
   async delete(@Req() req, @Res() res) {
     await this.deleteAllService.execute(req.user);

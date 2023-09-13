@@ -9,6 +9,7 @@ import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './app/auth/guards/jwt-auth.guard';
 import { HttpExceptionFilter } from './err/httt-exception-filter';
 import { AppCacheModule } from './modules/cache.module';
+import { AppThrottlerModule } from './modules/throttler.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AppCacheModule } from './modules/cache.module';
     AppMongooseModule,
     AppAuthModule,
     AppCacheModule,
+    AppThrottlerModule,
   ],
   providers: [
     // {
