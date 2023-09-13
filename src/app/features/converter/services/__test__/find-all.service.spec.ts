@@ -73,8 +73,8 @@ describe('Find all transactions testining', () => {
   });
 
   it('Should call service execute and return all transactions', async () => {
-    const user = '64e92312c74a2b4749bd2cf3';
-    const response = await findAllService.execute(user);
+    const user = { id: '64e92312c74a2b4749bd2cf3', email: 'john@gmail.com' };
+    const response = await findAllService.execute(user.id, user.email);
 
     expect(response[0]).toEqual(database[0]);
     expect(response).toHaveLength(2);

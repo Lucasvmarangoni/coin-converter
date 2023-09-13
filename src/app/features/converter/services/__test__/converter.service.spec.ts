@@ -35,7 +35,12 @@ describe('ConverterService', () => {
   });
 
   it('should throw BadRequestException with correct message if "to" parameter is invalid', async () => {
-    const req = { to: '123', amount: 100, from: 'USD', user: 'testUser' };
+    const req = {
+      to: '123',
+      amount: 100,
+      from: 'USD',
+      user: { id: '64feae0ad15e0c0e55a0b228', email: 'john@gmail.com' },
+    };
     await expect(service.execute(req)).rejects.toThrow(
       new BadRequestException(
         `You provide an invalid value for the 'to' parameter`,
@@ -48,7 +53,12 @@ describe('ConverterService', () => {
   });
 
   it('should throw BadRequestException with correct message if "from" parameter is invalid', async () => {
-    const req = { to: 'EUR', amount: 100, from: '123', user: 'testUser' };
+    const req = {
+      to: 'EUR',
+      amount: 100,
+      from: '123',
+      user: { id: '64feae0ad15e0c0e55a0b228', email: 'john@gmail.com' },
+    };
     await expect(service.execute(req)).rejects.toThrow(
       new BadRequestException(
         `You provide an invalid value for the 'from' parameter`,
@@ -65,7 +75,10 @@ describe('ConverterService', () => {
       to: 'EUR',
       amount: Number('abc'),
       from: 'USD',
-      user: 'testUser',
+      user: {
+        id: '64feae0ad15e0c0e55a0b228',
+        email: 'john@gmail.com',
+      },
     };
     await expect(service.execute(req)).rejects.toThrow(
       new BadRequestException(
@@ -79,7 +92,12 @@ describe('ConverterService', () => {
   });
 
   it('should return a transaction data if all parameters are valid', async () => {
-    const req = { to: 'EUR', amount: 100, from: 'USD', user: 'testUser' };
+    const req = {
+      to: 'EUR',
+      amount: 100,
+      from: 'USD',
+      user: { id: '64feae0ad15e0c0e55a0b228', email: 'john@gmail.com' },
+    };
     const mockApiResponse = { rates: { EUR: 0.85 } };
     const expectedResponse = {
       from: 'USD',
