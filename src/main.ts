@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
-import { HttpExceptionFilter } from './httt-exception-filter';
+import { HttpExceptionFilter } from './err/httt-exception-filter';
 
 (async (): Promise<void> => {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
