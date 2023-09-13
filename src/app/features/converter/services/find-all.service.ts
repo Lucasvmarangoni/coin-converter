@@ -14,15 +14,15 @@ export class FindAllService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async execute(userId: string): Promise<ResponseData[]> {
-    // const cached = await this.cacheManager.get<ResponseData[]>(
-    //   `transactions:${userId}`,
-    // );
-    // if (cached) {
-    //   return cached;
-    // }
-    const find = await this.transactionsModel.find({ user: userId });
-    await this.cacheManager.set(`transactions:${userId}`, find);
+  async execute(email: string): Promise<ResponseData[]> {
+    const cached = await this.cacheManager.get<ResponseData[]>(
+      `transactions:${email}`,
+    );
+    if (cached) {
+      return cached;
+    }
+    const find = await this.transactionsModel.find({ user: email });
+    await this.cacheManager.set(`transactions:${email}`, find);
     return find;
   }
 }

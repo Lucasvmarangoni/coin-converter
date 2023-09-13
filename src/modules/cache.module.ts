@@ -8,23 +8,23 @@ import { ConfigService } from '@nestjs/config';
   imports: [
     CacheModule.register({
       isGlobal: true,
-      useFactory: (configService: ConfigService) => ({
+      useFactory: async (configService: ConfigService) => ({
         store: redisStore,
-        host: configService.get('cache').host,
-        port: configService.get('cache').port,
-        ttl: configService.get('cache').ttl,
-        max: configService.get('cache').max,
-        password: configService.get('cache').password,
-        no_ready_check: true,
+        host: await configService.get('cache').host,
+        port: await configService.get('cache').port,
+        ttl: await configService.get('cache').ttl,
+        max: await configService.get('cache').max,
+        password: await configService.get('cache').password,
+        // no_ready_check: true,
       }),
       inject: [ConfigService],
     }),
   ],
-  providers: [
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
-    },
-  ],
+  // providers: [
+  //   {
+  //     provide: APP_INTERCEPTOR,
+  //     useClass: CacheInterceptor,
+  //   },
+  // ],
 })
 export class AppCacheModule {}

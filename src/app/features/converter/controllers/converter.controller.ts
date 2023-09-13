@@ -16,8 +16,8 @@ import { JwtAuthGuard } from '@src/app/auth/guards/jwt-auth.guard';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import { DeleteService } from '../services/delete.service';
 
+// @UseInterceptors(CacheInterceptor)
 @Controller('converter')
-@UseInterceptors(CacheInterceptor)
 export class ConverterController {
   constructor(
     private converterService: ConverterService,
@@ -39,7 +39,7 @@ export class ConverterController {
       to,
       amount: +amount,
       from,
-      user: req.user.id,
+      user: req.user,
     });
     res.status(201).json(converter);
   }
@@ -48,7 +48,7 @@ export class ConverterController {
   @CacheTTL(360 * 100)
   @Get('all')
   public async listAll(@Req() req, @Res() res): Promise<void> {
-    const listAll = await this.findAllService.execute(req.user.id);
+    const listAll = await this.findAllService.execute(req.user.email);
     res.status(200).json(listAll);
   }
 

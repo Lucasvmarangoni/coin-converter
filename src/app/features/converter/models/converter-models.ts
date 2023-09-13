@@ -15,5 +15,8 @@ export interface RequestData {
   to: string;
   amount: number;
   from: string;
-  user: string;
+  user: {
+    id: string;
+    email: string;
+  };
 }

@@ -40,7 +40,7 @@ export class ConverterService {
       to: to.split(',').map((item) => item.trim()),
       rates: converterAmount.rates,
       date: new Date(),
-      user: req.user,
+      user: req.user.id,
     };
 
     let response: ResponseData;
@@ -52,8 +52,11 @@ export class ConverterService {
         description: 'Some provided value to be invalid',
       });
     }
-    // const cached = this.cacheManager.get(`transactions:${req.user}`);
-    // this.cacheManager.set(`transactions:${req.user}`, { ...cached, response });
+    const cached = this.cacheManager.get(`transactions:${req.user.email}`);
+    this.cacheManager.set(`transactions:${req.user.email}`, {
+      ...cached,
+      response,
+    });
     return response;
   }
 
