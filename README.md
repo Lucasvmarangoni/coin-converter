@@ -91,10 +91,7 @@ Sujeito à alterações. <br>
             </tr>  
             <tr>             
                  <td colspan="1">Supertest</th>  
-            </tr>  
-            <tr>             
-                 <td colspan="1">Nock</th>   
-            </tr>
+            </tr>              
             <tr>             
                  <td colspan="1">Bcrypt</th>   
             </tr>  
