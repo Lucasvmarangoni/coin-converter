@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 import { HttpExceptionFilter } from './err/httt-exception-filter';
+import { swagger } from './docs/swagger';
 
 (async (): Promise<void> => {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
@@ -12,5 +13,6 @@ import { HttpExceptionFilter } from './err/httt-exception-filter';
   app.useLogger(app.get(Logger));
   app.useGlobalInterceptors(new LoggerErrorInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
+  swagger(app);
   await app.listen(port);
 })();

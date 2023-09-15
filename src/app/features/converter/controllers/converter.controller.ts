@@ -17,8 +17,20 @@ import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import { DeleteService } from '../services/delete.service';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { ttlOneHour } from '@src/modules/util/ttl-rate-limiter';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+import {
+  schemaOkDeletedResponse,
+  schemaOkResponse,
+} from '@src/docs/schemas/converter-schemas';
 
 // @UseInterceptors(CacheInterceptor)
+@ApiTags('converter')
 @SkipThrottle()
 @Controller('converter')
 export class ConverterController {
@@ -28,6 +40,26 @@ export class ConverterController {
     private deleteAllService: DeleteService,
   ) {}
 
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Create one transaction to converter currency.',
+    description: `
+    \n This route is used to currency converter.
+
+    \n It's possible converter 'from' any currencies and 'to' many and any currencies. As long as they are valid currency acronyms (ISO).
+
+    \n When provided with multiple 'to' currencies, they should be separated by commas. For example: USD, BRL, 100, AMD.
+
+    Authenticated\nThis route applies an authentication middleware to control the access to the route.It allows access only to authenticated user.
+
+    Rate-limiter\nThis route applies a rate limiter middleware to control the number of requests allowed in a certain period of time.
+    It allows a maximum of 30 requests every 2 hour.
+    `,
+  })
+  @ApiCreatedResponse({
+    description: 'The converter has been successfully created.',
+    schema: schemaOkResponse,
+  })
   @UseGuards(JwtAuthGuard)
   @Throttle({ long: { limit: 30, ttl: ttlOneHour * 2 } })
   @CacheTTL(360 * 100)
@@ -48,6 +80,25 @@ export class ConverterController {
     res.status(201).json(converter);
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Query all transaction.',
+    description: `
+    \n This route is used to query all transaction.    
+
+    Authenticated\nThis route applies an authentication middleware to control the access to the route.It allows access only to authenticated user.
+
+    Rate-limiter\nThis route applies a rate limiter middleware to control the number of requests allowed in a certain period of time.
+    It allows a maximum of 5 requests every 1 hour.
+    `,
+  })
+  @ApiOkResponse({
+    description: 'The transaction has been successfully query.',
+    schema: {
+      type: 'array',
+      items: schemaOkResponse,
+    },
+  })
   @UseGuards(JwtAuthGuard)
   @Throttle({ short: { limit: 5, ttl: ttlOneHour } })
   @CacheTTL(360 * 100)
@@ -58,6 +109,22 @@ export class ConverterController {
     res.status(200).json(listAll);
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Query all transaction.',
+    description: `
+    \n This route is used to query all transaction.    
+
+    Authenticated\nThis route applies an authentication middleware to control the access to the route.It allows access only to authenticated user.
+
+    Rate-limiter\nThis route applies a rate limiter middleware to control the number of requests allowed in a certain period of time.
+    It allows a maximum of 5 requests every 1 hour.
+    `,
+  })
+  @ApiOkResponse({
+    description: 'Delete all transaction.',
+    schema: schemaOkDeletedResponse,
+  })
   @UseGuards(JwtAuthGuard)
   @SkipThrottle({ default: true })
   @Delete('delete')

@@ -21,13 +21,21 @@
     "paths": {
       "@src/*": [
         "./src/*"
-      ],     
+      ],
       "@config/*": [
         "./config/*"
-      ],     
+      ],
       "@test/*": [
         "./test/*"
       ]
-    }    
+    },
+    "plugins": [
+      {
+        "name": "@nestjs/swagger",
+        "options": {
+          "classValidatorShim": true          
+        }
+      }
+    ]
   }
 }

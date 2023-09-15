@@ -5,7 +5,7 @@ import { FindUsersService } from '../../util/find-user';
 import { UserController } from '../user.controller';
 import { getModelToken } from '@nestjs/mongoose';
 import { Response } from 'express';
-import { CreateUserDto } from '../dto/user-dto';
+import { CreateUpdateUserDto } from '../dto/create-dto';
 import { CreateUserRequest } from '../../services/models/user-models';
 import { ProfileService } from '../../services/profile.service';
 import { UserInfo } from '@src/app/auth/models/user-info';
@@ -61,7 +61,7 @@ describe('User controller', () => {
 
   describe('create user', () => {
     it('sould return 201 created and a created user when valid data is provided', async () => {
-      const dto: CreateUserDto = {
+      const dto: CreateUpdateUserDto = {
         name: 'john doe',
         username: 'john',
         email: 'john@gmail.com',
