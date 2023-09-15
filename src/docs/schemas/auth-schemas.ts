@@ -7,3 +7,43 @@ export const authnResponse = {
     },
   },
 };
+// auth-schemas.ts
+
+export const BodyAuthSchema = {
+  properties: {
+    authnWithEmail: {
+      type: 'object',
+      properties: {
+        email: {
+          type: 'string',
+          example: 'john@mail.com',
+          description: 'The user email.',
+          require: true,
+        },
+        password: {
+          type: 'string',
+          example: 'hbGHss6$65',
+          description: 'The user password.',
+          require: true,
+        },
+      },
+    },
+    authnWithUsername: {
+      type: 'object',
+      properties: {
+        username: {
+          type: 'string',
+          example: 'john123',
+          description: 'The user username.',
+          require: true,
+        },
+        password: {
+          type: 'string',
+          example: 'hbGHss6$65',
+          description: 'The user password.',
+          require: true,
+        },
+      },
+    },
+  },
+};
