@@ -43,6 +43,6 @@ describe('DeleteService', () => {
     };
     await service.execute(user as User);
 
-    expect(userModel.deleteOne).toHaveBeenCalledWith({ id: user.id });
+    expect(userModel.deleteOne).toHaveBeenCalledWith({ email: user.email });
   });
 });
