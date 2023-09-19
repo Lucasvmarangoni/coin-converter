@@ -7,7 +7,6 @@ export const authnResponse = {
     },
   },
 };
-// auth-schemas.ts
 
 export const BodyAuthSchema = {
   properties: {

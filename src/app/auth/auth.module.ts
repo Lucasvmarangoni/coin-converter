@@ -26,7 +26,16 @@ import { GoogleStrategy } from './strategies/google.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    GoogleStrategy,
+    // {
+    //   provide: APP_GUARD,
+    //   useValue: JwtAuthGuard,
+    // },
+  ],
 })
 export class AppAuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

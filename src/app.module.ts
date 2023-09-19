@@ -5,8 +5,7 @@ import { AppLoggerModule } from './modules/logger.module';
 import { AppMongooseModule } from './modules/mongoose.module';
 import { AppAuthModule } from './app/auth/auth.module';
 import { AppFeaturesModule } from './app/features/features.module';
-import { APP_FILTER, APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './app/auth/guards/jwt-auth.guard';
+import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './err/httt-exception-filter';
 import { AppCacheModule } from './modules/cache.module';
 import { AppThrottlerModule } from './modules/throttler.module';
@@ -23,10 +22,6 @@ import { AppThrottlerModule } from './modules/throttler.module';
     AppThrottlerModule,
   ],
   providers: [
-    // {
-    //   provide: APP_GUARD,
-    //   useValue: JwtAuthGuard,
-    // },
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
