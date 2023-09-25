@@ -36,6 +36,9 @@ jobs:
         run: |
           echo "API_KEY=${{ secrets.API_KEY }}" >> .env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "EXPRESS_SESSION_SECRET=${{ secrets.EXPRESS_SESSION_SECRET }}" >> .env
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
+          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
           cat .env      
 
       - name: Use Node.js ${{ matrix.node-version }}
