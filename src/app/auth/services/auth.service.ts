@@ -23,7 +23,6 @@ export class AuthService {
     userData: UserGoogleData,
   ): Promise<Omit<UserResponse, 'password'>> {
     const user = await this.findUsersService.findOne(userData.email);
-    console.log(1);
 
     if (user) {
       user.password = undefined;
