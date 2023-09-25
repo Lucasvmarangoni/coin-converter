@@ -14,7 +14,7 @@ import * as passport from 'passport';
   app.setGlobalPrefix('api');
   app.use(
     session({
-      secret: 'asiodasjoddjdoasddasoidjasiodasdjaiodd',
+      secret: configService.get<{ secret: string }>('auth').secret,
       saveUninitialized: false,
       resave: false,
       cookie: {

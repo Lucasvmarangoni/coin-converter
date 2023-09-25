@@ -35,6 +35,7 @@ const env = {
         CACHE_PASSWORD: Joi.string(),
         GOOGLE_CLIENT_ID: Joi.string().required(),
         GOOGLE_CLIENT_SECRET: Joi.string().required(),
+        EXPRESS_SESSION_SECRET: Joi.string().required(),
       }).unknown(),
       validationOptions: {
         allowUnknown: false,

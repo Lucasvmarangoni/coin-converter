@@ -14,6 +14,7 @@ export default () => ({
   auth: {
     key: process.env.JWT_SECRET,
     expiresIn: Number(process.env.AUTH_TOKEN_EXPIRES_IN),
+    secret: process.env.EXPRESS_SESSION_SECRET,
     google: {
       id: process.env.GOOGLE_CLIENT_ID,
       secret: process.env.GOOGLE_CLIENT_SECRET,
