@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy } from 'passport-google-oauth20';
 import { AuthService } from '../services/auth.service';
 import { ConfigService } from '@nestjs/config';
+import { AuthGoogle } from '../models/auth-google';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
@@ -11,20 +12,28 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     private configService: ConfigService<string, true>,
   ) {
     super({
-      clientID: 'test-cliend-id',
-      clientSecret: 'test-secret',
+      clientID: configService.get<AuthGoogle>('auth', {
+        infer: true,
+      }).google.id,
+      clientSecret: configService.get<AuthGoogle>('auth', {
+        infer: true,
+      }).google.secret,
       callbackURL: `http://localhost:${configService.get<string>('port', {
         infer: true,
-      })}/api/auth/google/redirect`,
+      })}/api/google/redirect`,
       scope: ['profile', 'email'],
     });
   }
 
   async validate(accessToken: string, refreshToken: string, profile: Profile) {
+    console.log(4);
+
     const user = await this.authService.googleValidateUser({
       email: profile.emails[0].value,
       name: profile.displayName,
     });
+    console.log('user: ' + user);
+
     return user;
   }
 }

@@ -23,14 +23,16 @@ export class AuthService {
     userData: UserGoogleData,
   ): Promise<Omit<UserResponse, 'password'>> {
     const user = await this.findUsersService.findOne(userData.email);
-    const { password, ...result } = user;
-    if (!user) {
-      await this.createForOAuth.execute(userData);
-      const user = await this.findUsersService.findOne(userData.email);
-      const { password, ...result } = user;
-      return { ...result };
+    console.log(1);
+
+    if (user) {
+      user.password = undefined;
+      return user;
     }
-    return { ...result };
+    await this.createForOAuth.execute(userData);
+    const newUser = await this.findUsersService.findOne(userData.email);
+    newUser.password = undefined;
+    return newUser;
   }
 
   async localValidateUser(

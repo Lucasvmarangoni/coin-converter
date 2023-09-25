@@ -1,25 +1,22 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
-import { AuthService } from '../services/auth.service';
 import { User } from '@src/app/models/user';
 import { FindUsersService } from '../../features/user/util/find-user';
 
 @Injectable()
 export class SessionSerializer extends PassportSerializer {
-  constructor(
-    @Inject('AUTH_SERVICE') private readonly authService: AuthService,
-    private findUsersService: FindUsersService,
-  ) {
+  constructor(private findUsersService: FindUsersService) {
     super();
   }
 
   serializeUser(user: User, done: Function) {
-    console.log('Serializer User');
+    console.log(2);
     done(null, user);
   }
 
   async deserializeUser(payload: any, done: Function) {
+    console.log(3);
     const user = await this.findUsersService.findOne(payload.id);
     return user ? done(null, user) : done(null, null);
   }

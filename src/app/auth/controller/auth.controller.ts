@@ -1,4 +1,12 @@
-import { Controller, UseGuards, Post, Res, Req, Body } from '@nestjs/common';
+import {
+  Controller,
+  UseGuards,
+  Post,
+  Res,
+  Req,
+  Body,
+  Get,
+} from '@nestjs/common';
 import { AuthService } from '@src/app/auth/services/auth.service';
 import { LocalAuthGuard } from '@src/app/auth/guards/local-auth.guard';
 import { AuthRequest } from '@src/app/auth/models/auth-request';
@@ -49,7 +57,7 @@ export class AuthController {
     `,
   })
   @IsPublic()
-  @Post('google/redirect')
+  @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
   async google(@Req() req, @Res() res) {
     try {

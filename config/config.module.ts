@@ -33,6 +33,8 @@ const env = {
         CACHE_TTL: Joi.number().default(60000),
         CACHE_MAX: Joi.number().default(50),
         CACHE_PASSWORD: Joi.string(),
+        GOOGLE_CLIENT_ID: Joi.string().required(),
+        GOOGLE_CLIENT_SECRET: Joi.string().required(),
       }).unknown(),
       validationOptions: {
         allowUnknown: false,
