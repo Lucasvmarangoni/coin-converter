@@ -52,11 +52,12 @@ export class ConverterService {
         description: 'Some provided value to be invalid',
       });
     }
-    const cached = this.cacheManager.get(`transactions:${req.user.email}`);
-    this.cacheManager.set(`transactions:${req.user.email}`, {
-      ...cached,
-      response,
-    });
+    const cached = await this.cacheManager.get<ResponseData[]>(
+      `transactions:${req.user.email}`,
+    );
+    cached?.push(response);
+
+    this.cacheManager.set(`transactions:${req.user.email}`, cached);
     return response;
   }
 
