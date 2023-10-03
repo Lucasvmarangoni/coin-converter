@@ -6,7 +6,7 @@ import {
   UserProps,
   UserResponse,
 } from './models/user-models';
-import { FindUsersService } from '../util/find-user';
+import { FindUser } from '../util/find-user';
 import { HashPassword } from './util/hash-password';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
@@ -17,7 +17,7 @@ export class UpdateService {
   constructor(
     @InjectModel('UserModel')
     private userModel: Model<User>,
-    private readonly findUsersService: FindUsersService,
+    private readonly findUser: FindUser,
     private readonly hashPassword: HashPassword,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
@@ -27,7 +27,7 @@ export class UpdateService {
     req: Partial<CreateUserRequest>,
   ): Promise<UserResponse> {
     const { name, username, email, password } = req;
-    const user = await this.findUsersService.findOne(firstEmail);
+    const user = await this.findUser.findOne(firstEmail);
 
     const hashPassword = await this.hashPassword.hash(password);
 

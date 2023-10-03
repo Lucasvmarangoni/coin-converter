@@ -1,20 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { getModelToken } from '@nestjs/mongoose';
-import { FindUsersService } from '../find-user';
+import { FindUser } from '../find-user';
 import { mockCacheManager } from '@src/util/mock-cache';
 
 const mockUserModel = {
   findOne: jest.fn(),
 };
 
-describe('FindUsersService', () => {
-  let findUsersService: FindUsersService;
+describe('FindUser', () => {
+  let findUser: FindUser;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        FindUsersService,
+        FindUser,
         {
           provide: getModelToken('UserModel'),
           useValue: mockUserModel,
@@ -26,7 +26,7 @@ describe('FindUsersService', () => {
       ],
     }).compile();
 
-    findUsersService = module.get<FindUsersService>(FindUsersService);
+    findUser = module.get<FindUser>(FindUser);
   });
 
   describe('findOne', () => {
@@ -35,7 +35,7 @@ describe('FindUsersService', () => {
       mockUserModel.findOne.mockResolvedValue(user);
       mockCacheManager.get.mockResolvedValue(null);
 
-      const result = await findUsersService.findOne('test@example.com');
+      const result = await findUser.findOne('test@example.com');
 
       expect(result).toEqual(user);
       expect(mockUserModel.findOne).toHaveBeenCalledWith({
@@ -60,7 +60,7 @@ describe('FindUsersService', () => {
       mockUserModel.findOne.mockResolvedValue(user);
       mockCacheManager.get.mockResolvedValue(null);
 
-      const result = await findUsersService.findOne('testuser');
+      const result = await findUser.findOne('testuser');
 
       expect(result).toEqual(user);
       expect(mockUserModel.findOne).toHaveBeenCalledWith({
@@ -75,7 +75,7 @@ describe('FindUsersService', () => {
       mockUserModel.findOne.mockResolvedValue(user);
       mockCacheManager.get.mockResolvedValue(user);
 
-      const result = await findUsersService.findOne('cached@example.com');
+      const result = await findUser.findOne('cached@example.com');
 
       expect(result).toEqual(user);
       expect(mockUserModel.findOne).not.toHaveBeenCalled();
@@ -88,13 +88,13 @@ describe('FindUsersService', () => {
   describe('isEmail', () => {
     it('should return true for a valid email', () => {
       const validEmail = 'test@example.com';
-      const result = findUsersService.isEmail(validEmail);
+      const result = findUser.isEmail(validEmail);
       expect(result).toBeTruthy();
     });
 
     it('should return false for an invalid email', () => {
       const invalidEmail = 'invalid-email';
-      const result = findUsersService.isEmail(invalidEmail);
+      const result = findUser.isEmail(invalidEmail);
       expect(result).toBeFalsy();
     });
   });

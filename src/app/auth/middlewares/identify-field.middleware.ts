@@ -1,15 +1,15 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { FindUsersService } from '@src/app/features/user/util/find-user';
+import { FindUser } from '@src/app/features/user/util/find-user';
 import { Request, Response, NextFunction } from 'express';
 
 @Injectable()
 export class IdentifyFieldMiddleware implements NestMiddleware {
-  constructor(private findUsersService: FindUsersService) {}
+  constructor(private findUser: FindUser) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
     const { body } = req;
     if ('username' in body) {
-      const user = await this.findUsersService.findOne(body.username);
+      const user = await this.findUser.findOne(body.username);
       req.body = {
         ...body,
         email: user.email,

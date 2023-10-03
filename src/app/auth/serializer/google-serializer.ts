@@ -2,11 +2,11 @@
 import { Injectable } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
 import { User } from '@src/app/models/user';
-import { FindUsersService } from '../../features/user/util/find-user';
+import { FindUser } from '../../features/user/util/find-user';
 
 @Injectable()
 export class SessionSerializer extends PassportSerializer {
-  constructor(private findUsersService: FindUsersService) {
+  constructor(private findUser: FindUser) {
     super();
   }
 
@@ -15,7 +15,7 @@ export class SessionSerializer extends PassportSerializer {
   }
 
   async deserializeUser(payload: any, done: Function) {
-    const user = await this.findUsersService.findOne(payload.id);
+    const user = await this.findUser.findOne(payload.id);
     return user ? done(null, user) : done(null, null);
   }
 }

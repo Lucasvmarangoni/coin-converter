@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateService } from '../../services/create.service';
 import { DeleteService } from '../../services/delete.service';
-import { FindUsersService } from '../../util/find-user';
+import { FindUser } from '../../util/find-user';
 import { UserController } from '../user.controller';
 import { getModelToken } from '@nestjs/mongoose';
 import { Response } from 'express';
@@ -16,7 +16,7 @@ import { HashPassword } from '../../services/util/hash-password';
 
 describe('User controller', () => {
   let createService: CreateService,
-    findUsersService: FindUsersService,
+    findUser: FindUser,
     profileService: ProfileService,
     controller: UserController;
 
@@ -25,7 +25,7 @@ describe('User controller', () => {
       imports: [],
       providers: [
         CreateService,
-        FindUsersService,
+        FindUser,
         DeleteService,
         ProfileService,
         UpdateService,
@@ -46,7 +46,7 @@ describe('User controller', () => {
 
     controller = moduleRef.get<UserController>(UserController);
     createService = moduleRef.get<CreateService>(CreateService);
-    findUsersService = moduleRef.get<FindUsersService>(FindUsersService);
+    findUser = moduleRef.get<FindUser>(FindUser);
     profileService = moduleRef.get<ProfileService>(ProfileService);
   };
 
@@ -55,7 +55,7 @@ describe('User controller', () => {
 
     expect(controller).toBeDefined();
     expect(createService).toBeDefined();
-    expect(findUsersService).toBeDefined();
+    expect(findUser).toBeDefined();
     expect(profileService).toBeDefined();
   });
 

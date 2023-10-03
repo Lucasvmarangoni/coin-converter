@@ -4,7 +4,7 @@ import { User } from '@src/app/models/user';
 import * as bcrypt from 'bcrypt';
 import { UserPayload } from '../models/user-payload';
 import { UserToken } from '../models/user-token';
-import { FindUsersService } from '../../features/user/util/find-user';
+import { FindUser } from '../../features/user/util/find-user';
 import { UserGoogleData } from '../models/user-google-data';
 import { UserLocalData } from '../models/user-local-data';
 import { UserInfo } from '../models/user-info';
@@ -14,7 +14,7 @@ import { UserResponse } from '../models/user-response';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly findUsersService: FindUsersService,
+    private readonly findUser: FindUser,
     private readonly jwtService: JwtService,
     private readonly createForOAuth: CreateForOAuth,
   ) {}
@@ -22,14 +22,14 @@ export class AuthService {
   async googleValidateUser(
     userData: UserGoogleData,
   ): Promise<Omit<UserResponse, 'password'>> {
-    const user = await this.findUsersService.findOne(userData.email);
+    const user = await this.findUser.findOne(userData.email);
 
     if (user) {
       user.password = undefined;
       return user;
     }
     await this.createForOAuth.execute(userData);
-    const newUser = await this.findUsersService.findOne(userData.email);
+    const newUser = await this.findUser.findOne(userData.email);
     newUser.password = undefined;
     return newUser;
   }
@@ -45,7 +45,7 @@ export class AuthService {
     if (!password) {
       throw new Error('Password is required');
     }
-    const user: UserInfo = await this.findUsersService.findOne(usernameOrEmail);
+    const user: UserInfo = await this.findUser.findOne(usernameOrEmail);
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 

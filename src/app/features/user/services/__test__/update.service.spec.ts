@@ -4,7 +4,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { BadRequestException } from '@nestjs/common';
 import { User } from '@src/app/models/user';
 import { Model } from 'mongoose';
-import { FindUsersService } from '../../util/find-user';
+import { FindUser } from '../../util/find-user';
 import { UpdateService } from '../update.service';
 import { HashPassword } from '../util/hash-password';
 import { mockCacheManager } from '@src/util/mock-cache';
@@ -13,7 +13,7 @@ import { UserInfo } from '@src/app/auth/models/user-info';
 
 describe('UpdateService', () => {
   let service: UpdateService;
-  let findUsersService: FindUsersService;
+  let findUser: FindUser;
   let cacheManager: Cache;
   let userModel: Model<User>;
 
@@ -28,7 +28,7 @@ describe('UpdateService', () => {
           },
         },
         {
-          provide: FindUsersService,
+          provide: FindUser,
           useValue: {
             findOne: jest.fn(),
           },
@@ -47,14 +47,14 @@ describe('UpdateService', () => {
     }).compile();
 
     service = module.get<UpdateService>(UpdateService);
-    findUsersService = module.get<FindUsersService>(FindUsersService);
+    findUser = module.get<FindUser>(FindUser);
     cacheManager = module.get<Cache>(CACHE_MANAGER);
     userModel = module.get<Model<User>>(getModelToken('UserModel'));
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-    expect(findUsersService).toBeDefined();
+    expect(findUser).toBeDefined();
     expect(cacheManager).toBeDefined();
     expect(userModel).toBeDefined();
   });
@@ -69,7 +69,7 @@ describe('UpdateService', () => {
       createdAt: new Date('2023-09-12T11:15:15.662Z'),
     };
 
-    jest.spyOn(findUsersService, 'findOne').mockResolvedValue(user);
+    jest.spyOn(findUser, 'findOne').mockResolvedValue(user);
 
     const result = await service.execute('test@test.com', {
       name: 'Updated',
@@ -97,7 +97,7 @@ describe('UpdateService', () => {
       createdAt: new Date('2023-09-12T11:15:15.662Z'),
     };
 
-    jest.spyOn(findUsersService, 'findOne').mockResolvedValue(user);
+    jest.spyOn(findUser, 'findOne').mockResolvedValue(user);
     jest.spyOn(userModel, 'updateOne').mockReturnValue({
       exec: jest.fn().mockResolvedValue({ nModified: 1 }),
     } as any);

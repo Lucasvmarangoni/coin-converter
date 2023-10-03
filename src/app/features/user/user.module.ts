@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CreateService } from './services/create.service';
 import { DeleteService } from './services/delete.service';
-import { FindUsersService } from './util/find-user';
+import { FindUser } from './util/find-user';
 import { AppDatabaseModule } from '@src/app/models/database.module';
 import { UserController } from './controllers/user.controller';
 import { CreateForOAuth } from './services/create.oauth.service';
@@ -13,7 +13,7 @@ import { HashPassword } from './services/util/hash-password';
   imports: [AppDatabaseModule],
   providers: [
     CreateService,
-    FindUsersService,
+    FindUser,
     DeleteService,
     CreateForOAuth,
     ProfileService,
@@ -21,11 +21,6 @@ import { HashPassword } from './services/util/hash-password';
     HashPassword,
   ],
   controllers: [UserController],
-  exports: [
-    AppDatabaseModule,
-    FindUsersService,
-    CreateForOAuth,
-    ProfileService,
-  ],
+  exports: [AppDatabaseModule, FindUser, CreateForOAuth, ProfileService],
 })
 export class AppUserModule {}

@@ -4,17 +4,17 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { FindUsersService } from '../util/find-user';
+import { FindUser } from '../util/find-user';
 import { UserResponse } from './models/user-models';
 import { ReqProps } from './models/req-props';
 
 @Injectable()
 export class ProfileService {
-  constructor(private readonly findUsersService: FindUsersService) {}
+  constructor(private readonly findUser: FindUser) {}
 
   async execute(req: ReqProps): Promise<UserResponse> {
     const { id, username, email } = req;
-    const user = await this.findUsersService.findOne(email);
+    const user = await this.findUser.findOne(email);
 
     if (!user) {
       throw new NotFoundException('User not found', {

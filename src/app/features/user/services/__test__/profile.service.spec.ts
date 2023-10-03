@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UnauthorizedException } from '@nestjs/common';
-import { FindUsersService } from '../../util/find-user';
+import { FindUser } from '../../util/find-user';
 import { ProfileService } from '../profile.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
@@ -8,14 +8,14 @@ import { mockCacheManager } from '@src/util/mock-cache';
 
 describe('ProfileService', () => {
   let profileService: ProfileService;
-  let findUsersService: FindUsersService;
+  let findUser: FindUser;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProfileService,
         {
-          provide: FindUsersService,
+          provide: FindUser,
           useValue: {
             findOne: jest.fn(),
           },
@@ -30,7 +30,7 @@ describe('ProfileService', () => {
     }).compile();
 
     profileService = module.get<ProfileService>(ProfileService);
-    findUsersService = module.get<FindUsersService>(FindUsersService);
+    findUser = module.get<FindUser>(FindUser);
   });
 
   it('should return user profile if id and username match', async () => {
@@ -48,7 +48,7 @@ describe('ProfileService', () => {
       createdAt: new Date(),
     };
 
-    jest.spyOn(findUsersService, 'findOne').mockResolvedValue(user);
+    jest.spyOn(findUser, 'findOne').mockResolvedValue(user);
 
     expect(await profileService.execute(req)).toEqual({
       user: {
@@ -75,7 +75,7 @@ describe('ProfileService', () => {
       createdAt: new Date(),
     };
 
-    jest.spyOn(findUsersService, 'findOne').mockResolvedValue(user);
+    jest.spyOn(findUser, 'findOne').mockResolvedValue(user);
 
     await expect(profileService.execute(req)).rejects.toThrow(
       UnauthorizedException,
