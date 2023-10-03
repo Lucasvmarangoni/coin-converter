@@ -8,7 +8,6 @@ import { UserResponse } from './models/user-models';
 export class CreateForOAuth {
   constructor(
     private readonly createUserService: CreateService,
-    @Inject(FindUser)
     private readonly findUser: FindUser,
   ) {}
 

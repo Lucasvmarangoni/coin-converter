@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { AuthService } from '@src/app/auth/services/auth.service';
+import { AuthService } from '@src/app/modules/auth/services/auth.service';
 
 export class HashPassword {
   async hash(password: string): Promise<string> {

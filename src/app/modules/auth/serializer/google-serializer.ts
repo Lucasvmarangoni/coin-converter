@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
 import { User } from '@src/app/models/user';
-import { FindUser } from '../../modules/user/util/find-user';
+import { FindUser } from '../../user/util/find-user';
 
 @Injectable()
 export class SessionSerializer extends PassportSerializer {

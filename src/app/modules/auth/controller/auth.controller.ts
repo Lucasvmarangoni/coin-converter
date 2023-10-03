@@ -7,14 +7,14 @@ import {
   Body,
   Get,
 } from '@nestjs/common';
-import { AuthService } from '@src/app/auth/services/auth.service';
-import { LocalAuthGuard } from '@src/app/auth/guards/local-auth.guard';
-import { AuthRequest } from '@src/app/auth/models/auth-request';
 import { IsPublic } from '../decorators/is-public.decorator';
 import { GoogleAuthGuard } from '../guards/google-auth.guard';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { SkipThrottle } from '@nestjs/throttler';
 import { authnResponse, BodyAuthSchema } from '@src/docs/schemas/auth-schemas';
+import { LocalAuthGuard } from '../guards/local-auth.guard';
+import { AuthRequest } from '../models/auth-request';
+import { AuthService } from '../services/auth.service';
 
 @SkipThrottle({ default: false })
 @ApiTags('auth')

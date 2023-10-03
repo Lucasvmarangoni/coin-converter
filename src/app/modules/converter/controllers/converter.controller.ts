@@ -12,7 +12,6 @@ import {
 import { Response } from 'express';
 import { ConverterService } from '../services/converter.service';
 import { FindAllService } from '../services/find-all.service';
-import { JwtAuthGuard } from '@src/app/auth/guards/jwt-auth.guard';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import { DeleteService } from '../services/delete.service';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
@@ -28,6 +27,7 @@ import {
   schemaOkDeletedResponse,
   schemaOkResponse,
 } from '@src/docs/schemas/converter-schemas';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 // @UseInterceptors(CacheInterceptor)
 @ApiTags('converter')

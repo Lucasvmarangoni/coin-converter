@@ -9,7 +9,7 @@ import { UpdateService } from '../update.service';
 import { HashPassword } from '../util/hash-password';
 import { mockCacheManager } from '@src/util/mock-cache';
 import { Cache } from 'cache-manager';
-import { UserInfo } from '@src/app/auth/models/user-info';
+import { UserInfo } from '@src/app/modules/auth/models/user-info';
 
 describe('UpdateService', () => {
   let service: UpdateService;

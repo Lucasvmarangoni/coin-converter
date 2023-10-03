@@ -2,9 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '@src/app/models/user';
 import { Model } from 'mongoose';
-import { UserInfo } from '../../../auth/models/user-info';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { UserInfo } from '../../auth/models/user-info';
 
 @Injectable()
 export class FindUser {

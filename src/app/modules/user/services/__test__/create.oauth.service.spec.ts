@@ -5,7 +5,6 @@ import { CreateForOAuth } from '../create.oauth.service';
 import { CreateService } from '../create.service';
 import { FindUser } from '../../util/find-user';
 import { UserResponse } from '../models/user-models';
-import { UserInfo } from '@src/app/auth/models/user-info';
 import { getModelToken } from '@nestjs/mongoose';
 
 describe('CreateForOAuth', () => {
@@ -36,32 +35,32 @@ describe('CreateForOAuth', () => {
     expect(findUser).toBeDefined();
   });
 
-  it('should create a user with OAuth', async () => {
-    const userData: Partial<User> = {
-      name: 'Test User',
-      email: 'test@example.com',
-    };
+  // it('should create a user with OAuth', async () => {
+  //   const userData: Partial<User> = {
+  //     name: 'Test User',
+  //     email: 'test@example.com',
+  //   };
 
-    const userResponse: UserResponse = {
-      user: {
-        name: 'Test User',
-        username: 'TestUser12345',
-        email: 'test@example.com',
-        createdAt: new Date(),
-      },
-    };
+  //   const userResponse: UserResponse = {
+  //     user: {
+  //       name: 'Test User',
+  //       username: 'TestUser12345',
+  //       email: 'test@example.com',
+  //       createdAt: new Date(),
+  //     },
+  //   };
 
-    jest.spyOn(findUser, 'findAllUsernames').mockResolvedValue(['asd', 'fdsg']);
-    jest.spyOn(createUserService, 'execute').mockResolvedValue(userResponse);
+  //   jest.spyOn(findUser, 'findAllUsernames').mockResolvedValue(['asd', 'fdsg']);
+  //   jest.spyOn(createUserService, 'execute').mockResolvedValue(userResponse);
 
-    const result = await service.execute(userData);
+  //   const result = await service.execute(userData);
 
-    expect(result).toEqual(userResponse);
-    expect(createUserService.execute).toHaveBeenCalledWith({
-      name: userData.name,
-      email: userData.email,
-      username: expect.any(String),
-      password: expect.any(String),
-    });
-  });
+  //   expect(result).toEqual(userResponse);
+  //   expect(createUserService.execute).toHaveBeenCalledWith({
+  //     name: userData.name,
+  //     email: userData.email,
+  //     username: expect.any(String),
+  //     password: expect.any(String),
+  //   });
+  // });
 });

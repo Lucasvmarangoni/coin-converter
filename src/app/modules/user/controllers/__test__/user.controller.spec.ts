@@ -8,7 +8,6 @@ import { Response } from 'express';
 import { CreateUpdateUserDto } from '../dto/create-dto';
 import { CreateUserRequest } from '../../services/models/user-models';
 import { ProfileService } from '../../services/profile.service';
-import { UserInfo } from '@src/app/auth/models/user-info';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { mockCacheManager } from '@src/util/mock-cache';
 import { UpdateService } from '../../services/update.service';
