@@ -7,7 +7,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 
 @Injectable()
-export class FindUsersService {
+export class FindUser {
   constructor(
     @InjectModel('UserModel')
     private userModel: Model<User>,
@@ -34,6 +34,19 @@ export class FindUsersService {
     }
 
     return user;
+  }
+
+  async findAllUsernames(): Promise<string[]> {
+    const cached = await this.cacheManager.get<string[]>(`usernames`);
+    if (cached) {
+      return cached;
+    }
+    const users = await this.userModel.find({}, 'username');
+    const usernames = users.map((user) => user.username);
+    const ttl5days = 432 * 1000000;
+    this.cacheManager.set(`usernames`, usernames, ttl5days);
+
+    return usernames;
   }
 
   isEmail(email: string) {

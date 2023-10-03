@@ -1,15 +1,15 @@
 import { User } from '@src/app/models/user';
 import { CreateService } from './create.service';
 import * as crypto from 'crypto';
-import { FindUsersService } from '../util/find-user';
+import { FindUser } from '../util/find-user';
 import { Inject, UnprocessableEntityException } from '@nestjs/common';
 import { UserResponse } from './models/user-models';
 
 export class CreateForOAuth {
   constructor(
     private readonly createUserService: CreateService,
-    @Inject(FindUsersService)
-    private readonly findUsersService: FindUsersService,
+    @Inject(FindUser)
+    private readonly findUser: FindUser,
   ) {}
 
   async execute(userData: Partial<User>): Promise<UserResponse> {
@@ -45,28 +45,26 @@ export class CreateForOAuth {
     userData: Partial<User>,
     length: number,
   ): Promise<string> {
-    const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
-    const numbers = '0123456789';
-    const characters = uppercaseChars + lowercaseChars + numbers;
-    const { name, email } = userData;
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const { name } = userData;
     const maxAttempts = 1000;
-    let attempts = 0;
 
-    while (attempts < maxAttempts) {
-      const usernameArray: string[] = [];
+    const usersnames = await this.findUser.findAllUsernames();
 
-      for (let i = 0; i < length; i++) {
-        const randomIndex = crypto.randomInt(0, characters.length);
-        usernameArray.push(characters.charAt(randomIndex));
-      }
+    for (let attempts = 0; attempts < maxAttempts; ) {
+      const generateUsername = this.generateRandomString(
+        characters,
+        length,
+        name,
+      );
 
-      const username = name.split(' ').join('') + '-' + usernameArray.join('');
+      const check = usersnames.filter((username) => {
+        return username === generateUsername;
+      });
 
-      const user = await this.findUsersService.findOne(username);
-
-      if (!user) {
-        return username;
+      if (check.length === 0) {
+        return generateUsername;
       }
       attempts++;
     }
@@ -79,5 +77,17 @@ export class CreateForOAuth {
           'The server was unable to create a valid username. Please contact support.',
       },
     );
+  }
+
+  private generateRandomString(
+    characters: string,
+    length: number,
+    name: string,
+  ): string {
+    return Array(length)
+      .fill('')
+      .map(() => characters.charAt(crypto.randomInt(0, characters.length)))
+      .join('')
+      .concat(name.replace(/\s/g, '-'));
   }
 }
