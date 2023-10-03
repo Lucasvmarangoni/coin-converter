@@ -3,8 +3,6 @@ import { UnauthorizedException } from '@nestjs/common';
 import { FindUser } from '../../util/find-user';
 import { ProfileService } from '../profile.service';
 import { getModelToken } from '@nestjs/mongoose';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { mockCacheManager } from '@src/util/mock-cache';
 
 describe('ProfileService', () => {
   let profileService: ProfileService;

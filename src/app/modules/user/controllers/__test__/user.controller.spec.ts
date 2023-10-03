@@ -9,9 +9,9 @@ import { CreateUpdateUserDto } from '../dto/create-dto';
 import { CreateUserRequest } from '../../services/models/user-models';
 import { ProfileService } from '../../services/profile.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { mockCacheManager } from '@src/util/mock-cache';
 import { UpdateService } from '../../services/update.service';
 import { HashPassword } from '../../services/util/hash-password';
+import { mockCacheManager } from '@src/app/common/constants/mock-cache';
 
 describe('User controller', () => {
   let createService: CreateService,

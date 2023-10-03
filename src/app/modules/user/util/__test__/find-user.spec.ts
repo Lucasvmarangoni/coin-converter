@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { getModelToken } from '@nestjs/mongoose';
 import { FindUser } from '../find-user';
-import { mockCacheManager } from '@src/util/mock-cache';
+import { mockCacheManager } from '@src/app/common/constants/mock-cache';
 
 const mockUserModel = {
   findOne: jest.fn(),

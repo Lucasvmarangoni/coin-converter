@@ -4,7 +4,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { BadRequestException } from '@nestjs/common';
 import { ConverterService } from '../converter.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { mockCacheManager } from '@src/util/mock-cache';
+import { mockCacheManager } from '@src/app/common/constants/mock-cache';
 
 describe('ConverterService', () => {
   let service: ConverterService;

@@ -4,7 +4,7 @@ import { User } from '@src/app/models/user';
 import { Model } from 'mongoose';
 import { DeleteService } from '../delete.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { mockCacheManager } from '@src/util/mock-cache';
+import { mockCacheManager } from '@src/app/common/constants/mock-cache';
 
 describe('DeleteService', () => {
   let service: DeleteService;

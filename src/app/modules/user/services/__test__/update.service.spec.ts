@@ -7,9 +7,9 @@ import { Model } from 'mongoose';
 import { FindUser } from '../../util/find-user';
 import { UpdateService } from '../update.service';
 import { HashPassword } from '../util/hash-password';
-import { mockCacheManager } from '@src/util/mock-cache';
 import { Cache } from 'cache-manager';
-import { UserInfo } from '@src/app/modules/auth/models/user-info';
+import { UserInfo } from '@src/app/common/models/user-info';
+import { mockCacheManager } from '@src/app/common/constants/mock-cache';
 
 describe('UpdateService', () => {
   let service: UpdateService;

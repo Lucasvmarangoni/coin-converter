@@ -6,7 +6,7 @@ import { UserPayload } from '../models/user-payload';
 import { UserToken } from '../models/user-token';
 import { UserGoogleData } from '../models/user-google-data';
 import { UserLocalData } from '../models/user-local-data';
-import { UserInfo } from '../models/user-info';
+import { UserInfo } from '../../../common/models/user-info';
 import { UserResponse } from '../models/user-response';
 import { CreateForOAuth } from '../../user/services/create.oauth.service';
 import { FindUser } from '../../user/util/find-user';

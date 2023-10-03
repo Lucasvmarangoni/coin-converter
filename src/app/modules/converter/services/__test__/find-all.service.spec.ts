@@ -2,7 +2,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { FindAllService } from '../find-all.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { mockCacheManager } from '@src/util/mock-cache';
+import { mockCacheManager } from '@src/app/common/constants/mock-cache';
 
 describe('Find all transactions testining', () => {
   let findAllService: FindAllService;

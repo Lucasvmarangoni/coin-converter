@@ -10,7 +10,7 @@ import {
   ExchangeRatesResponse,
 } from '../exchangerates.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { mockCacheManager } from '@src/util/mock-cache';
+import { mockCacheManager } from '@src/app/common/constants/mock-cache';
 
 describe('ExchangeratesService', () => {
   let service: ExchangeratesService;

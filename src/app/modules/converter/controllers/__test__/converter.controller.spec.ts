@@ -8,8 +8,8 @@ import { ExchangeratesService } from '@src/client/exchangerates.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { ResponseData } from '../../models/converter-models';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { mockCacheManager } from '@src/util/mock-cache';
 import { DeleteService } from '../../services/delete.service';
+import { mockCacheManager } from '@src/app/common/constants/mock-cache';
 
 describe('converter controller', () => {
   let controller: ConverterController,

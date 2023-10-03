@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
-import { HttpExceptionFilter } from './err/httt-exception-filter';
+import { HttpExceptionFilter } from './app/common/err/httt-exception-filter';
 import { swagger } from './docs/swagger';
 import * as session from 'express-session';
 import * as passport from 'passport';
