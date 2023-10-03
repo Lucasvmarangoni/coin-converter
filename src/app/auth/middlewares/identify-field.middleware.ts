@@ -1,5 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { FindUser } from '@src/app/features/user/util/find-user';
+import { FindUser } from '@src/app/modules/user/util/find-user';
 import { Request, Response, NextFunction } from 'express';
 
 @Injectable()

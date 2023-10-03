@@ -4,11 +4,11 @@ import { User } from '@src/app/models/user';
 import * as bcrypt from 'bcrypt';
 import { UserPayload } from '../models/user-payload';
 import { UserToken } from '../models/user-token';
-import { FindUser } from '../../features/user/util/find-user';
+import { FindUser } from '../../modules/user/util/find-user';
 import { UserGoogleData } from '../models/user-google-data';
 import { UserLocalData } from '../models/user-local-data';
 import { UserInfo } from '../models/user-info';
-import { CreateForOAuth } from '../../features/user/services/create.oauth.service';
+import { CreateForOAuth } from '../../modules/user/services/create.oauth.service';
 import { UserResponse } from '../models/user-response';
 
 @Injectable()

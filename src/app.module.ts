@@ -4,7 +4,7 @@ import { AppConfigModule } from '../config/config.module';
 import { AppLoggerModule } from './modules/logger.module';
 import { AppMongooseModule } from './modules/mongoose.module';
 import { AppAuthModule } from './app/auth/auth.module';
-import { AppFeaturesModule } from './app/features/features.module';
+import { AppModules } from './app/modules/modules.module';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './err/httt-exception-filter';
 import { AppCacheModule } from './modules/cache.module';
@@ -15,7 +15,7 @@ import { AppThrottlerModule } from './modules/throttler.module';
     AppConfigModule,
     AppLoggerModule,
     AppClientModule,
-    AppFeaturesModule,
+    AppModules,
     AppMongooseModule,
     AppAuthModule,
     AppCacheModule,

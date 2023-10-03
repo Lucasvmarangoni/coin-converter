@@ -6,7 +6,7 @@ import { AuthService } from './services/auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { AuthConfig, JwtStrategy } from './strategies/jwt.strategy';
 import { AuthController } from './controller/auth.controller';
-import { AppUserModule } from '../features/user/user.module';
+import { AppUserModule } from '../modules/user/user.module';
 import { LoginValidationMiddleware } from './middlewares/login-validation.middleware';
 import { IdentifyFieldMiddleware } from './middlewares/identify-field.middleware';
 import { GoogleStrategy } from './strategies/google.strategy';
