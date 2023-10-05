@@ -4,3 +4,4 @@ NOTES.md
 config/secrets.env
 dist
 .env
+notes.md
