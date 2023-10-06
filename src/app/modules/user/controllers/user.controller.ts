@@ -53,8 +53,7 @@ export class UserController {
     description: 'The record has been successfully created.',
     schema: schemaOkResponse,
   })
-  @SkipThrottle({ default: true })
-  @UsePipes(ValidationPipe)
+  @SkipThrottle({ default: true })  
   @Post('')
   public async create(
     @Body() body: CreateUpdateUserDto,
@@ -106,7 +105,7 @@ export class UserController {
   })
   @UseGuards(JwtAuthGuard)
   @Throttle({ short: { limit: 3, ttl: ttlOneHour } })
-  @UsePipes(ValidationPipe)
+  
   @Put('update')
   async update(@Body() body: CreateUpdateUserDto, @Req() req, @Res() res) {
     const updateUser = await this.updateService.execute(req.user.email, body);

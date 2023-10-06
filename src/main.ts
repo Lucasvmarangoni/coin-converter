@@ -6,6 +6,7 @@ import { HttpExceptionFilter } from './app/common/err/exception.filter';
 import { swagger } from './docs/swagger';
 import * as session from 'express-session';
 import * as passport from 'passport';
+import { ValidationPipe } from '@nestjs/common';
 
 (async (): Promise<void> => {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
@@ -25,6 +26,7 @@ import * as passport from 'passport';
   app.use(passport.initialize());
   app.use(passport.session());
   app.useLogger(app.get(Logger));
+  app.useGlobalPipes(new ValidationPipe)
   app.useGlobalInterceptors(new LoggerErrorInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
   swagger(app);
