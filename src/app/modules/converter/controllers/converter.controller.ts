@@ -35,9 +35,9 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 @Controller('converter')
 export class ConverterController {
   constructor(
-    private converterService: ConverterService,
-    private findAllService: FindAllService,
-    private deleteAllService: DeleteService,
+    private readonly converterService: ConverterService,
+    private readonly findAllService: FindAllService,
+    private readonly deleteAllService: DeleteService,
   ) {}
 
   @ApiBearerAuth()

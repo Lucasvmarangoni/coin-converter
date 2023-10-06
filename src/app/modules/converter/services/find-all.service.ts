@@ -10,8 +10,8 @@ import { Cache } from 'cache-manager';
 export class FindAllService {
   constructor(
     @InjectModel('TransactionModel')
-    private transactionsModel: Model<Transaction>,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly transactionsModel: Model<Transaction>,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   async execute(id: string, email: string): Promise<ResponseData[]> {

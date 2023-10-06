@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 
 @Injectable()
 export class IdentifyFieldMiddleware implements NestMiddleware {
-  constructor(private findUser: FindUser) {}
+  constructor(private readonly findUser: FindUser) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
     const { body } = req;

@@ -19,7 +19,7 @@ export class UpdateService {
     private userModel: Model<User>,
     private readonly findUser: FindUser,
     private readonly hashPassword: HashPassword,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   async execute(

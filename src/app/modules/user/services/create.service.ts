@@ -13,7 +13,7 @@ import { HashPassword } from './util/hash-password';
 export class CreateService {
   constructor(
     @InjectModel('UserModel')
-    private userModel: Model<User>,
+    private readonly userModel: Model<User>,
     private readonly hashPassword: HashPassword,
   ) {}
 

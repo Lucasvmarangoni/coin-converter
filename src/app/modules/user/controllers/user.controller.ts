@@ -37,10 +37,10 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 @Controller('user')
 export class UserController {
   constructor(
-    private createService: CreateService,
-    private deleteService: DeleteService,
-    private profileService: ProfileService,
-    private updateService: UpdateService,
+    private readonly createService: CreateService,
+    private readonly deleteService: DeleteService,
+    private readonly profileService: ProfileService,
+    private readonly updateService: UpdateService,
   ) {}
 
   @ApiOperation({

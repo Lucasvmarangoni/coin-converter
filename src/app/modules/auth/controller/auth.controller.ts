@@ -20,7 +20,7 @@ import { AuthService } from '../services/auth.service';
 @ApiTags('auth')
 @Controller()
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
   @ApiOperation({
     summary: 'Local authenticate user',
     description: `

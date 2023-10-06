@@ -10,8 +10,8 @@ import { Transaction } from 'ioredis/built/transaction';
 export class DeleteService {
   constructor(
     @InjectModel('TransactionModel')
-    private transactionsModel: Model<Transaction>,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly transactionsModel: Model<Transaction>,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   async execute(user: User): Promise<void> {

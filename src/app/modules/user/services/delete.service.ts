@@ -9,8 +9,8 @@ import { Cache } from 'cache-manager';
 export class DeleteService {
   constructor(
     @InjectModel('UserModel')
-    private userModel: Model<User>,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly userModel: Model<User>,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   async execute(user: User): Promise<void> {

@@ -19,9 +19,9 @@ export class ConverterService {
 
   constructor(
     @InjectModel('TransactionModel')
-    private transactionsModel: Model<Transaction>,
-    private exchangeratesService: ExchangeratesService,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly transactionsModel: Model<Transaction>,
+    private readonly exchangeratesService: ExchangeratesService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   async execute(req: RequestData): Promise<ResponseData> {
