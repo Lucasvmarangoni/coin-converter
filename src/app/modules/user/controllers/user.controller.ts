@@ -19,7 +19,7 @@ import { Response } from 'express';
 import { ProfileService } from '../services/profile.service';
 import { UpdateService } from '../services/update.service';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
-import { ttlOneHour } from '@src/modules/util/ttl-rate-limiter';
+import { ttlOneHour } from '@src/app/common/rate-limiter/util/ttl-rate-limiter';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,

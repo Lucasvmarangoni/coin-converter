@@ -15,7 +15,7 @@ import { FindAllService } from '../services/find-all.service';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import { DeleteService } from '../services/delete.service';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
-import { ttlOneHour } from '@src/modules/util/ttl-rate-limiter';
+import { ttlOneHour } from '@src/app/common/rate-limiter/util/ttl-rate-limiter';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
