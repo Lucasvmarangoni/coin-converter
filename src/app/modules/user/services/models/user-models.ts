@@ -10,5 +10,10 @@ export interface UserProps extends CreateUserRequest {
 }
 
 export interface UserResponse {
-  user: Omit<UserProps, 'password'>;
+  user: {
+    name: string;
+    username: string;
+    email: string;    
+    createdAt: Date;
+  }
 }
