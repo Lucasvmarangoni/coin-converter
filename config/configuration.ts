@@ -1,7 +1,7 @@
 export default () => ({
   port: parseInt(process.env.PORT, 10) || 3333,
   database: {
-    url: process.env.DATABASE_URL,
+    uri: process.env.DATABASE_URI,
   },
   api: {
     url: process.env.API_URL,
@@ -13,7 +13,7 @@ export default () => ({
   },
   auth: {
     key: process.env.JWT_SECRET,
-    expiresIn: Number(process.env.AUTH_TOKEN_EXPIRES_IN),
+    expiresIn: +process.env.AUTH_TOKEN_EXPIRES_IN,
     secret: process.env.EXPRESS_SESSION_SECRET,
     google: {
       id: process.env.GOOGLE_CLIENT_ID,
@@ -26,5 +26,9 @@ export default () => ({
     ttl: process.env.CACHE_TTL,
     max: process.env.CACHE_MAX,
     password: process.env.CACHE_PASSWORD,
+  },
+  redis: {
+    host: process.env.REDIS_HOST,
+    port: +process.env.REDIS_PORT,
   },
 });

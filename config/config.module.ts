@@ -23,7 +23,7 @@ const env = {
           .valid('development', 'test')
           .default('development'),
         PORT: Joi.number().default(3333),
-        DATABASE_URL: Joi.string().required(),
+        DATABASE_URI: Joi.string().required(),
         API_URL: Joi.string().required(),
         API_KEY: Joi.string().required(),
         LOGGER_LEVEL: Joi.string().default('info'),
@@ -36,6 +36,8 @@ const env = {
         GOOGLE_CLIENT_ID: Joi.string().required(),
         GOOGLE_CLIENT_SECRET: Joi.string().required(),
         EXPRESS_SESSION_SECRET: Joi.string().required(),
+        REDIS_HOST: Joi.string().required(),
+        REDIS_PORT: Joi.number().required(),
       }).unknown(),
       validationOptions: {
         allowUnknown: false,
