@@ -59,15 +59,9 @@ describe('Authentication (e2e)', () => {
     });
 
     it('/user (POST) - username already exists', async () => {
-      const userData = {
-        name: 'John Doe',
-        username: 'johnuser',
-        email: 'john@gmail.com',
-        password: '1aS@3$4%sF',
-      };
       const response = await request(app.getHttpServer())
         .post('/api/user')
-        .send(userData)
+        .send(validUserData)
         .expect(400);
 
       expect(response.body).toEqual({
