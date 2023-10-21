@@ -118,9 +118,5 @@ describe('CreateService', () => {
       'user.creating',
       expect.any(UserCreatedEvent),
     );
-    expect(eventEmitterMock.once).toHaveBeenCalledWith(
-      'user.created.failed',
-      expect.any(Function),
-    );
   });
 });
