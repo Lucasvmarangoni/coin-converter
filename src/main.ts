@@ -26,7 +26,7 @@ import { ValidationPipe } from '@nestjs/common';
   app.use(passport.initialize());
   app.use(passport.session());
   app.useLogger(app.get(Logger));
-  app.useGlobalPipes(new ValidationPipe)
+  app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new LoggerErrorInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
   swagger(app);
