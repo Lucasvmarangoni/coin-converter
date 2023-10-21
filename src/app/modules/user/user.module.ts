@@ -8,9 +8,15 @@ import { CreateForOAuth } from './services/create.oauth.service';
 import { ProfileService } from './services/profile.service';
 import { UpdateService } from './services/update.service';
 import { HashPassword } from './services/util/hash-password';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
-  imports: [AppDatabaseModule],
+  imports: [
+    AppDatabaseModule,
+    BullModule.registerQueue({
+      name: 'users',
+    }),
+  ],
   providers: [
     CreateService,
     FindUser,

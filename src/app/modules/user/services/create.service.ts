@@ -1,6 +1,3 @@
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import { User } from '@src/app/models/user';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   CreateUserRequest,
@@ -8,18 +5,36 @@ import {
   UserProps,
 } from './models/user-models';
 import { HashPassword } from './util/hash-password';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
+import { UserCreatedEvent } from '@src/app/common/events/user-created-event';
 
 @Injectable()
 export class CreateService {
   constructor(
-    @InjectModel('UserModel')
-    private readonly userModel: Model<User>,
     private readonly hashPassword: HashPassword,
+    @InjectQueue('users')
+    private usersQueue: Queue,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async execute(req: CreateUserRequest): Promise<UserResponse> {
-    const { email, name, username, password } = req;
+    const user = await this.createUser(req);
+    await this.emitUserCreatedEvent(user);
 
+    const response: UserProps = {
+      ...user,
+      password: undefined,
+    };
+
+    return { user: response };
+  }
+
+  private async createUser(
+    userData: Omit<UserProps, 'createdAt'>,
+  ): Promise<UserProps> {
+    const { name, username, email, password } = userData;
     const hashPassword = await this.hashPassword.hash(password);
 
     const user: UserProps = {
@@ -29,8 +44,19 @@ export class CreateService {
       password: hashPassword,
       createdAt: new Date(),
     };
+
+    return user;
+  }
+
+  private async emitUserCreatedEvent(user: UserProps): Promise<void> {
+    const waitForUserCreated = new Promise<void>((resolve, reject) => {
+      this.eventEmitter.once('user.created', resolve);
+      this.eventEmitter.once('user.created.failed', reject);
+    });
+
     try {
-      await this.userModel.create(user);
+      await this.usersQueue.add('user.creating', new UserCreatedEvent(user));
+      await waitForUserCreated;
     } catch (err) {
       throw new BadRequestException(
         err.message.includes('duplicate key')
@@ -42,10 +68,11 @@ export class CreateService {
         },
       );
     }
-    const response: UserProps = {
-      ...user,
-      password: undefined,
-    };
-    return { user: response };
   }
+
+  // @OnEvent('user.created', { async: true })
+  // async welcomeNewUser() {
+  //   await new Promise<void>((resolve) => setTimeout(() => resolve(), 3000));
+  //   console.info('USER CREATED SECCESSFULLY');
+  // }
 }
