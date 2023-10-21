@@ -11,9 +11,9 @@ const config: Config = {
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: '<rootDir>/',
   }),
-  collectCoverageFrom: ['**/*.(t|j)s'], 
+  collectCoverageFrom: ['**/*.(t|j)s'],
   testEnvironment: 'node',
-  clearMocks: true, 
+  clearMocks: true,
 };
 
 export default config;

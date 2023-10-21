@@ -12,6 +12,8 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { UpdateService } from '../../services/update.service';
 import { HashPassword } from '../../services/util/hash-password';
 import { mockCacheManager } from '@src/app/common/constants/mock-cache';
+import { BullModule } from '@nestjs/bull';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 describe('User controller', () => {
   let createService: CreateService,
@@ -19,9 +21,14 @@ describe('User controller', () => {
     profileService: ProfileService,
     controller: UserController;
 
-  const createTestingModuleWithData = async (userData?: CreateUserRequest) => {
+  beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [],
+      imports: [
+        BullModule.registerQueue({
+          name: 'users',
+        }),
+        EventEmitterModule.forRoot(),
+      ],
       providers: [
         CreateService,
         FindUser,
@@ -32,7 +39,7 @@ describe('User controller', () => {
         {
           provide: getModelToken('UserModel'),
           useValue: {
-            create: jest.fn().mockResolvedValue(userData),
+            create: jest.fn(),
           },
         },
         {
@@ -47,11 +54,9 @@ describe('User controller', () => {
     createService = moduleRef.get<CreateService>(CreateService);
     findUser = moduleRef.get<FindUser>(FindUser);
     profileService = moduleRef.get<ProfileService>(ProfileService);
-  };
+  });
 
   it('to be defined', async () => {
-    await createTestingModuleWithData();
-
     expect(controller).toBeDefined();
     expect(createService).toBeDefined();
     expect(findUser).toBeDefined();
