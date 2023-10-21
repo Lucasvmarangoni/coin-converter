@@ -9,7 +9,7 @@ import { MongooseError } from 'mongoose';
       useFactory: async (configService: ConfigService) => {
         const logger = new Logger('MongooseModule');
         return {
-          uri: configService.get('database').url,
+          uri: configService.get('database').uri,
           connectionFactory: (connection: any, name: string) => {
             logger.log(`Creating connection for ${name}`);
             return connection;
