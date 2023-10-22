@@ -3,13 +3,11 @@ services:
 
   mongodb:
     container_name: database
-    image: mongo
+    image: docker.io/bitnami/mongodb:5.0   
     ports:
-      - 27017:27017
-    command:
-      - 'mongod'
+      - 27017:27017    
     volumes:
-      - mongodb:/data
+      - mongodb:/data        
 
   redis:
     container_name: qso_redis
@@ -19,7 +17,7 @@ services:
     volumes:
       - .:/usr/app
     networks:
-      - app-network
+      - app-network 
 
 networks:
   app-network:
