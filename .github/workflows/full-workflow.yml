@@ -32,6 +32,8 @@ jobs:
         image: redis:alpine
         ports:
           - 6379
+        networks:
+          - app-network 
 
     steps:
       - uses: actions/checkout@v2
@@ -66,4 +68,4 @@ jobs:
         env:
           DATABASE_URI: mongodb://localhost:${{ job.services.mongodb.ports[27017] }}/currency-converter-test    
           LOGGER_ENABLED: false    
-        run: npm run test:e2e
+        run: npm run test:e2e --detectOpenHandles
