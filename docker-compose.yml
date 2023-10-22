@@ -20,9 +20,7 @@ services:
       - app-network 
 
 networks:
-  app-network:
-  mongo-network:
-    driver: bridge
+  app-network:  
 
 volumes:
   mongodb:
