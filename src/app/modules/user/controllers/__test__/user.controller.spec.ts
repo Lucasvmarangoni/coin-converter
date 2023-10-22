@@ -6,14 +6,13 @@ import { UserController } from '../user.controller';
 import { getModelToken } from '@nestjs/mongoose';
 import { Response } from 'express';
 import { CreateUpdateUserDto } from '../dto/create-dto';
-import { CreateUserRequest } from '../../services/models/user-models';
 import { ProfileService } from '../../services/profile.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { UpdateService } from '../../services/update.service';
 import { HashPassword } from '../../services/util/hash-password';
 import { mockCacheManager } from '@src/app/common/constants/mock-cache';
-import { BullModule } from '@nestjs/bull';
-import { EventEmitterModule } from '@nestjs/event-emitter';
+import { BullModule, getQueueToken } from '@nestjs/bull';
+import { EventEmitter2, EventEmitterModule } from '@nestjs/event-emitter';
 
 describe('User controller', () => {
   let createService: CreateService,
@@ -21,14 +20,23 @@ describe('User controller', () => {
     profileService: ProfileService,
     controller: UserController;
 
+  const usersQueue = {
+    add: jest.fn(),
+  } as any;
+
+  const eventEmitterMock = {
+    once: jest.fn(),
+    emit: jest.fn(),
+  };
+
   beforeEach(async () => {
-    const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [
-        BullModule.registerQueue({
-          name: 'users',
-        }),
-        EventEmitterModule.forRoot(),
-      ],
+    const module: TestingModule = await Test.createTestingModule({
+      // imports: [
+      //   BullModule.registerQueue({
+      //     name: 'users',
+      //   }),
+      //   EventEmitterModule.forRoot(),
+      // ],
       providers: [
         CreateService,
         FindUser,
@@ -42,6 +50,11 @@ describe('User controller', () => {
             create: jest.fn(),
           },
         },
+        { provide: EventEmitter2, useValue: eventEmitterMock },
+        {
+          provide: getQueueToken('users'),
+          useValue: usersQueue,
+        },
         {
           provide: CACHE_MANAGER,
           useValue: mockCacheManager,
@@ -50,10 +63,10 @@ describe('User controller', () => {
       controllers: [UserController],
     }).compile();
 
-    controller = moduleRef.get<UserController>(UserController);
-    createService = moduleRef.get<CreateService>(CreateService);
-    findUser = moduleRef.get<FindUser>(FindUser);
-    profileService = moduleRef.get<ProfileService>(ProfileService);
+    controller = module.get<UserController>(UserController);
+    createService = module.get<CreateService>(CreateService);
+    findUser = module.get<FindUser>(FindUser);
+    profileService = module.get<ProfileService>(ProfileService);
   });
 
   it('to be defined', async () => {

@@ -1,10 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getModelToken } from '@nestjs/mongoose';
 import { BadRequestException } from '@nestjs/common';
 import { CreateService } from '../create.service';
 import { HashPassword } from '../util/hash-password';
-import { BullModule, getQueueToken } from '@nestjs/bull';
-import { EventEmitter2, EventEmitterModule } from '@nestjs/event-emitter';
+import { getQueueToken } from '@nestjs/bull';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Queue } from 'bull';
 import { UserCreatedEvent } from '@src/app/common/events/user-created-event';
 
@@ -22,26 +21,13 @@ describe('CreateService', () => {
     } as any;
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        BullModule.registerQueue({
-          name: 'users',
-        }),
-        EventEmitterModule.forRoot(),
-      ],
       providers: [
         CreateService,
         HashPassword,
         { provide: EventEmitter2, useValue: eventEmitterMock },
-        // { provide: 'Queue', useValue: mockQueue },
         {
           provide: getQueueToken('users'),
           useValue: usersQueue,
-        },
-        {
-          provide: getModelToken('UserModel'),
-          useValue: {
-            create: jest.fn(),
-          },
         },
       ],
     }).compile();
