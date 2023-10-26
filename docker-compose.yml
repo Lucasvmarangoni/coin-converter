@@ -1,13 +1,75 @@
 version: '3.8'
 services:
 
-  mongodb:
-    container_name: database
-    image: docker.io/bitnami/mongodb:5.0   
+  # mongodb:
+  #   container_name: database
+  #   image: docker.io/bitnami/mongodb:5.0   
+  #   ports:
+  #     - 27017:27017    
+  #   volumes:
+  #     - mongodb:/data  
+
+  mongo-primary:
+    container_name: mongo-primary
+    image: mongo:4.4    
+    volumes:     
+      - ~/mongo/data1:/data/db
+      - ./scripts/rs-init.sh:/scripts/rs-init.sh
+      - ./scripts/init.js:/scripts/init.js
+      - ./scripts/create-user.js:/scripts/create-user.js      
+      - ./scripts/status.js:/scripts/util/get-env.ts    
+    networks:
+      - mongo-network
     ports:
-      - 27017:27017    
+      - 27021:27017  
+    restart: always
+    environment:
+     - MONGO_USER=${MONGO_USER}
+     - MONGO_PWD=${MONGO_PWD}
+     - MONGO_DB=${MONGO_DB}
+    entrypoint:
+      [
+        "mongod",
+        "--bind_ip_all",
+        "--replSet",
+        "dbrs",
+      ]    
+
+  mongo-secondary:  
+    container_name: mongo-secondary
+    image: mongo:4.4
     volumes:
-      - mongodb:/data        
+      - ~/mongo/data2:/data/db
+    networks:
+      - mongo-network
+    ports:
+      - 27022:27017      
+    restart: always
+    entrypoint:
+      [
+        "mongod",
+        "--bind_ip_all",
+        "--replSet",
+        "dbrs"
+      ]
+
+  mongo-arbiter:
+    container_name: mongo-arbiter
+    image: mongo:4.4
+    volumes:
+      - ~/mongo/data3:/data/db
+    networks:
+      - mongo-network
+    ports:
+      - 27023:27017      
+    restart: always
+    entrypoint:
+      [
+        "mongod",
+        "--bind_ip_all",
+        "--replSet",
+        "dbrs",        
+      ]    
 
   redis:
     container_name: qso_redis
@@ -17,11 +79,38 @@ services:
     volumes:
       - .:/usr/app
     networks:
-      - app-network 
+      - mongo-network
+
+  currency-converter:
+    container_name: currency-converter
+    build:
+      context: .
+      dockerfile: ./docker/DockerFile
+      target: currency-converter-app
+    env_file:
+      - ./.env
+    ports:
+      - 8080:3333
+    networks:
+      - mongo-network
+    depends_on:
+      - mongo-primary
+      - mongo-secondary
+      - mongo-arbiter
+      - redis    
+    volumes:
+      - /home/ldragk/Documentos/Programação/currency-converter/src:/app/src         
+      - /home/ldragk/Documentos/Programação/currency-converter/config:/app/config  
+      - /home/ldragk/Documentos/Programação/currency-converter/test:/app/test   
+      - /home/ldragk/Documentos/Programação/currency-converter/jest.config.ts:/app/jest.config.ts 
+      - /home/ldragk/Documentos/Programação/currency-converter/package.json:/app/package.json   
+      - /home/ldragk/Documentos/Programação/currency-converter/tsconfig.json:/app/tsconfig.json   
+      - /home/ldragk/Documentos/Programação/currency-converter/tsconfig.build.json:/app/tsconfig.build.json   
+    command: sh -c "while :; do sleep 1; done"
 
 networks:
-  app-network:  
+  mongo-network:
 
-volumes:
-  mongodb:
-    driver: local
+    # volumes:
+    #   mongodb:
+    #     driver: local

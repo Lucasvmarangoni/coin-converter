@@ -18,7 +18,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
       clientSecret: configService.get<AuthGoogle>('auth', {
         infer: true,
       }).google.secret,
-      callbackURL: `http://localhost:${configService.get<string>('port', {
+      callbackURL: `http://localhost:${configService.get<string>('container', {
         infer: true,
       })}/api/google/redirect`,
       scope: ['profile', 'email'],

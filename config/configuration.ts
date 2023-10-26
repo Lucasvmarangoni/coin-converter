@@ -1,7 +1,15 @@
+const t = 'test'
+
 export default () => ({
-  port: parseInt(process.env.PORT, 10) || 3333,
+  port: +process.env.PORT,
+  container: +process.env.CONTAINER_PORT,
   database: {
-    uri: process.env.DATABASE_URI,
+    uri: process.env.NODE_ENV !== 'test' ? process.env.DATABASE_URI : process.env.DATABASE_TEST_URI,
+  },
+  mongodb: {
+    user: process.env.MONGO_USER,
+    pwd: process.env.MONGO_PWD,
+    db: process.env.MONGO_DB,
   },
   api: {
     url: process.env.API_URL,

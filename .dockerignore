@@ -1,0 +1,15 @@
+# Versioning and metadata
+.git
+.gitignore
+.dockerignore
+.env
+.github
+.vscode
+.eslintrc.js
+.prettierrc
+
+dist
+node_modules
+README.md
+scripts
+docker

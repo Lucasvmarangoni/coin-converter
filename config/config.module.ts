@@ -3,10 +3,10 @@ import { ConfigModule } from '@nestjs/config';
 import configuration from './configuration';
 import * as Joi from 'joi';
 
-const node_env = process.env.NODE_ENV || 'development';
 
 const env = {
-  environment: `config/.env.${node_env}`,
+  development: `config/.env.development`,
+  test: `config/.env.test`,
   secrets: '.env',
   default: 'config/default.env',
 };
@@ -14,7 +14,7 @@ const env = {
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: [env.environment, env.default, env.secrets],
+      envFilePath: [env.development, env.test, env.default, env.secrets],
       load: [configuration],
       isGlobal: true,
       cache: true,
@@ -38,6 +38,9 @@ const env = {
         EXPRESS_SESSION_SECRET: Joi.string().required(),
         REDIS_HOST: Joi.string().required(),
         REDIS_PORT: Joi.number().required(),
+        MONGO_USER: Joi.string().required(),
+        MONGO_PWD: Joi.string().required(),
+        MONGO_DB: Joi.string().required(),
       }).unknown(),
       validationOptions: {
         allowUnknown: false,

@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config';
           port: configService.get<{ port: string }>('redis', {
             infer: true,
           }).port,
-          host: configService.get<{ host: number }>('redis', {
+          host: configService.get<{ host: string }>('redis', {
             infer: true,
           }).host,
         },

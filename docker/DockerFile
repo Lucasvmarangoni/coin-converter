@@ -1,0 +1,15 @@
+FROM node:20.3.1-alpine As currency-converter-app
+
+RUN npm install -g pnpm
+
+WORKDIR /app
+
+COPY package*.json ./
+
+# COPY .env .
+
+RUN pnpm install
+
+COPY . .
+
+
