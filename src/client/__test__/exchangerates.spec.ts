@@ -5,10 +5,7 @@ import { of } from 'rxjs';
 import { AxiosResponse } from 'axios';
 import { ClientRequestError } from '../err/client-request-error';
 import { ExchangeratesResponseError } from '../err/response-error';
-import {
-  ExchangeratesService,
-  ExchangeRatesResponse,
-} from '../exchangerates.service';
+import { ExchangeratesService, ExchangeRatesResponse } from '../exchangerates.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { mockCacheManager } from '@src/app/common/constants/mock-cache';
 
@@ -65,7 +62,7 @@ describe('ExchangeratesService', () => {
       jest.spyOn(httpService, 'get').mockReturnValueOnce(of(mockAxiosResponse));
 
       await expect(service.fetchConvert('EUR')).rejects.toThrow(
-        ExchangeratesResponseError,
+        ExchangeratesResponseError
       );
     });
 
@@ -104,9 +101,7 @@ describe('ExchangeratesService', () => {
         throw new Error('Request failed');
       });
 
-      await expect(service.fetchConvert('EUR')).rejects.toThrow(
-        ClientRequestError,
-      );
+      await expect(service.fetchConvert('EUR')).rejects.toThrow(ClientRequestError);
     });
   });
 });

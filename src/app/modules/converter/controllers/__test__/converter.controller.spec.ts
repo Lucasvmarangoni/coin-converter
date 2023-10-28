@@ -1,21 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Response } from 'express';
-import { ConverterController } from '../converter.controller';
-import { allRates } from '../../services/__test__/util/all-rates';
-import { ConverterService } from '../../services/converter.service';
-import { FindAllService } from '../../services/find-all.service';
+import { Response, Request } from 'express';
+import { ConverterController } from '@src/app/modules/converter/controllers/converter.controller';
+import { allRates } from '@src/app/modules/converter/services/__test__/util/all-rates';
+import { ConverterService } from '@src/app/modules/converter/services/converter.service';
+import { FindAllService } from '@src/app/modules/converter/services/find-all.service';
 import { ExchangeratesService } from '@src/client/exchangerates.service';
 import { getModelToken } from '@nestjs/mongoose';
-import { ResponseData } from '../../models/converter-models';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { DeleteService } from '../../services/delete.service';
+import { DeleteService } from '@src/app/modules/converter/services/delete.service';
 import { mockCacheManager } from '@src/app/common/constants/mock-cache';
+import { ResponseData } from '@src/app/modules/converter/models/response';
 
 describe('converter controller', () => {
   let controller: ConverterController,
     converterService: ConverterService,
     findAllService: FindAllService;
-  const { USD, EUR, BRL, AMD } = allRates;
+  const { USD } = allRates;
   const mockExchangeratesService = { fetchConvert: jest.fn() };
   const mockTransactionModel = { create: jest.fn(), find: jest.fn() };
 
@@ -77,7 +77,7 @@ describe('converter controller', () => {
       mockExchangeratesService.fetchConvert.mockResolvedValue(mockApiResponse);
       mockTransactionModel.create.mockResolvedValue(expectedResponse);
 
-      await controller.converter(params, req, res as Response);
+      await controller.converter(params, req as unknown as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith(expectedResponse);
@@ -101,7 +101,7 @@ describe('converter controller', () => {
         status: jest.fn().mockReturnThis(),
         json: jest.fn().mockReturnThis(),
       };
-      await controller.listAll(req, res as Response);
+      await controller.listAll(req as unknown as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith(responseDataArray);

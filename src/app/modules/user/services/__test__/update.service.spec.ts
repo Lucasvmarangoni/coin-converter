@@ -1,12 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { BadRequestException } from '@nestjs/common';
 import { User } from '@src/app/models/user';
 import { Model } from 'mongoose';
-import { FindUser } from '../../util/find-user';
-import { UpdateService } from '../update.service';
-import { HashPassword } from '../util/hash-password';
+import { FindUser } from '@src/app/modules/user/util/find-user';
+import { UpdateService } from '@src/app/modules/user/services/update.service';
+import { HashPassword } from '@src/app/modules/user/services/util/hash-password';
 import { Cache } from 'cache-manager';
 import { UserInfo } from '@src/app/common/models/user-info';
 import { mockCacheManager } from '@src/app/common/constants/mock-cache';

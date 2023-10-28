@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UnauthorizedException } from '@nestjs/common';
-import { FindUser } from '../../util/find-user';
-import { ProfileService } from '../profile.service';
+import { FindUser } from '@src/app/modules/user/util/find-user';
+import { ProfileService } from '@src/app/modules/user/services/profile.service';
 import { getModelToken } from '@nestjs/mongoose';
 
 describe('ProfileService', () => {
@@ -75,8 +75,6 @@ describe('ProfileService', () => {
 
     jest.spyOn(findUser, 'findOne').mockResolvedValue(user);
 
-    await expect(profileService.execute(req)).rejects.toThrow(
-      UnauthorizedException,
-    );
+    await expect(profileService.execute(req)).rejects.toThrow(UnauthorizedException);
   });
 });

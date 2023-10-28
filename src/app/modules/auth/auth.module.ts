@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+// eslint-disable-next-line no-restricted-imports
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './services/auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
@@ -10,7 +11,7 @@ import { LoginValidationMiddleware } from './middlewares/login-validation.middle
 import { IdentifyFieldMiddleware } from './middlewares/identify-field.middleware';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { SessionSerializer } from './serializer/google-serializer';
-import { AppUserModule } from '../user/user.module';
+import { AppUserModule } from '@src/app/modules/user/user.module';
 
 @Module({
   imports: [

@@ -33,13 +33,8 @@ describe('AppController (e2e)', () => {
     connection = app.get<Connection>(getConnectionToken());
     await clearDatabase(connection);
 
-    await request(app.getHttpServer())
-      .post('/api/user')
-      .send(userData)
-      .expect(201);
-    token = await request(app.getHttpServer())
-      .post('/api/login/')
-      .send(authnUser);
+    await request(app.getHttpServer()).post('/api/user').send(userData).expect(201);
+    token = await request(app.getHttpServer()).post('/api/login/').send(authnUser);
     token = token.body.access_token;
   });
 
@@ -120,12 +115,10 @@ describe('AppController (e2e)', () => {
       .expect(400);
 
     expect(status).toBe(400);
-    expect(body.message).toBe(
-      `You provide an invalid value for the 'to' parameter`,
-    );
+    expect(body.message).toBe(`You provide an invalid value for the 'to' parameter`);
     expect(body.statusCode).toBe(400);
     expect(body.error).toBe(
-      `You need to provide a valid 'currency ISO code' in to param.`,
+      `You need to provide a valid 'currency ISO code' in to param.`
     );
     expect(body).toEqual({
       message: "You provide an invalid value for the 'to' parameter",
@@ -142,11 +135,11 @@ describe('AppController (e2e)', () => {
 
     expect(status).toBe(400);
     expect(body.message).toBe(
-      `You provide an invalide 'amount' value to converter parameter`,
+      `You provide an invalide 'amount' value to converter parameter`
     );
     expect(body.statusCode).toBe(400);
     expect(body.error).toBe(
-      `You must provide a valid 'amount' in numeric format and Number type for the conversion.`,
+      `You must provide a valid 'amount' in numeric format and Number type for the conversion.`
     );
     expect(body).toEqual({
       message: "You provide an invalide 'amount' value to converter parameter",
@@ -163,12 +156,10 @@ describe('AppController (e2e)', () => {
       .expect(400);
 
     expect(status).toBe(400);
-    expect(body.message).toBe(
-      `You provide an invalid value for the 'from' parameter`,
-    );
+    expect(body.message).toBe(`You provide an invalid value for the 'from' parameter`);
     expect(body.statusCode).toBe(400);
     expect(body.error).toBe(
-      `You need to provide a valid 'currency ISO code' in to param or leave it undefined to use the default value.`,
+      `You need to provide a valid 'currency ISO code' in to param or leave it undefined to use the default value.`
     );
     expect(body).toEqual({
       message: "You provide an invalid value for the 'from' parameter",

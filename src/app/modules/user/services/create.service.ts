@@ -1,14 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import {
-  CreateUserRequest,
-  UserResponse,
-  UserProps,
-} from './models/user-models';
+import { CreateUserRequest, UserProps } from './models/user-models';
 import { HashPassword } from './util/hash-password';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
-import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UserCreatedEvent } from '@src/app/common/events/user-created-event';
+import { ResponseProps } from './models/response.props';
+import { UserResponse } from './models/user-res';
 
 @Injectable()
 export class CreateService {
@@ -16,14 +14,14 @@ export class CreateService {
     private readonly hashPassword: HashPassword,
     @InjectQueue('users')
     private usersQueue: Queue,
-    private readonly eventEmitter: EventEmitter2,
+    private readonly eventEmitter: EventEmitter2
   ) {}
 
   async execute(req: CreateUserRequest): Promise<UserResponse> {
     const user = await this.createUser(req);
     await this.emitUserCreatedEvent(user);
 
-    const response: UserProps = {
+    const response: ResponseProps = {
       ...user,
       password: undefined,
     };
@@ -31,9 +29,7 @@ export class CreateService {
     return { user: response };
   }
 
-  private async createUser(
-    userData: Omit<UserProps, 'createdAt'>,
-  ): Promise<UserProps> {
+  private async createUser(userData: Omit<UserProps, 'createdAt'>): Promise<UserProps> {
     const { name, username, email, password } = userData;
     const hashPassword = await this.hashPassword.hash(password);
 
@@ -57,7 +53,7 @@ export class CreateService {
     try {
       await this.usersQueue.add('user.creating', new UserCreatedEvent(user));
       await waitForUserCreated;
-    } catch (err) {
+    } catch (err: any) {
       throw new BadRequestException(
         err.message.includes('duplicate key')
           ? 'This user already exist. Try with other username or email.'
@@ -65,7 +61,7 @@ export class CreateService {
         {
           cause: new Error(),
           description: 'mongoose validation error',
-        },
+        }
       );
     }
   }

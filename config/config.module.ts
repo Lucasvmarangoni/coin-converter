@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
+// eslint-disable-next-line no-restricted-imports
 import { ConfigModule } from '@nestjs/config';
 import configuration from './configuration';
 import * as Joi from 'joi';
-
 
 const env = {
   development: `config/.env.development`,
@@ -19,9 +19,7 @@ const env = {
       isGlobal: true,
       cache: true,
       validationSchema: Joi.object({
-        NODE_ENV: Joi.string()
-          .valid('development', 'test')
-          .default('development'),
+        NODE_ENV: Joi.string().valid('development', 'test').default('development'),
         PORT: Joi.number().default(3333),
         DATABASE_URI: Joi.string().required(),
         API_URL: Joi.string().required(),

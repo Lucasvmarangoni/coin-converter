@@ -3,15 +3,15 @@ import { Transaction } from '@src/app/models/transactions';
 import { ExchangeratesService } from '@src/client/exchangerates.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { currencies } from '../util/all-currencies';
+import { currencies } from '@src/app/modules/converter/util/all-currencies';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { RequestData } from '@src/app/modules/converter/models/request';
 import {
-  RequestData,
   ResponseData,
   ConvertProps,
   Rate,
-} from '../models/converter-models';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
+} from '@src/app/modules/converter/models/response';
 
 @Injectable()
 export class ConverterService {
@@ -21,7 +21,7 @@ export class ConverterService {
     @InjectModel('TransactionModel')
     private readonly transactionsModel: Model<Transaction>,
     private readonly exchangeratesService: ExchangeratesService,
-    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache
   ) {}
 
   async execute(req: RequestData): Promise<ResponseData> {
@@ -37,7 +37,7 @@ export class ConverterService {
     const transactionData: ResponseData = {
       from: from,
       amount: amount,
-      to: to.split(',').map((item) => item.trim()),
+      to: to.split(',').map((item: string) => item.trim()),
       rates: converterAmount.rates,
       date: new Date(),
       user: req.user.id,
@@ -46,16 +46,15 @@ export class ConverterService {
     let response: ResponseData;
     try {
       response = await this.transactionsModel.create(transactionData);
-    } catch (err) {
+    } catch (err: any) {
       throw new BadRequestException('mongoose validation error', {
         cause: new Error(),
         description: 'Some provided value to be invalid',
       });
     }
     const cached =
-      (await this.cacheManager.get<ResponseData[]>(
-        `transactions:${req.user.email}`,
-      )) || [];
+      (await this.cacheManager.get<ResponseData[]>(`transactions:${req.user.email}`)) ||
+      [];
     cached.push(response);
 
     this.cacheManager.set(`transactions:${req.user.email}`, cached);
@@ -64,10 +63,10 @@ export class ConverterService {
 
   private async converterCurrency(req: RequestData): Promise<ConvertProps> {
     let conversionRate: Rate;
-    const selectRates = {};
+    const selectRates: { [key: string]: number } = {};
 
     const apiResponse = await this.exchangeratesService.fetchConvert(
-      this.sourceCurrenciesAccepted,
+      this.sourceCurrenciesAccepted
     );
     const { rates } = apiResponse;
 
@@ -110,18 +109,15 @@ export class ConverterService {
         {
           cause: new Error(),
           description: `You need to provide a valid 'currency ISO code' in to param.`,
-        },
+        }
       );
-    } else if (
-      !Number.isNaN(Number(from)) ||
-      (!!from && !currencies.includes(from))
-    ) {
+    } else if (!Number.isNaN(Number(from)) || (!!from && !currencies.includes(from))) {
       throw new BadRequestException(
         `You provide an invalid value for the 'from' parameter`,
         {
           cause: new Error(),
           description: `You need to provide a valid 'currency ISO code' in to param or leave it undefined to use the default value.`,
-        },
+        }
       );
     } else if (!amount || typeof amount !== 'number') {
       throw new BadRequestException(
@@ -129,7 +125,7 @@ export class ConverterService {
         {
           cause: new Error(),
           description: `You must provide a valid 'amount' in numeric format and Number type for the conversion.`,
-        },
+        }
       );
     }
   }

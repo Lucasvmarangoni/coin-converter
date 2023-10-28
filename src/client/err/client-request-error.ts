@@ -9,7 +9,7 @@ export class ClientRequestError extends HttpException {
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         message: `${internalMessage}: ${message}`,
       },
-      HttpStatus.INTERNAL_SERVER_ERROR,
+      HttpStatus.INTERNAL_SERVER_ERROR
     );
   }
 }

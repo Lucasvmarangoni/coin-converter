@@ -1,20 +1,16 @@
-import {
-  BadRequestException,
-  Injectable,
-  NestMiddleware,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 import { validate } from 'class-validator';
 import {
   LoginRequestBodyByEmail,
   LoginRequestBodyByUsername,
-} from '../models/login-request';
+} from '@src/app/modules/auth/models/login-request';
 
 @Injectable()
 export class LoginValidationMiddleware implements NestMiddleware {
-  async use(req: Request, res: Response, next: NextFunction) {
+  async use(req: Request, _: Response, next: NextFunction) {
     const body = req.body;
-    let loginRequestBody, validations;
+    let loginRequestBody, validations: any;
 
     if (body.username) {
       loginRequestBody = new LoginRequestBodyByUsername();
@@ -30,9 +26,15 @@ export class LoginValidationMiddleware implements NestMiddleware {
 
     if (validations.length) {
       throw new BadRequestException(
-        validations.reduce((acc, curr) => {
-          return [...acc, ...Object.values(curr.constraints)];
-        }, []),
+        validations.reduce(
+          (
+            acc: any,
+            curr: { constraints: { [s: string]: unknown } | ArrayLike<unknown> }
+          ) => {
+            return [...acc, ...Object.values(curr.constraints)];
+          },
+          []
+        )
       );
     }
 

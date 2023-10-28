@@ -1,11 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { User } from '@src/app/models/user';
-import { UnprocessableEntityException } from '@nestjs/common';
-import { CreateForOAuth } from '../create.oauth.service';
-import { CreateService } from '../create.service';
-import { FindUser } from '../../util/find-user';
-import { UserResponse } from '../models/user-models';
-import { getModelToken } from '@nestjs/mongoose';
+import { CreateForOAuth } from '@src/app/modules/user/services/create.oauth.service';
+import { CreateService } from '@src/app/modules/user/services/create.service';
+import { FindUser } from '@src/app/modules/user/util/find-user';
 
 describe('CreateForOAuth', () => {
   let service: CreateForOAuth;

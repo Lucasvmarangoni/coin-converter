@@ -8,12 +8,3 @@ export interface CreateUserRequest {
 export interface UserProps extends CreateUserRequest {
   createdAt: Date;
 }
-
-export interface UserResponse {
-  user: {
-    name: string;
-    username: string;
-    email: string;
-    createdAt: Date;
-  };
-}

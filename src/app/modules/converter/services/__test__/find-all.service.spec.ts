@@ -1,6 +1,6 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { FindAllService } from '../find-all.service';
+import { FindAllService } from '@src/app/modules/converter/services/find-all.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { mockCacheManager } from '@src/app/common/constants/mock-cache';
 
@@ -52,7 +52,7 @@ describe('Find all transactions testining', () => {
             find: jest.fn().mockImplementation((query) => {
               const user = query.user;
               const filteredTransactions = database.filter(
-                (transaction) => transaction.user === user,
+                (transaction) => transaction.user === user
               );
               return Promise.resolve(filteredTransactions);
             }),

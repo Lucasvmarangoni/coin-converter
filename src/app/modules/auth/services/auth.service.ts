@@ -1,42 +1,41 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@src/app/models/user';
 import * as bcrypt from 'bcrypt';
-import { UserPayload } from '../models/user-payload';
-import { UserToken } from '../models/user-token';
-import { UserGoogleData } from '../models/user-google-data';
-import { UserLocalData } from '../models/user-local-data';
-import { UserInfo } from '../../../common/models/user-info';
-import { UserResponse } from '../models/user-response';
-import { CreateForOAuth } from '../../user/services/create.oauth.service';
-import { FindUser } from '../../user/util/find-user';
+import { UserPayload } from '@src/app/modules/auth/models/user-payload';
+import { UserToken } from '@src/app/modules/auth/models/user-token';
+import { UserGoogleData } from '@src/app/common/models/user-google-data';
+import { UserLocalData } from '@src/app/modules/auth/models/user-local-data';
+import { UserInfo } from '@src/app/common/models/user-info';
+import { UserResponse } from '@src/app/modules/auth/models/user-response';
+import { CreateForOAuth } from '@src/app/modules/user/services/create.oauth.service';
+import { FindUser } from '@src/app/modules/user/util/find-user';
+import { UserFromJwt } from '@src/app/modules/auth/models/user-from-jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly findUser: FindUser,
     private readonly jwtService: JwtService,
-    private readonly createForOAuth: CreateForOAuth,
+    private readonly createForOAuth: CreateForOAuth
   ) {}
 
-  async googleValidateUser(
-    userData: UserGoogleData,
-  ): Promise<Omit<UserResponse, 'password'>> {
+  async googleValidateUser(userData: UserGoogleData): Promise<UserResponse | null> {
     const user = await this.findUser.findOne(userData.email);
 
     if (user) {
-      user.password = undefined;
+      (user.password as any) = undefined;
+      console.log(user);
       return user;
     }
     await this.createForOAuth.execute(userData);
+
     const newUser = await this.findUser.findOne(userData.email);
-    newUser.password = undefined;
+    if (newUser) (newUser.password as any) = undefined;
+    console.log(newUser);
     return newUser;
   }
 
-  async localValidateUser(
-    userData: UserLocalData,
-  ): Promise<Omit<UserResponse, 'password'>> {
+  async localValidateUser(userData: UserLocalData): Promise<UserResponse | null> {
     const { usernameOrEmail, password } = userData;
 
     if (!usernameOrEmail) {
@@ -45,7 +44,7 @@ export class AuthService {
     if (!password) {
       throw new Error('Password is required');
     }
-    const user: UserInfo = await this.findUser.findOne(usernameOrEmail);
+    const user = (await this.findUser.findOne(usernameOrEmail)) as UserInfo;
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
@@ -58,7 +57,7 @@ export class AuthService {
     return null;
   }
 
-  login(user: User): UserToken {
+  login(user: UserFromJwt): UserToken {
     const { id, name, username, email } = user;
     const payload: UserPayload = {
       sub: id,
@@ -73,10 +72,7 @@ export class AuthService {
     };
   }
 
-  public static async hashPassword(
-    password: string,
-    salt = 10,
-  ): Promise<string> {
+  public static async hashPassword(password: string, salt = 10): Promise<string> {
     return await bcrypt.hash(password, salt);
   }
 }

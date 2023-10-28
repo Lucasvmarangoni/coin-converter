@@ -1,4 +1,5 @@
 import { Logger, Module } from '@nestjs/common';
+// eslint-disable-next-line no-restricted-imports
 import { ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MongooseError } from 'mongoose';

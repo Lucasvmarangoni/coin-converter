@@ -4,3 +4,7 @@ export interface UserResponse {
   email: string;
   createdAt: Date;
 }
+
+export interface UserResponseWithPassword extends UserResponse {
+  password: string | undefined;
+}

@@ -7,13 +7,12 @@ import {
   Req,
   Res,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
-import { Response } from 'express';
-import { ConverterService } from '../services/converter.service';
-import { FindAllService } from '../services/find-all.service';
-import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
-import { DeleteService } from '../services/delete.service';
+import { Request, Response } from 'express';
+import { ConverterService } from '@src/app/modules/converter/services/converter.service';
+import { FindAllService } from '@src/app/modules/converter/services/find-all.service';
+import { CacheTTL } from '@nestjs/cache-manager';
+import { DeleteService } from '@src/app/modules/converter/services/delete.service';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { ttlOneHour } from '@src/app/common/rate-limiter/util/ttl-rate-limiter';
 import {
@@ -27,7 +26,7 @@ import {
   schemaOkDeletedResponse,
   schemaOkResponse,
 } from '@src/docs/schemas/converter-schemas';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@src/app/modules/auth/guards/jwt-auth.guard';
 
 // @UseInterceptors(CacheInterceptor)
 @ApiTags('converter')
@@ -37,7 +36,7 @@ export class ConverterController {
   constructor(
     private readonly converterService: ConverterService,
     private readonly findAllService: FindAllService,
-    private readonly deleteAllService: DeleteService,
+    private readonly deleteAllService: DeleteService
   ) {}
 
   @ApiBearerAuth()
@@ -65,9 +64,9 @@ export class ConverterController {
   @CacheTTL(360 * 100)
   @Post(':to/:amount/:from?')
   public async converter(
-    @Param() params: { to: string; amount: number; from?: string },
-    @Req() req,
-    @Res() res: Response,
+    @Param() params: { to: string; amount: number; from: string },
+    @Req() req: Request,
+    @Res() res: Response
   ): Promise<void> {
     const { from, to, amount } = params;
 
@@ -103,7 +102,7 @@ export class ConverterController {
   @Throttle({ short: { limit: 5, ttl: ttlOneHour } })
   @CacheTTL(360 * 100)
   @Get('all')
-  public async listAll(@Req() req, @Res() res): Promise<void> {
+  public async listAll(@Req() req: Request, @Res() res: Response): Promise<void> {
     const { id, email } = req.user;
     const listAll = await this.findAllService.execute(id, email);
     res.status(200).json(listAll);
@@ -128,7 +127,7 @@ export class ConverterController {
   @UseGuards(JwtAuthGuard)
   @SkipThrottle({ default: true })
   @Delete('delete')
-  async delete(@Req() req, @Res() res) {
+  async delete(@Req() req: Request, @Res() res: Response) {
     await this.deleteAllService.execute(req.user);
     return res.status(200).json({
       message: 'You transactions are deleted successful',

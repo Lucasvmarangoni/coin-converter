@@ -3,8 +3,8 @@ import {
   Post,
   Res,
   Body,
-  UsePipes,
-  ValidationPipe,
+  // UsePipes,
+  // ValidationPipe,
   Delete,
   UseGuards,
   Get,
@@ -13,11 +13,11 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { CreateUpdateUserDto } from './dto/create-dto';
-import { CreateService } from '../services/create.service';
-import { DeleteService } from '../services/delete.service';
-import { Response } from 'express';
-import { ProfileService } from '../services/profile.service';
-import { UpdateService } from '../services/update.service';
+import { CreateService } from '@src/app/modules/user/services/create.service';
+import { DeleteService } from '@src/app/modules/user/services/delete.service';
+import { Request, Response } from 'express';
+import { ProfileService } from '@src/app/modules/user/services/profile.service';
+import { UpdateService } from '@src/app/modules/user/services/update.service';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { ttlOneHour } from '@src/app/common/rate-limiter/util/ttl-rate-limiter';
 import {
@@ -31,7 +31,7 @@ import {
   schemaOkDeletedResponse,
   schemaOkResponse,
 } from '@src/docs/schemas/user-schemas';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@src/app/modules/auth/guards/jwt-auth.guard';
 
 @ApiTags('user')
 @Controller('user')
@@ -40,7 +40,7 @@ export class UserController {
     private readonly createService: CreateService,
     private readonly deleteService: DeleteService,
     private readonly profileService: ProfileService,
-    private readonly updateService: UpdateService,
+    private readonly updateService: UpdateService
   ) {}
 
   @ApiOperation({
@@ -57,7 +57,7 @@ export class UserController {
   @Post('')
   public async create(
     @Body() body: CreateUpdateUserDto,
-    @Res() res: Response,
+    @Res() res: Response
   ): Promise<void> {
     const { user } = await this.createService.execute(body);
 
@@ -83,7 +83,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Throttle({ medium: { limit: 20, ttl: ttlOneHour } })
   @Get('profile')
-  async getProfile(@Req() req, @Res() res) {
+  async getProfile(@Req() req: Request, @Res() res: Response) {
     const profile = await this.profileService.execute(req.user);
     return res.status(200).json(profile);
   }
@@ -106,7 +106,11 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Throttle({ short: { limit: 3, ttl: ttlOneHour } })
   @Put('update')
-  async update(@Body() body: CreateUpdateUserDto, @Req() req, @Res() res) {
+  async update(
+    @Body() body: CreateUpdateUserDto,
+    @Req() req: Request,
+    @Res() res: Response
+  ) {
     const updateUser = await this.updateService.execute(req.user.email, body);
     return res.status(200).json(updateUser);
   }
@@ -127,8 +131,8 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @SkipThrottle({ default: true })
   @Delete('delete')
-  async delete(@Req() req, @Res() res) {
-    await this.deleteService.execute(req.user);
+  async delete(@Req() req: Request, @Res() res: Response) {
+    await this.deleteService.execute({ email: req.user.email });
     return res.status(200).json({
       message: 'You account is deleted successful',
     });

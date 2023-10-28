@@ -1,12 +1,7 @@
-import {
-  Inject,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { FindUser } from '../util/find-user';
-import { UserResponse } from './models/user-models';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { FindUser } from '@src/app/modules/user/util/find-user';
 import { ReqProps } from './models/req-props';
+import { UserResponse } from './models/user-res';
 
 @Injectable()
 export class ProfileService {

@@ -19,7 +19,7 @@ export interface ExchangeRatesResponse {
 
 export const sourceCurrenciesAccepted = ['EUR'];
 export const acceptedCurrencies = `At the moment, it is only possible to perform conversions based on the ${sourceCurrenciesAccepted.join(
-  ',',
+  ','
 )} currency.`;
 
 interface ApiConfig {
@@ -32,12 +32,10 @@ export class ExchangeratesService {
   constructor(
     private request: HttpService,
     private configService: ConfigService<ApiConfig, true>,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache
   ) {}
 
-  public async fetchConvert(
-    sourceCurrency: string,
-  ): Promise<ExchangeRatesResponse> {
+  public async fetchConvert(sourceCurrency: string): Promise<ExchangeRatesResponse> {
     this.ParamsValidator(sourceCurrency);
 
     const api = await this.configService.get<ApiConfig>('api', {
@@ -49,27 +47,29 @@ export class ExchangeratesService {
 
     try {
       const response$ = this.request.get<ExchangeRatesResponse>(url);
-      const axiosResponse: AxiosResponse<ExchangeRatesResponse> =
-        await firstValueFrom(response$);
+      const axiosResponse: AxiosResponse<ExchangeRatesResponse> = await firstValueFrom(
+        response$
+      );
       response = axiosResponse.data;
 
       if (!this.isValidResponse(response)) {
         throw new ExchangeratesResponseError('Invalid response');
       }
 
-      const cachedExchangeRates =
-        await this.cacheManager.get<ExchangeRatesResponse>('ExchangeRates');
+      const cachedExchangeRates = await this.cacheManager.get<ExchangeRatesResponse>(
+        'ExchangeRates'
+      );
 
       if (cachedExchangeRates) {
         return cachedExchangeRates;
       }
       await this.cacheManager.set('ExchangeRates', response, 6000);
       return response;
-    } catch (err) {
+    } catch (err: any) {
       const { response } = err;
       if (err instanceof Error && response && response.status) {
         throw new ExchangeratesResponseError(
-          `Error: ${JSON.stringify(response.data)} Code: ${response.status}`,
+          `Error: ${JSON.stringify(response.data)} Code: ${response.status}`
         );
       }
       if (err instanceof ExchangeratesResponseError) {
@@ -83,7 +83,7 @@ export class ExchangeratesService {
     if (!sourceCurrenciesAccepted.includes(sourceCurrency)) {
       if (typeof sourceCurrency !== 'string' || !sourceCurrency.trim()) {
         throw new ExchangeratesInvalidInputError(
-          `${acceptedCurrencies} Invalid source currency. It must be a non-empty string.`,
+          `${acceptedCurrencies} Invalid source currency. It must be a non-empty string.`
         );
       }
       throw new ExchangeratesInvalidInputError(acceptedCurrencies);

@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ExchangeratesService } from '@src/client/exchangerates.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { BadRequestException } from '@nestjs/common';
-import { ConverterService } from '../converter.service';
+import { ConverterService } from '@src/app/modules/converter/services/converter.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { mockCacheManager } from '@src/app/common/constants/mock-cache';
 
@@ -42,13 +42,10 @@ describe('ConverterService', () => {
       user: { id: '64feae0ad15e0c0e55a0b228', email: 'john@gmail.com' },
     };
     await expect(service.execute(req)).rejects.toThrow(
-      new BadRequestException(
-        `You provide an invalid value for the 'to' parameter`,
-        {
-          cause: new Error(),
-          description: `You need to provide a valid 'currency ISO code' in to param.`,
-        },
-      ),
+      new BadRequestException(`You provide an invalid value for the 'to' parameter`, {
+        cause: new Error(),
+        description: `You need to provide a valid 'currency ISO code' in to param.`,
+      })
     );
   });
 
@@ -60,13 +57,10 @@ describe('ConverterService', () => {
       user: { id: '64feae0ad15e0c0e55a0b228', email: 'john@gmail.com' },
     };
     await expect(service.execute(req)).rejects.toThrow(
-      new BadRequestException(
-        `You provide an invalid value for the 'from' parameter`,
-        {
-          cause: new Error(),
-          description: `You need to provide a valid 'currency ISO code' in to param or leave it undefined to use the default value.`,
-        },
-      ),
+      new BadRequestException(`You provide an invalid value for the 'from' parameter`, {
+        cause: new Error(),
+        description: `You need to provide a valid 'currency ISO code' in to param or leave it undefined to use the default value.`,
+      })
     );
   });
 
@@ -86,8 +80,8 @@ describe('ConverterService', () => {
         {
           cause: new Error(),
           description: `You must provide a valid 'amount' in numeric format and Number type for the conversion.`,
-        },
-      ),
+        }
+      )
     );
   });
 

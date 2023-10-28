@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException } from '@nestjs/common';
-import { CreateService } from '../create.service';
-import { HashPassword } from '../util/hash-password';
+import { CreateService } from '@src/app/modules/user/services/create.service';
+import { HashPassword } from '@src/app/modules/user/services/util/hash-password';
 import { getQueueToken } from '@nestjs/bull';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Queue } from 'bull';
@@ -48,7 +48,7 @@ describe('CreateService', () => {
       password: 'password123',
     };
 
-    jest.spyOn(usersQueue, 'add').mockResolvedValue(null);
+    jest.spyOn(usersQueue, 'add').mockResolvedValue(null as any);
     eventEmitterMock.once.mockImplementation((event, callback) => {
       if (event === 'user.created') {
         callback();
@@ -65,11 +65,11 @@ describe('CreateService', () => {
     expect(hashPassword.hash).toHaveBeenCalledWith('password123');
     expect(usersQueue.add).toHaveBeenCalledWith(
       'user.creating',
-      expect.any(UserCreatedEvent),
+      expect.any(UserCreatedEvent)
     );
     expect(eventEmitterMock.once).toHaveBeenCalledWith(
       'user.created',
-      expect.any(Function),
+      expect.any(Function)
     );
   });
 
@@ -81,7 +81,7 @@ describe('CreateService', () => {
       password: 'password123',
     };
 
-    jest.spyOn(usersQueue, 'add').mockResolvedValue(null);
+    jest.spyOn(usersQueue, 'add').mockResolvedValue(null as any);
 
     eventEmitterMock.emit('user.created.failed', {
       message: 'duplicate key',
@@ -96,13 +96,11 @@ describe('CreateService', () => {
 
     jest.spyOn(hashPassword, 'hash').mockResolvedValue('hashedpassword');
 
-    await expect(service.execute(userData)).rejects.toThrow(
-      BadRequestException,
-    );
+    await expect(service.execute(userData)).rejects.toThrow(BadRequestException);
     expect(hashPassword.hash).toHaveBeenCalledWith('password123');
     expect(usersQueue.add).toHaveBeenCalledWith(
       'user.creating',
-      expect.any(UserCreatedEvent),
+      expect.any(UserCreatedEvent)
     );
   });
 });

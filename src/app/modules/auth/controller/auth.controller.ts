@@ -1,20 +1,13 @@
-import {
-  Controller,
-  UseGuards,
-  Post,
-  Res,
-  Req,
-  Body,
-  Get,
-} from '@nestjs/common';
-import { IsPublic } from '../decorators/is-public.decorator';
-import { GoogleAuthGuard } from '../guards/google-auth.guard';
+import { Controller, UseGuards, Post, Res, Req, Get } from '@nestjs/common';
+import { IsPublic } from '@src/app/modules/auth/decorators/is-public.decorator';
+import { GoogleAuthGuard } from '@src/app/modules/auth/guards/google-auth.guard';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { SkipThrottle } from '@nestjs/throttler';
 import { authnResponse, BodyAuthSchema } from '@src/docs/schemas/auth-schemas';
-import { LocalAuthGuard } from '../guards/local-auth.guard';
-import { AuthRequest } from '../models/auth-request';
-import { AuthService } from '../services/auth.service';
+import { LocalAuthGuard } from '@src/app/modules/auth/guards/local-auth.guard';
+import { AuthRequest } from '@src/app/modules/auth/models/auth-request';
+import { AuthService } from '@src/app/modules/auth/services/auth.service';
+import { Response } from 'express';
 
 @SkipThrottle({ default: false })
 @ApiTags('auth')
@@ -41,11 +34,11 @@ export class AuthController {
   @IsPublic()
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Req() req: AuthRequest, @Res() res) {
+  async login(@Req() req: AuthRequest, @Res() res: Response) {
     try {
       // res.set('authorization', jwt.access_token);
       res.status(200).json(this.authService.login(req.user));
-    } catch (err) {
+    } catch (err: any) {
       return res.status(401).json({ error: err.message });
     }
   }
@@ -59,11 +52,11 @@ export class AuthController {
   @IsPublic()
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
-  async google(@Req() req, @Res() res) {
+  async google(@Req() req: AuthRequest, @Res() res: Response) {
     try {
       // res.set('authorization', jwt.access_token);
       res.status(200).json(this.authService.login(req.user));
-    } catch (err) {
+    } catch (err: any) {
       return res.status(401).json({ error: err.message });
     }
   }

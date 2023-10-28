@@ -13,7 +13,7 @@ export class UsersManagementProcessor {
     private readonly loggerService: LoggerService,
     @InjectModel('UserModel')
     private readonly userModel: Model<User>,
-    private readonly eventEmitter: EventEmitter2,
+    private readonly eventEmitter: EventEmitter2
   ) {
     this.loggerService.contextName = UsersManagementProcessor.name;
   }
@@ -36,7 +36,7 @@ export class UsersManagementProcessor {
         });
 
       await userCreation;
-    } catch (err) {
+    } catch (err: any) {
       this.loggerService.error(`${err.message}`);
       throw err;
     }

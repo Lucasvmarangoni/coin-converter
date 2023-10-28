@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
+// eslint-disable-next-line no-restricted-imports
 import { ConfigService } from '@nestjs/config';
 
 @Module({
@@ -8,7 +9,7 @@ import { ConfigService } from '@nestjs/config';
       useFactory: (configService: ConfigService) => {
         return {
           pinoHttp: {
-            customProps: (req, res) => ({
+            customProps: () => ({
               context: 'HTTP',
             }),
             transport: {

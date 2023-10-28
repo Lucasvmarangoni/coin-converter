@@ -1,18 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateService } from '../../services/create.service';
-import { DeleteService } from '../../services/delete.service';
-import { FindUser } from '../../util/find-user';
-import { UserController } from '../user.controller';
+import { CreateService } from '@src/app/modules/user/services/create.service';
+import { DeleteService } from '@src/app/modules/user/services/delete.service';
+import { FindUser } from '@src/app/modules/user/util/find-user';
+import { UserController } from '@src/app/modules/user/controllers/user.controller';
 import { getModelToken } from '@nestjs/mongoose';
-import { Response } from 'express';
-import { CreateUpdateUserDto } from '../dto/create-dto';
-import { ProfileService } from '../../services/profile.service';
+import { Request, Response } from 'express';
+import { CreateUpdateUserDto } from '@src/app/modules/user/controllers/dto/create-dto';
+import { ProfileService } from '@src/app/modules/user/services/profile.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { UpdateService } from '../../services/update.service';
-import { HashPassword } from '../../services/util/hash-password';
+import { UpdateService } from '@src/app/modules/user/services/update.service';
+import { HashPassword } from '@src/app/modules/user/services/util/hash-password';
 import { mockCacheManager } from '@src/app/common/constants/mock-cache';
-import { BullModule, getQueueToken } from '@nestjs/bull';
-import { EventEmitter2, EventEmitterModule } from '@nestjs/event-emitter';
+import { getQueueToken } from '@nestjs/bull';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 describe('User controller', () => {
   let createService: CreateService,
@@ -117,7 +117,7 @@ describe('User controller', () => {
       };
 
       jest.spyOn(profileService, 'execute').mockResolvedValue({ user });
-      await controller.getProfile(user, res as Response);
+      await controller.getProfile(user as unknown as Request, res as Response);
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({ user });

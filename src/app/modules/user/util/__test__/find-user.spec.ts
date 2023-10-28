@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { getModelToken } from '@nestjs/mongoose';
-import { FindUser } from '../find-user';
+import { FindUser } from '@src/app/modules/user/util/find-user';
 import { mockCacheManager } from '@src/app/common/constants/mock-cache';
 
 const mockUserModel = {
@@ -41,13 +41,11 @@ describe('FindUser', () => {
       expect(mockUserModel.findOne).toHaveBeenCalledWith({
         email: 'test@example.com',
       });
-      expect(mockCacheManager.get).toHaveBeenCalledWith(
-        'user:test@example.com',
-      );
+      expect(mockCacheManager.get).toHaveBeenCalledWith('user:test@example.com');
       expect(mockCacheManager.set).toHaveBeenCalledWith(
         'user:test@example.com',
         result,
-        expect.any(Number),
+        expect.any(Number)
       );
     });
 
@@ -79,9 +77,7 @@ describe('FindUser', () => {
 
       expect(result).toEqual(user);
       expect(mockUserModel.findOne).not.toHaveBeenCalled();
-      expect(mockCacheManager.get).toHaveBeenCalledWith(
-        'user:cached@example.com',
-      );
+      expect(mockCacheManager.get).toHaveBeenCalledWith('user:cached@example.com');
     });
   });
 

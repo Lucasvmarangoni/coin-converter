@@ -88,16 +88,14 @@ export class LoggerService {
           }
           const time = `${this.dateFormat(info?.timestamp)}`;
           const level = `${levelColor}${info.level.toLocaleUpperCase()}${resetText}`;
-          const context = `${contextColor}${
-            info?.meta?.context ?? ''
-          }${resetText}`;
+          const context = `${contextColor}${info?.meta?.context ?? ''}${resetText}`;
           const fullTimestamp = `${emphasize}full-timestamp:${resetText} ${info?.timestamp}`;
 
           return (
             `${time} ${level} ${context} ➔` +
             ` ${info?.message} ${JSON.stringify(info?.meta)} ${fullTimestamp}`
           );
-        }),
+        })
       ),
     });
   }

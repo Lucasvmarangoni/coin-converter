@@ -1,15 +1,16 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy } from 'passport-google-oauth20';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '@src/app/modules/auth/services/auth.service';
+// eslint-disable-next-line no-restricted-imports
 import { ConfigService } from '@nestjs/config';
-import { AuthGoogle } from '../models/auth-google';
+import { AuthGoogle } from '@src/app/modules/auth/models/auth-google';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
   constructor(
     private readonly authService: AuthService,
-    private configService: ConfigService<string, true>,
+    private readonly configService: ConfigService<string, true>
   ) {
     super({
       clientID: configService.get<AuthGoogle>('auth', {
@@ -23,13 +24,18 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
       })}/api/google/redirect`,
       scope: ['profile', 'email'],
     });
+    this.configService;
   }
 
-  async validate(accessToken: string, refreshToken: string, profile: Profile) {
-    const user = await this.authService.googleValidateUser({
-      email: profile.emails[0].value,
-      name: profile.displayName,
-    });
-    return user;
+  async validate(_accessToken: string, _refreshToken: string, profile: Profile) {
+    if (profile.emails?.[0]?.value) {
+      const user = await this.authService.googleValidateUser({
+        email: profile.emails[0].value,
+        name: profile.displayName,
+      });
+      return user;
+    } else {
+      throw new Error(`Email address not provided, something is wrong!"`);
+    }
   }
 }

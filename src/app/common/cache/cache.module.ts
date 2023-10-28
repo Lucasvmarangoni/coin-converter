@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
+import { CacheModule } from '@nestjs/cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+// eslint-disable-next-line no-restricted-imports
 import { ConfigService } from '@nestjs/config';
 
 @Module({

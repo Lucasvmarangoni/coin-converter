@@ -4,36 +4,49 @@ import { User } from '@src/app/models/user';
 import { Model } from 'mongoose';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import { UserInfo } from '../../../common/models/user-info';
+import { UserInfo } from '@src/app/common/models/user-info';
 
 @Injectable()
 export class FindUser {
+  ttl5days = 432 * 1000000;
+
   constructor(
     @InjectModel('UserModel')
     private userModel: Model<User>,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache
   ) {}
 
-  async findOne(usernameOrEmail: string): Promise<UserInfo | undefined> {
-    let user: UserInfo;
-
+  async findOne(usernameOrEmail: string): Promise<UserInfo | null> {
     if (this.isEmail(usernameOrEmail)) {
-      const cached = await this.cacheManager.get<UserInfo>(
-        `user:${usernameOrEmail}`,
-      );
-      if (cached) {
-        return cached;
-      }
-      const ttl5days = 432 * 1000000;
-      user = await this.userModel.findOne<UserInfo>({ email: usernameOrEmail });
-      this.cacheManager.set(`user:${usernameOrEmail}`, user, ttl5days);
+      return this.findUserByEmail(usernameOrEmail);
     } else {
-      user = await this.userModel.findOne<UserInfo>({
-        username: usernameOrEmail,
-      });
+      return this.findUserByUsername(usernameOrEmail);
+    }
+  }
+
+  private async findUserByEmail(email: string): Promise<UserInfo | null> {
+    const cachedUser = await this.getUserFromCache(email);
+    if (cachedUser) {
+      return cachedUser;
     }
 
+    const user = await this.userModel.findOne<UserInfo>({ email });
+    if (user) this.setUserToCache(email, user);
     return user;
+  }
+
+  private async findUserByUsername(username: string): Promise<UserInfo | null> {
+    return this.userModel.findOne<UserInfo>({ username });
+  }
+
+  private async getUserFromCache(key: string): Promise<UserInfo | undefined> {
+    return this.cacheManager.get<UserInfo>(`user:${key}`);
+  }
+
+  private setUserToCache(key: string, user: UserInfo | undefined): void {
+    if (user) {
+      this.cacheManager.set(`user:${key}`, user, this.ttl5days);
+    }
   }
 
   async findAllUsernames(): Promise<string[]> {

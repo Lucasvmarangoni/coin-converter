@@ -1,10 +1,11 @@
-const t = 'test'
-
 export default () => ({
-  port: +process.env.PORT,
-  container: +process.env.CONTAINER_PORT,
+  port: Number(process.env.PORT),
+  container: Number(process.env.CONTAINER_PORT),
   database: {
-    uri: process.env.NODE_ENV !== 'test' ? process.env.DATABASE_URI : process.env.DATABASE_TEST_URI,
+    uri:
+      process.env.NODE_ENV !== 'test'
+        ? process.env.DATABASE_URI
+        : process.env.DATABASE_TEST_URI,
   },
   mongodb: {
     user: process.env.MONGO_USER,
@@ -21,7 +22,7 @@ export default () => ({
   },
   auth: {
     key: process.env.JWT_SECRET,
-    expiresIn: +process.env.AUTH_TOKEN_EXPIRES_IN,
+    expiresIn: Number(process.env.AUTH_TOKEN_EXPIRES_IN),
     secret: process.env.EXPRESS_SESSION_SECRET,
     google: {
       id: process.env.GOOGLE_CLIENT_ID,
@@ -37,6 +38,6 @@ export default () => ({
   },
   redis: {
     host: process.env.REDIS_HOST,
-    port: +process.env.REDIS_PORT,
+    port: Number(process.env.REDIS_PORT),
   },
 });

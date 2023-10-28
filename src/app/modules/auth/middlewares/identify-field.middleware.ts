@@ -6,13 +6,13 @@ import { Request, Response, NextFunction } from 'express';
 export class IdentifyFieldMiddleware implements NestMiddleware {
   constructor(private readonly findUser: FindUser) {}
 
-  async use(req: Request, res: Response, next: NextFunction) {
+  async use(req: Request, _: Response, next: NextFunction) {
     const { body } = req;
     if ('username' in body) {
       const user = await this.findUser.findOne(body.username);
       req.body = {
         ...body,
-        email: user.email,
+        email: user?.email,
       };
     }
     next();

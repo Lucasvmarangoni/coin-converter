@@ -1,11 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+// eslint-disable-next-line no-restricted-imports
 import { ConfigService } from '@nestjs/config';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 import { HttpExceptionFilter } from './app/common/err/exception.filter';
 import { swagger } from './docs/swagger';
-import * as session from 'express-session';
-import * as passport from 'passport';
+import session from 'express-session';
+import passport from 'passport';
 import { ValidationPipe } from '@nestjs/common';
 
 (async (): Promise<void> => {
@@ -15,13 +16,15 @@ import { ValidationPipe } from '@nestjs/common';
   app.setGlobalPrefix('api');
   app.use(
     session({
-      secret: configService.get<{ secret: string }>('auth').secret,
+      secret: configService.get<{ secret: string }>('auth', {
+        infer: true,
+      }).secret,
       saveUninitialized: false,
       resave: false,
       cookie: {
         maxAge: 60000,
       },
-    }),
+    })
   );
   app.use(passport.initialize());
   app.use(passport.session());

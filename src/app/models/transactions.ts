@@ -40,5 +40,5 @@ export const TransactionSchema = SchemaFactory.createForClass(Transaction);
 
 export const Transactions = mongoose.model<TransactionDocument>(
   'Transactions',
-  TransactionSchema,
+  TransactionSchema
 );
