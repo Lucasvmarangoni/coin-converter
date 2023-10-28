@@ -13,3 +13,4 @@ node_modules
 README.md
 scripts
 docker
+package-lock.json
