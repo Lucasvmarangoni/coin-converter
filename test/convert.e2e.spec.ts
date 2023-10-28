@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { ObjectId } from 'bson';
 import { getConnectionToken } from '@nestjs/mongoose';
@@ -8,7 +8,9 @@ import { Connection } from 'mongoose';
 import { clearDatabase } from './util/clear-database';
 
 describe('AppController (e2e)', () => {
-  let app: INestApplication, token, connection: Connection;
+  let app: INestApplication,
+    token: { body: { access_token: any } },
+    connection: Connection;
 
   beforeAll(async () => {
     const userData = {
@@ -170,7 +172,7 @@ describe('AppController (e2e)', () => {
   });
 
   it('(POST) Transaction of invalid token', async () => {
-    const { body, status } = await request(app.getHttpServer())
+    const { body } = await request(app.getHttpServer())
       .post('/api/converter/10/AMD')
       .set('Authorization', `Bearer invalid_token`);
 
@@ -185,7 +187,7 @@ describe('AppController (e2e)', () => {
   });
 
   it('(DELETE) Deleted all transactions', async () => {
-    const { body, status } = await request(app.getHttpServer())
+    const { body } = await request(app.getHttpServer())
       .delete('/api/converter/delete')
       .set('Authorization', `Bearer ${token}`)
       .expect(200);

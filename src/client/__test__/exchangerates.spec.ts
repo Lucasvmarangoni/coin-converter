@@ -1,11 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpService } from '@nestjs/axios';
+// eslint-disable-next-line no-restricted-imports
 import { ConfigService } from '@nestjs/config';
 import { of } from 'rxjs';
 import { AxiosResponse } from 'axios';
-import { ClientRequestError } from '../err/client-request-error';
-import { ExchangeratesResponseError } from '../err/response-error';
-import { ExchangeratesService, ExchangeRatesResponse } from '../exchangerates.service';
+import { ClientRequestError } from '@src/client/err/client-request-error';
+import { ExchangeratesResponseError } from '@src/client/err/response-error';
+import {
+  ExchangeratesService,
+  ExchangeRatesResponse,
+} from '@src/client/exchangerates.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { mockCacheManager } from '@src/app/common/constants/mock-cache';
 
@@ -52,14 +56,17 @@ describe('ExchangeratesService', () => {
         url: 'http://api.exchangeratesapi.io/v1/latest?base=',
         key: 'testKey',
       });
-      const mockAxiosResponse: AxiosResponse = {
+      const mockAxiosResponse = {
         data: { success: false },
         status: 200,
         statusText: 'OK',
         headers: {},
         config: undefined,
       };
-      jest.spyOn(httpService, 'get').mockReturnValueOnce(of(mockAxiosResponse));
+
+      jest
+        .spyOn(httpService, 'get')
+        .mockReturnValueOnce(of(mockAxiosResponse as unknown as AxiosResponse));
 
       await expect(service.fetchConvert('EUR')).rejects.toThrow(
         ExchangeratesResponseError
@@ -78,14 +85,16 @@ describe('ExchangeratesService', () => {
         url: 'http://api.exchangeratesapi.io/v1/latest?base=',
         key: 'testKey',
       });
-      const mockAxiosResponse: AxiosResponse = {
+      const mockAxiosResponse = {
         data: mockResponse,
         status: 200,
         statusText: 'OK',
         headers: {},
         config: undefined,
       };
-      jest.spyOn(httpService, 'get').mockReturnValueOnce(of(mockAxiosResponse));
+      jest
+        .spyOn(httpService, 'get')
+        .mockReturnValueOnce(of(mockAxiosResponse as unknown as AxiosResponse));
 
       const result = await service.fetchConvert('EUR');
 
