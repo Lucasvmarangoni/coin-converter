@@ -55,7 +55,7 @@ export class UpdateService {
   private async update(currentEmail: string, updateData: UserProps) {
     try {
       await this.userModel.updateOne({ email: currentEmail }, updateData);
-    } catch (err: any) {
+    } catch (err) {
       throw new BadRequestException(
         err.message.includes('duplicate key')
           ? 'This user already exist. Try with other username or email.'

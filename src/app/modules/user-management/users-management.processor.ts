@@ -36,7 +36,7 @@ export class UsersManagementProcessor {
         });
 
       await userCreation;
-    } catch (err: any) {
+    } catch (err) {
       this.loggerService.error(`${err.message}`);
       throw err;
     }

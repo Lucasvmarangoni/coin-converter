@@ -13,7 +13,7 @@ export class SessionSerializer extends PassportSerializer {
   serializeUser(user: User, done: Function) {
     done(null, user);
   }
-
+  // usar o UserPayload no lugar do any, depois que eu corrigir o bug
   async deserializeUser(payload: any, done: Function) {
     const user = await this.findUser.findOne(payload.id);
     return user ? done(null, user) : done(null, null);

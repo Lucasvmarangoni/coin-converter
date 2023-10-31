@@ -38,7 +38,7 @@ export class AuthController {
     try {
       // res.set('authorization', jwt.access_token);
       res.status(200).json(this.authService.login(req.user));
-    } catch (err: any) {
+    } catch (err) {
       return res.status(401).json({ error: err.message });
     }
   }
@@ -56,7 +56,7 @@ export class AuthController {
     try {
       // res.set('authorization', jwt.access_token);
       res.status(200).json(this.authService.login(req.user));
-    } catch (err: any) {
+    } catch (err) {
       return res.status(401).json({ error: err.message });
     }
   }

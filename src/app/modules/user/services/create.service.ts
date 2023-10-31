@@ -53,7 +53,7 @@ export class CreateService {
     try {
       await this.usersQueue.add('user.creating', new UserCreatedEvent(user));
       await waitForUserCreated;
-    } catch (err: any) {
+    } catch (err) {
       throw new BadRequestException(
         err.message.includes('duplicate key')
           ? 'This user already exist. Try with other username or email.'

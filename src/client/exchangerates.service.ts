@@ -65,7 +65,7 @@ export class ExchangeratesService {
       }
       await this.cacheManager.set('ExchangeRates', response, 6000);
       return response;
-    } catch (err: any) {
+    } catch (err) {
       const { response } = err;
       if (err instanceof Error && response && response.status) {
         throw new ExchangeratesResponseError(

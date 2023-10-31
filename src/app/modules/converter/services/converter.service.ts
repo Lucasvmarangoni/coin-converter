@@ -46,7 +46,7 @@ export class ConverterService {
     let response: ResponseData;
     try {
       response = await this.transactionsModel.create(transactionData);
-    } catch (err: any) {
+    } catch (err) {
       throw new BadRequestException('mongoose validation error', {
         cause: new Error(),
         description: 'Some provided value to be invalid',
