@@ -6,10 +6,9 @@ WORKDIR /app
 
 COPY package*.json ./
 
-# COPY .env .
-
-RUN pnpm install
+RUN pnpm i
 
 COPY . .
+
 
 
