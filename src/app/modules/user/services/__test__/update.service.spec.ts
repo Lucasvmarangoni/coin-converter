@@ -79,7 +79,7 @@ describe('UpdateService', () => {
 
     expect(result).toEqual({
       user: {
-        ...result.user,
+        ...result?.user,
         password: undefined,
         createdAt: user.createdAt,
       },
@@ -110,7 +110,7 @@ describe('UpdateService', () => {
 
     expect(result).toEqual({
       user: {
-        ...result.user,
+        ...result?.user,
         username: user.username,
         password: undefined,
         createdAt: user.createdAt,

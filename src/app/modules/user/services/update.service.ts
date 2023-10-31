@@ -20,11 +20,11 @@ export class UpdateService {
   ) {}
 
   async execute(
-    firstEmail: string,
+    currentEmail: string,
     req: Partial<CreateUserRequest>
-  ): Promise<UserResponse> {
+  ): Promise<UserResponse | null> {
     const { name, username, email, password } = req;
-    const user = await this.findUser.findOne(firstEmail);
+    const user = await this.findUser.findOne(currentEmail);
     let hashPassword, response;
 
     if (password) hashPassword = await this.hashPassword.hash(password);
@@ -38,7 +38,7 @@ export class UpdateService {
         password: hashPassword || user.password,
         createdAt: user.createdAt,
       };
-      await this.update(firstEmail, updateData);
+      await this.update(currentEmail, updateData);
 
       response = {
         name: updateData.name,
@@ -46,14 +46,15 @@ export class UpdateService {
         email: updateData.email,
         createdAt: updateData.createdAt,
       };
-      await this.cache(firstEmail, updateData);
+      await this.cache(currentEmail, updateData);
     }
-    return { user: response } as UserResponse;
+
+    return response ? { user: response } : null;
   }
 
-  private async update(firstEmail: string, updateData: UserProps) {
+  private async update(currentEmail: string, updateData: UserProps) {
     try {
-      await this.userModel.updateOne({ email: firstEmail }, updateData);
+      await this.userModel.updateOne({ email: currentEmail }, updateData);
     } catch (err: any) {
       throw new BadRequestException(
         err.message.includes('duplicate key')
@@ -67,12 +68,12 @@ export class UpdateService {
     }
   }
 
-  private async cache(firstEmail: string, updateData: UserProps) {
-    if (firstEmail !== updateData.email) {
-      await this.cacheManager.del(`user:${firstEmail}`);
+  private async cache(currentEmail: string, updateData: UserProps) {
+    if (currentEmail !== updateData.email) {
+      await this.cacheManager.del(`user:${currentEmail}`);
       await this.cacheManager.set(`user:${updateData.email}`, updateData);
     } else {
-      await this.cacheManager.set(`user:${firstEmail}`, updateData);
+      await this.cacheManager.set(`user:${currentEmail}`, updateData);
     }
   }
 }
