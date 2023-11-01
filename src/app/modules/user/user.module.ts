@@ -3,7 +3,7 @@ import { CreateService } from './domain/services/create.service';
 import { DeleteService } from './domain/services/delete.service';
 import { FindUser } from './util/find-user';
 import { AppDatabaseModule } from '@src/database/database.module';
-import { UserController } from './controllers/user.controller';
+import { UserController } from './http/controllers/user.controller';
 import { CreateForOAuth } from './domain/services/create.oauth.service';
 import { ProfileService } from './domain/services/profile.service';
 import { UpdateService } from './domain/services/update.service';

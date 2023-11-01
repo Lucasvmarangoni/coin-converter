@@ -12,7 +12,7 @@ import {
   Put,
   HttpStatus,
 } from '@nestjs/common';
-import { CreateUpdateUserDto } from './dto/create-dto';
+import { CreateUpdateUserDto } from '@src/app/modules/user/http/dto/create-dto';
 import { CreateService } from '@src/app/modules/user/domain/services/create.service';
 import { DeleteService } from '@src/app/modules/user/domain/services/delete.service';
 import { Request, Response } from 'express';
