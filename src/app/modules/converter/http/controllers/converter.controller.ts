@@ -22,7 +22,7 @@ import {
   schemaOkDeletedResponse,
   schemaOkResponse,
 } from '@src/docs/schemas/converter-schemas';
-import { JwtAuthGuard } from '@src/app/modules/auth/http/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@src/app/modules/authn/http/guards/jwt-auth.guard';
 import { CacheTTL } from '@nestjs/cache-manager';
 import { ConverterService } from '@src/app/modules/converter/domain/services/converter.service';
 import { DeleteService } from '@src/app/modules/converter/domain/services/delete.service';
