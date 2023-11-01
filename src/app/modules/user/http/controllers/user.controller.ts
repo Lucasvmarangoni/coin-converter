@@ -31,7 +31,7 @@ import {
   schemaOkDeletedResponse,
   schemaOkResponse,
 } from '@src/docs/schemas/user-schemas';
-import { JwtAuthGuard } from '@src/app/modules/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@src/app/modules/auth/http/guards/jwt-auth.guard';
 
 @ApiTags('user')
 @Controller('user')
