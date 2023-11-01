@@ -8,7 +8,7 @@ import {
   forwardRef,
 } from '@nestjs/common';
 import { UserGoogleData } from '@src/app/common/interfaces/user-google-data';
-import { UserResponse } from './interfaces/user-res';
+import { UserResponse } from '@src/app/modules/user/domain/services/interfaces/user-res';
 
 @Injectable()
 export class CreateForOAuth {

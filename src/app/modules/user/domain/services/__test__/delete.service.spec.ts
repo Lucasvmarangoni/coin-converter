@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
-import { User } from '@src/app/models/user';
+import { User } from '@src/app/modules/user/domain/models/user';
 import { Model } from 'mongoose';
 import { DeleteService } from '../delete.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';

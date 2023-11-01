@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { FindUser } from '@src/app/modules/user/util/find-user';
-import { ReqProps } from './interfaces/req-props';
-import { UserResponse } from './interfaces/user-res';
+import { ReqProps } from '@src/app/modules/user/domain/services/interfaces/req-props';
+import { UserResponse } from '@src/app/modules/user/domain/services/interfaces/user-res';
 
 @Injectable()
 export class ProfileService {

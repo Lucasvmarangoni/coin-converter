@@ -4,7 +4,7 @@ import { Job } from 'bull';
 import { Model } from 'mongoose';
 import { UserCreatedEvent } from '@src/app/common/events/user-created-event';
 import { LoggerService } from '@src/app/common/loggers/custom/logger.service';
-import { User } from '@src/app/models/user';
+import { User } from '@src/app/modules/user/domain/models/user';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Processor('users')

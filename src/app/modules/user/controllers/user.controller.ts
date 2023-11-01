@@ -13,11 +13,11 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { CreateUpdateUserDto } from './dto/create-dto';
-import { CreateService } from '@src/app/modules/user/services/create.service';
-import { DeleteService } from '@src/app/modules/user/services/delete.service';
+import { CreateService } from '@src/app/modules/user/domain/services/create.service';
+import { DeleteService } from '@src/app/modules/user/domain/services/delete.service';
 import { Request, Response } from 'express';
-import { ProfileService } from '@src/app/modules/user/services/profile.service';
-import { UpdateService } from '@src/app/modules/user/services/update.service';
+import { ProfileService } from '@src/app/modules/user/domain/services/profile.service';
+import { UpdateService } from '@src/app/modules/user/domain/services/update.service';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { ttlOneHour } from '@src/app/common/rate-limiter/util/ttl-rate-limiter';
 import {

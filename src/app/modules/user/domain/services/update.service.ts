@@ -1,13 +1,16 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '@src/app/models/user';
+import { User } from '@src/app/modules/user/domain/models/user';
 import { Model } from 'mongoose';
-import { CreateUserRequest, UserProps } from './interfaces/user-models';
+import {
+  CreateUserRequest,
+  UserProps,
+} from '@src/app/modules/user/domain/services/interfaces/user-models';
 import { FindUser } from '@src/app/modules/user/util/find-user';
 import { HashPassword } from './util/hash-password';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import { UserResponse } from './interfaces/user-res';
+import { UserResponse } from '@src/app/modules/user/domain/services/interfaces/user-res';
 
 @Injectable()
 export class UpdateService {

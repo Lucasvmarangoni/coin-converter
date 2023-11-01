@@ -1,5 +1,6 @@
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
+// eslint-disable-next-line no-restricted-imports
 import { ConfigService } from '@nestjs/config';
 
 @Module({

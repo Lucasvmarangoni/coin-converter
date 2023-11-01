@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { Transaction } from '@src/app/models/transactions';
+import { Transaction } from '@src/database/models/transactions';
 import { ExchangeratesService } from '@src/client/exchangerates.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';

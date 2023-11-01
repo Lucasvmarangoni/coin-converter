@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateForOAuth } from '@src/app/modules/user/services/create.oauth.service';
-import { CreateService } from '@src/app/modules/user/services/create.service';
+import { CreateForOAuth } from '@src/app/modules/user/domain/services/create.oauth.service';
+import { CreateService } from '@src/app/modules/user/domain/services/create.service';
 import { FindUser } from '@src/app/modules/user/util/find-user';
 
 describe('CreateForOAuth', () => {

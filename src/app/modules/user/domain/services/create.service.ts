@@ -1,12 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateUserRequest, UserProps } from './interfaces/user-models';
+import {
+  CreateUserRequest,
+  UserProps,
+} from '@src/app/modules/user/domain/services/interfaces/user-models';
 import { HashPassword } from './util/hash-password';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UserCreatedEvent } from '@src/app/common/events/user-created-event';
-import { ResponseProps } from './interfaces/response.props';
-import { UserResponse } from './interfaces/user-res';
+import { ResponseProps } from '@src/app/modules/user/domain/services/interfaces/response.props';
+import { UserResponse } from '@src/app/modules/user/domain/services/interfaces/user-res';
 
 @Injectable()
 export class CreateService {

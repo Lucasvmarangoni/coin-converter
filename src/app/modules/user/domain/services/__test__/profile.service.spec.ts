@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UnauthorizedException } from '@nestjs/common';
 import { FindUser } from '@src/app/modules/user/util/find-user';
-import { ProfileService } from '@src/app/modules/user/services/profile.service';
+import { ProfileService } from '@src/app/modules/user/domain/services/profile.service';
 import { getModelToken } from '@nestjs/mongoose';
 
 describe('ProfileService', () => {

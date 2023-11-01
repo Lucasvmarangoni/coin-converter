@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException } from '@nestjs/common';
-import { CreateService } from '@src/app/modules/user/services/create.service';
-import { HashPassword } from '@src/app/modules/user/services/util/hash-password';
+import { CreateService } from '@src/app/modules/user/domain/services/create.service';
+import { HashPassword } from '@src/app/modules/user/domain/services/util/hash-password';
 import { getQueueToken } from '@nestjs/bull';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Queue } from 'bull';

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppClientModule } from '@src/client/client.module';
 import { AppConfigModule } from '../config/config.module';
 import { AppLoggerModule } from './app/common/loggers/logger.module';
-import { AppMongooseModule } from './database/mongoose.module';
+import { AppMongooseModule } from './database/setups/mongoose.module';
 // import { AppAuthModule } from './app/auth/auth.module';
 import { AppModules } from './app/modules/modules.module';
 import { APP_FILTER } from '@nestjs/core';

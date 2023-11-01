@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { TransactionSchema } from './transactions';
-import { UserSchema } from './user';
+import { TransactionSchema } from './models/transactions';
+import { UserSchema } from '@src/app/modules/user/domain/models/user';
 
 @Module({
   imports: [

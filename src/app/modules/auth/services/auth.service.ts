@@ -7,7 +7,7 @@ import { UserGoogleData } from '@src/app/common/interfaces/user-google-data';
 import { UserLocalData } from '@src/app/modules/auth/interface/user-local-data';
 import { UserInfo } from '@src/app/common/interfaces/user-info';
 import { UserResponse } from '@src/app/modules/auth/interface/user-response';
-import { CreateForOAuth } from '@src/app/modules/user/services/create.oauth.service';
+import { CreateForOAuth } from '@src/app/modules/user/domain/services/create.oauth.service';
 import { FindUser } from '@src/app/modules/user/util/find-user';
 import { UserFromJwt } from '@src/app/modules/auth/interface/user-from-jwt';
 
