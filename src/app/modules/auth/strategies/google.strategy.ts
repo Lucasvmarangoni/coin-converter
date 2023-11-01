@@ -4,7 +4,7 @@ import { Profile, Strategy } from 'passport-google-oauth20';
 import { AuthService } from '@src/app/modules/auth/services/auth.service';
 // eslint-disable-next-line no-restricted-imports
 import { ConfigService } from '@nestjs/config';
-import { AuthGoogle } from '@src/app/modules/auth/models/auth-google';
+import { AuthGoogle } from '@src/app/modules/auth/interface/auth-google';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {

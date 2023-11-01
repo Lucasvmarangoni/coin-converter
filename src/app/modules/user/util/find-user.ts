@@ -4,7 +4,7 @@ import { User } from '@src/app/models/user';
 import { Model } from 'mongoose';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import { UserInfo } from '@src/app/common/models/user-info';
+import { UserInfo } from '@src/app/common/interfaces/user-info';
 
 @Injectable()
 export class FindUser {

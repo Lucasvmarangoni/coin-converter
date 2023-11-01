@@ -6,12 +6,12 @@ import { Model } from 'mongoose';
 import { currencies } from '@src/app/modules/converter/util/all-currencies';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import { RequestData } from '@src/app/modules/converter/models/request';
+import { RequestData } from '@src/app/modules/converter/interfaces/request';
 import {
   ResponseData,
   ConvertProps,
   Rate,
-} from '@src/app/modules/converter/models/response';
+} from '@src/app/modules/converter/interfaces/response';
 
 @Injectable()
 export class ConverterService {

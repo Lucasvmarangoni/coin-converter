@@ -4,7 +4,7 @@ import { validate } from 'class-validator';
 import {
   LoginRequestBodyByEmail,
   LoginRequestBodyByUsername,
-} from '@src/app/modules/auth/models/login-request';
+} from '@src/app/modules/auth/interface/login-request';
 
 @Injectable()
 export class LoginValidationMiddleware implements NestMiddleware {

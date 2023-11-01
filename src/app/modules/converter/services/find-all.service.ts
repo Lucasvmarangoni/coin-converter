@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { Transaction } from '@src/app/models/transactions';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import { ResponseData } from '@src/app/modules/converter/models/response';
+import { ResponseData } from '@src/app/modules/converter/interfaces/response';
 
 @Injectable()
 export class FindAllService {

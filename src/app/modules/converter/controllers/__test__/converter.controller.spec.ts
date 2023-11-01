@@ -9,7 +9,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { DeleteService } from '@src/app/modules/converter/services/delete.service';
 import { mockCacheManager } from '@src/app/common/constants/mock-cache';
-import { ResponseData } from '@src/app/modules/converter/models/response';
+import { ResponseData } from '@src/app/modules/converter/interfaces/response';
 
 describe('converter controller', () => {
   let controller: ConverterController,

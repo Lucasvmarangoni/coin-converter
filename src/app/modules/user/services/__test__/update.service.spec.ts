@@ -7,7 +7,7 @@ import { FindUser } from '@src/app/modules/user/util/find-user';
 import { UpdateService } from '@src/app/modules/user/services/update.service';
 import { HashPassword } from '@src/app/modules/user/services/util/hash-password';
 import { Cache } from 'cache-manager';
-import { UserInfo } from '@src/app/common/models/user-info';
+import { UserInfo } from '@src/app/common/interfaces/user-info';
 import { mockCacheManager } from '@src/app/common/constants/mock-cache';
 
 describe('UpdateService', () => {

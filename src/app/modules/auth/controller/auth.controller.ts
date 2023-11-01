@@ -5,7 +5,7 @@ import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { SkipThrottle } from '@nestjs/throttler';
 import { authnResponse, BodyAuthSchema } from '@src/docs/schemas/auth-schemas';
 import { LocalAuthGuard } from '@src/app/modules/auth/guards/local-auth.guard';
-import { AuthRequest } from '@src/app/modules/auth/models/auth-request';
+import { AuthRequest } from '@src/app/modules/auth/interface/auth-request';
 import { AuthService } from '@src/app/modules/auth/services/auth.service';
 import { Response } from 'express';
 

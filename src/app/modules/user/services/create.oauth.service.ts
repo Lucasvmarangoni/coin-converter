@@ -7,8 +7,8 @@ import {
   UnprocessableEntityException,
   forwardRef,
 } from '@nestjs/common';
-import { UserGoogleData } from '@src/app/common/models/user-google-data';
-import { UserResponse } from './models/user-res';
+import { UserGoogleData } from '@src/app/common/interfaces/user-google-data';
+import { UserResponse } from './interfaces/user-res';
 
 @Injectable()
 export class CreateForOAuth {

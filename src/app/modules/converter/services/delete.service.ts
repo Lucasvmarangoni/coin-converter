@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { Transaction } from 'ioredis/built/transaction';
-import { UserReq } from '@src/app/common/models/user-req';
+import { UserReq } from '@src/app/common/interfaces/user-req';
 
 @Injectable()
 export class DeleteService {
