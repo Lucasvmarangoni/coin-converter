@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Response, Request } from 'express';
-import { ConverterController } from '@src/app/modules/converter/controllers/converter.controller';
-import { allRates } from '@src/app/modules/converter/services/__test__/util/all-rates';
-import { ConverterService } from '@src/app/modules/converter/services/converter.service';
-import { FindAllService } from '@src/app/modules/converter/services/find-all.service';
+import { ConverterController } from '@src/app/modules/converter/http/controllers/converter.controller';
+import { allRates } from '@src/app/modules/converter/domain/services/__test__/util/all-rates';
 import { ExchangeratesService } from '@src/client/exchangerates.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { DeleteService } from '@src/app/modules/converter/services/delete.service';
 import { mockCacheManager } from '@src/app/common/constants/mock-cache';
-import { ResponseData } from '@src/app/modules/converter/interfaces/response';
+import { ResponseData } from '@src/app/modules/converter/domain/services/interfaces/response';
+import { ConverterService } from '@src/app/modules/converter/domain/services/converter.service';
+import { DeleteService } from '@src/app/modules/converter/domain/services/delete.service';
+import { FindAllService } from '@src/app/modules/converter/domain/services/find-all.service';
 
 describe('converter controller', () => {
   let controller: ConverterController,

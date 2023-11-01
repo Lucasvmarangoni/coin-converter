@@ -1,17 +1,17 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { Transaction } from '@src/database/models/transactions';
+import { Transaction } from '@src/app/modules/converter/domain/models/transactions';
 import { ExchangeratesService } from '@src/client/exchangerates.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { currencies } from '@src/app/modules/converter/util/all-currencies';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import { RequestData } from '@src/app/modules/converter/interfaces/request';
+import { RequestData } from '@src/app/modules/converter/domain/services/interfaces/request';
 import {
   ResponseData,
   ConvertProps,
   Rate,
-} from '@src/app/modules/converter/interfaces/response';
+} from '@src/app/modules/converter/domain/services/interfaces/response';
 
 @Injectable()
 export class ConverterService {

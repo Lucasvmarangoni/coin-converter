@@ -2,9 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ExchangeratesService } from '@src/client/exchangerates.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { BadRequestException } from '@nestjs/common';
-import { ConverterService } from '@src/app/modules/converter/services/converter.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { mockCacheManager } from '@src/app/common/constants/mock-cache';
+import { ConverterService } from '@src/app/modules/converter/domain/services/converter.service';
 
 describe('ConverterService', () => {
   let service: ConverterService;

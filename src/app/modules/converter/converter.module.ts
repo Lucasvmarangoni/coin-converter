@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppClientModule } from '@src/client/client.module';
-import { ConverterService } from './services/converter.service';
-import { FindAllService } from './services/find-all.service';
+import { ConverterService } from './domain/services/converter.service';
+import { FindAllService } from './domain/services/find-all.service';
 import { AppDatabaseModule } from '@src/database/database.module';
-import { ConverterController } from './controllers/converter.controller';
-import { DeleteService } from './services/delete.service';
+import { ConverterController } from './http/controllers/converter.controller';
+import { DeleteService } from './domain/services/delete.service';
 
 @Module({
   imports: [AppClientModule, AppDatabaseModule],

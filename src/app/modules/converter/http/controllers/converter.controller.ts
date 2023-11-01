@@ -9,10 +9,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { ConverterService } from '@src/app/modules/converter/services/converter.service';
-import { FindAllService } from '@src/app/modules/converter/services/find-all.service';
-import { CacheTTL } from '@nestjs/cache-manager';
-import { DeleteService } from '@src/app/modules/converter/services/delete.service';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { ttlOneHour } from '@src/app/common/rate-limiter/util/ttl-rate-limiter';
 import {
@@ -26,7 +22,11 @@ import {
   schemaOkDeletedResponse,
   schemaOkResponse,
 } from '@src/docs/schemas/converter-schemas';
-import { JwtAuthGuard } from '@src/app/modules/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@src/app/modules/auth/http/guards/jwt-auth.guard';
+import { CacheTTL } from '@nestjs/cache-manager';
+import { ConverterService } from '@src/app/modules/converter/domain/services/converter.service';
+import { DeleteService } from '@src/app/modules/converter/domain/services/delete.service';
+import { FindAllService } from '@src/app/modules/converter/domain/services/find-all.service';
 
 // @UseInterceptors(CacheInterceptor)
 @ApiTags('converter')
