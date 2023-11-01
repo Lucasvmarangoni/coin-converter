@@ -1,14 +1,20 @@
 import { CreateService } from './create.service';
 import * as crypto from 'crypto';
 import { FindUser } from '@src/app/modules/user/util/find-user';
-import { UnprocessableEntityException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  UnprocessableEntityException,
+  forwardRef,
+} from '@nestjs/common';
 import { UserGoogleData } from '@src/app/common/models/user-google-data';
 import { UserResponse } from './models/user-res';
 
+@Injectable()
 export class CreateForOAuth {
   constructor(
-    private readonly createUserService: CreateService,
-    private readonly findUser: FindUser
+    private readonly findUser: FindUser,
+    @Inject(forwardRef(() => CreateService)) private createService: CreateService
   ) {}
 
   async execute(userData: UserGoogleData): Promise<UserResponse> {
@@ -16,7 +22,7 @@ export class CreateForOAuth {
     const password = this.generateRandomPassword(30);
     const generatedUsername = await this.generateRandomUsername(userData, 5);
 
-    return await this.createUserService.execute({
+    return await this.createService.execute({
       name,
       email,
       username: generatedUsername,

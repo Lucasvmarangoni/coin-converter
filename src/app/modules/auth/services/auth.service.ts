@@ -24,14 +24,11 @@ export class AuthService {
 
     if (user) {
       (user.password as any) = undefined;
-      console.log(user);
       return user;
     }
     await this.createForOAuth.execute(userData);
-
     const newUser = await this.findUser.findOne(userData.email);
     if (newUser) (newUser.password as any) = undefined;
-    console.log(newUser);
     return newUser;
   }
 
