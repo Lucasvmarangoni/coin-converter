@@ -3,14 +3,14 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 // eslint-disable-next-line no-restricted-imports
 import { ConfigService } from '@nestjs/config';
-import { AuthService } from './services/auth.service';
-import { LocalStrategy } from './strategies/local.strategy';
-import { AuthConfig, JwtStrategy } from './strategies/jwt.strategy';
-import { AuthController } from './controller/auth.controller';
-import { LoginValidationMiddleware } from './middlewares/login-validation.middleware';
-import { IdentifyFieldMiddleware } from './middlewares/identify-field.middleware';
-import { GoogleStrategy } from './strategies/google.strategy';
-import { SessionSerializer } from './serializer/google-serializer';
+import { AuthService } from './domain/services/auth.service';
+import { LocalStrategy } from './http/strategies/local.strategy';
+import { AuthConfig, JwtStrategy } from './http/strategies/jwt.strategy';
+import { AuthController } from './http/controller/auth.controller';
+import { LoginValidationMiddleware } from './http/middlewares/login-validation.middleware';
+import { IdentifyFieldMiddleware } from './http/middlewares/identify-field.middleware';
+import { GoogleStrategy } from './http/strategies/google.strategy';
+import { SessionSerializer } from './http/serializer/google-serializer';
 import { AppUserModule } from '@src/app/modules/user/user.module';
 
 @Module({

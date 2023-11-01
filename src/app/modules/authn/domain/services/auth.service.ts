@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { UserPayload } from '@src/app/modules/auth/interface/user-payload';
-import { UserToken } from '@src/app/modules/auth/interface/user-token';
+import { UserPayload } from '@src/app/modules/authn/interface/user-payload';
+import { UserToken } from '@src/app/modules/authn/interface/user-token';
 import { UserGoogleData } from '@src/app/common/interfaces/user-google-data';
-import { UserLocalData } from '@src/app/modules/auth/interface/user-local-data';
+import { UserLocalData } from '@src/app/modules/authn/interface/user-local-data';
 import { UserInfo } from '@src/app/common/interfaces/user-info';
-import { UserResponse } from '@src/app/modules/auth/interface/user-response';
 import { CreateForOAuth } from '@src/app/modules/user/domain/services/create.oauth.service';
 import { FindUser } from '@src/app/modules/user/util/find-user';
-import { UserFromJwt } from '@src/app/modules/auth/interface/user-from-jwt';
+import { UserFromJwt } from '@src/app/modules/authn/interface/user-from-jwt';
+import { UserResponse } from '@src/app/modules/authn/interface/user-response';
 
 @Injectable()
 export class AuthService {

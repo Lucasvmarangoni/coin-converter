@@ -3,8 +3,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 // eslint-disable-next-line no-restricted-imports
 import { ConfigService } from '@nestjs/config';
-import { UserPayload } from '@src/app/modules/auth/interface/user-payload';
-import { UserFromJwt } from '@src/app/modules/auth/interface/user-from-jwt';
+import { UserPayload } from '@src/app/modules/authn/interface/user-payload';
+import { UserFromJwt } from '@src/app/modules/authn/interface/user-from-jwt';
 
 export interface AuthConfig {
   readonly key: string;
