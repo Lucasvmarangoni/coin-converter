@@ -1,30 +1,38 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getModelToken } from '@nestjs/mongoose';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { User } from '@src/app/modules/user/domain/models/user';
-import { Model } from 'mongoose';
 import { FindUser } from '@src/app/modules/user/util/find-user';
 import { UpdateService } from '@src/app/modules/user/domain/services/update.service';
 import { HashPassword } from '@src/app/modules/user/domain/services/util/hash-password';
 import { Cache } from 'cache-manager';
 import { UserInfo } from '@src/app/common/interfaces/user-info';
 import { mockCacheManager } from '@src/app/common/constants/mock-cache';
+import { getQueueToken } from '@nestjs/bull';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Queue } from 'bull';
 
 describe('UpdateService', () => {
-  let service: UpdateService;
-  let findUser: FindUser;
-  let cacheManager: Cache;
-  let userModel: Model<User>;
+  let service: UpdateService,
+    findUser: FindUser,
+    cacheManager: Cache,
+    hashPassword: HashPassword,
+    usersQueue: Queue;
+
+  const eventEmitterMock = {
+    once: jest.fn(),
+    emit: jest.fn(),
+  };
 
   beforeEach(async () => {
+    usersQueue = {
+      add: jest.fn(),
+    } as any;
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UpdateService,
+        { provide: EventEmitter2, useValue: eventEmitterMock },
         {
-          provide: getModelToken('UserModel'),
-          useValue: {
-            updateOne: jest.fn(),
-          },
+          provide: getQueueToken('users'),
+          useValue: usersQueue,
         },
         {
           provide: FindUser,
@@ -42,20 +50,20 @@ describe('UpdateService', () => {
           provide: CACHE_MANAGER,
           useValue: mockCacheManager,
         },
+        HashPassword,
       ],
     }).compile();
 
     service = module.get<UpdateService>(UpdateService);
     findUser = module.get<FindUser>(FindUser);
     cacheManager = module.get<Cache>(CACHE_MANAGER);
-    userModel = module.get<Model<User>>(getModelToken('UserModel'));
+    hashPassword = module.get<HashPassword>(HashPassword);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
     expect(findUser).toBeDefined();
     expect(cacheManager).toBeDefined();
-    expect(userModel).toBeDefined();
   });
 
   it('should update user', async () => {
@@ -69,6 +77,12 @@ describe('UpdateService', () => {
     };
 
     jest.spyOn(findUser, 'findOne').mockResolvedValue(user);
+    eventEmitterMock.once.mockImplementation((event, callback) => {
+      if (event === 'user.updated') {
+        callback();
+      }
+    });
+    jest.spyOn(hashPassword, 'hash').mockResolvedValue('hashedpassword');
 
     const result = await service.execute('test@test.com', {
       name: 'Updated',
@@ -97,9 +111,6 @@ describe('UpdateService', () => {
     };
 
     jest.spyOn(findUser, 'findOne').mockResolvedValue(user);
-    jest.spyOn(userModel, 'updateOne').mockReturnValue({
-      exec: jest.fn().mockResolvedValue({ nModified: 1 }),
-    } as any);
     jest.spyOn(cacheManager, 'set').mockResolvedValue();
 
     const result = await service.execute('test@test.com', {
