@@ -9,6 +9,7 @@ import { mockCacheManager } from '@src/app/common/constants/mock-cache';
 import { getQueueToken } from '@nestjs/bull';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Queue } from 'bull';
+import { UserUpdatedEvent } from '@src/app/common/events/user-updated-event';
 
 describe('UpdateService', () => {
   let service: UpdateService,
@@ -77,6 +78,7 @@ describe('UpdateService', () => {
     };
 
     jest.spyOn(findUser, 'findOne').mockResolvedValue(user);
+    jest.spyOn(usersQueue, 'add').mockResolvedValue(null as any);
     eventEmitterMock.once.mockImplementation((event, callback) => {
       if (event === 'user.updated') {
         callback();
@@ -98,6 +100,15 @@ describe('UpdateService', () => {
         createdAt: user.createdAt,
       },
     });
+    expect(hashPassword.hash).toHaveBeenCalledWith('updatedPassword');
+    expect(usersQueue.add).toHaveBeenCalledWith(
+      'user.updating',
+      expect.any(UserUpdatedEvent)
+    );
+    expect(eventEmitterMock.once).toHaveBeenCalledWith(
+      'user.updated',
+      expect.any(Function)
+    );
   });
 
   it('should update user with partial data', async () => {
