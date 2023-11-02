@@ -1,6 +1,3 @@
-import { InjectModel } from '@nestjs/mongoose';
-import { User } from '@src/app/modules/user/domain/models/user';
-import { Model } from 'mongoose';
 import {
   CreateUserRequest,
   UserProps,
@@ -11,14 +8,19 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { UserResponse } from '@src/app/modules/user/domain/services/interfaces/user-res';
+import { InjectQueue } from '@nestjs/bull';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Queue } from 'bull';
+import { UserUpdatedEvent } from '@src/app/common/events/user-updated-event';
 
 @Injectable()
 export class UpdateService {
   constructor(
-    @InjectModel('UserModel')
-    private userModel: Model<User>,
     private readonly findUser: FindUser,
     private readonly hashPassword: HashPassword,
+    @InjectQueue('users')
+    private usersQueue: Queue,
+    private readonly eventEmitter: EventEmitter2,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache
   ) {}
 
@@ -41,23 +43,31 @@ export class UpdateService {
         password: hashPassword || user.password,
         createdAt: user.createdAt,
       };
-      await this.update(currentEmail, updateData);
-
-      response = {
-        name: updateData.name,
-        username: updateData.username,
-        email: updateData.email,
-        createdAt: updateData.createdAt,
-      };
+      await this.emitUserUpdatedEvent(currentEmail, updateData);
       await this.cache(currentEmail, updateData);
+      (updateData.password as any) = undefined;
+      (updateData.id as any) = undefined;
+      response = updateData;
     }
 
     return response ? { user: response } : null;
   }
 
-  private async update(currentEmail: string, updateData: UserProps) {
+  private async emitUserUpdatedEvent(
+    currentEmail: string,
+    updateData: UserProps
+  ): Promise<void> {
+    const waitForUserUpdated = new Promise<void>((resolve, reject) => {
+      this.eventEmitter.once('user.updated', resolve);
+      this.eventEmitter.once('user.updated.failed', reject);
+    });
     try {
-      await this.userModel.updateOne({ email: currentEmail }, updateData);
+      await this.usersQueue.add(
+        'user.updating',
+        new UserUpdatedEvent(currentEmail, updateData)
+      );
+
+      await waitForUserUpdated;
     } catch (err) {
       throw new BadRequestException(
         err.message.includes('duplicate key')
