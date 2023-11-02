@@ -20,12 +20,12 @@ export class CreateForOAuth {
   async execute(userData: UserGoogleData): Promise<UserResponse> {
     const { name, email } = userData;
     const password = this.generateRandomPassword(30);
-    const generatedUsername = await this.generateRandomUsername(userData, 5);
+    const username = await this.generateRandomUsername(userData, 5);
 
     return await this.createService.execute({
       name,
       email,
-      username: generatedUsername,
+      username,
       password,
     });
   }

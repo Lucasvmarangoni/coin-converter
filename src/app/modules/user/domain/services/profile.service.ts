@@ -17,7 +17,6 @@ export class ProfileService {
         description: 'NotFound',
       });
     }
-
     const { name, createdAt } = user;
 
     const response = {

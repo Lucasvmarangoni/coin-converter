@@ -35,8 +35,8 @@ export class ConverterService {
     const converterAmount = await this.converterCurrency(req);
 
     const transactionData: ResponseData = {
-      from: from,
-      amount: amount,
+      from,
+      amount,
       to: to.split(',').map((item: string) => item.trim()),
       rates: converterAmount.rates,
       date: new Date(),

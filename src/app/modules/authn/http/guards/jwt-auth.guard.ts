@@ -27,9 +27,9 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
     const canActivatePromise = canActivate as Promise<boolean>;
 
-    return canActivatePromise.catch((error) => {
-      if (error instanceof Error) {
-        throw new UnauthorizedException(error.message);
+    return canActivatePromise.catch((err) => {
+      if (err instanceof Error) {
+        throw new UnauthorizedException(err.message);
       }
 
       throw new UnauthorizedException();
